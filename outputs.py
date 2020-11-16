@@ -82,27 +82,32 @@ class SaveImagesToBinaryFile(Output):
 
 
 class SaveDensityMapsToCSVFiles(Output):
-    def __init__(self, dir_path):
+    def __init__(self, dir_path, downscaling=None):
         Output.__init__(self)
         self.dir_path = dir_path
+        self.downscaling = downscaling
 
     def output(self, images_and_density_maps):
         os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map[0]
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
             path = os.path.join(self.dir_path, f"GT_{str(cnt)}.csv")
             with open(path, 'w', newline='') as f:
-                csv.writer(f).writerows(density_map)
+                csv.writer(f).writerows(den_map_to_save)
             yield image, density_map
             cnt += 1
 
 
 class SaveDensityMapsToBinaryFile(Output):
-    def __init__(self, file_path, keep_3_dimensions=True):
+    def __init__(self, file_path, downscaling=None, keep_3_dimensions=True):
         Output.__init__(self)
         self.requires_full_dataset_in_memory = True
         self.file_path = file_path
+        self.downscaling = downscaling
         self.keep_3_dimensions = keep_3_dimensions
 
     def output(self, images_and_density_maps):
@@ -111,10 +116,12 @@ class SaveDensityMapsToBinaryFile(Output):
         den_maps = []
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map[0]
-            if self.keep_3_dimensions and len(density_map.shape) != 3:
-                den_maps.append(density_map.copy().reshape(*density_map.shape, 1))
-            else:
-                den_maps.append(density_map)
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
+            if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
+                den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
+            den_maps.append(den_map_to_save)
             yield image, density_map
         with open(self.file_path, 'wb') as f:
             pickle.dump(den_maps, f)
