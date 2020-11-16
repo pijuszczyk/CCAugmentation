@@ -37,7 +37,7 @@ class Demonstrate(Output):
                 if self.show_density_map:
                     axes[1].set_title(f"Density map {str(cnt)}")
                     axes[1].imshow(density_map)
-                plt.show()
+                plt.show(block=False)
             yield image, density_map
             cnt += 1
 
