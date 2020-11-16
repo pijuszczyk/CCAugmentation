@@ -103,6 +103,17 @@ class DensityMapCSVFileLoader(Loader):
             yield np.array(den_map)
 
 
+class ConcatenatingLoader(Loader):
+    def __init__(self, loaders):
+        Loader.__init__(self)
+        self.loaders = loaders
+
+    def load(self):
+        for loader in self.loaders:
+            for sample in loader:
+                yield sample
+
+
 class CombinedLoader(Loader):
     def __init__(self, img_loader, gt_loader, den_map_loader=None):
         if (gt_loader is None) == (den_map_loader is None):
