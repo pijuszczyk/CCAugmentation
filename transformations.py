@@ -128,7 +128,8 @@ class StandardizeSize(Transformation):
 
 class Normalize(Transformation):
     def __init__(self, type, probability=1.0):
-        if type not in ["samplewise_centering", "samplewise_std_normalization", "featurewise_centering", "featurewise_std_normalization"]:
+        if type not in ["range_0_to_1", "range_-1_to_1", "samplewise_centering", "samplewise_std_normalization",
+                        "featurewise_centering", "featurewise_std_normalization"]:
             raise ValueError(f"Wrong type of normalization selected: {type}")
 
         Transformation.__init__(self, probability)
@@ -137,13 +138,17 @@ class Normalize(Transformation):
         self.type = type
 
     def transform(self, image, density_map):
-        if self.type == "samplewise_centering":
+        if self.type == "range_-1_to_1":
+            return (image - 127.5) / 255.0, density_map
+        elif self.type == "range_0_to_1":
+            return image / 255.0, density_map
+        elif self.type == "samplewise_centering":
             return image - np.mean(image), density_map
         elif self.type == "samplewise_std_normalization":
             return image / np.std(image), density_map
 
     def transform_all(self, images_and_density_maps):
-        if self.type.startswith("samplewise"):
+        if self.type.startswith("range") or self.type.startswith("samplewise"):
             return Transformation.transform_all(self, images_and_density_maps)
         all_images, all_density_maps = zip(*list(images_and_density_maps))
         if self.type == "featurewise_centering":
