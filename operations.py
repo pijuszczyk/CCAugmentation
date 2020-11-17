@@ -41,7 +41,7 @@ class Duplicate(Operation):
         """ Duplicates samples """
         for image_and_density_map in images_and_density_maps:
             for i in range(self.duplicates_num):
-                yield image_and_density_map[0]
+                yield image_and_density_map
 
 
 class Dropout(Operation):
@@ -61,4 +61,4 @@ class Dropout(Operation):
         """ Drops out samples """
         for image_and_density_map in images_and_density_maps:
             if random.random() >= self.probability:
-                yield image_and_density_map[0]
+                yield image_and_density_map

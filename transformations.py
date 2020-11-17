@@ -45,7 +45,7 @@ class Transformation(Operation):
         :return: Iterable of maybe transformed img+DM pairs.
         """
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             yield self.transform(image, density_map) if random.random() < self.probability else image, density_map
 
 

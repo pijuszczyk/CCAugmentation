@@ -51,7 +51,7 @@ class Demonstrate(Output):
         """
         cnt = 0
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             if cnt < self.max_examples:
                 cols = 2 if self.show_density_map else 1
                 _, axes = plt.subplots(1, cols, figsize=(20, 4))
@@ -93,7 +93,7 @@ class SaveImagesToFiles(Output):
         os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             path = os.path.join(self.dir_path, f"IMG_{str(cnt)}.{self.file_extension}")
             cv2.imwrite(path, image)
             yield image, density_map
@@ -127,7 +127,7 @@ class SaveImagesToBinaryFile(Output):
         os.makedirs(dir_path)
         images = []
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             if self.keep_3_dimensions and len(image.shape) != 3:
                 images.append(image.copy().reshape(*image.shape, 1))
             else:
@@ -163,7 +163,7 @@ class SaveDensityMapsToCSVFiles(Output):
         os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
                 den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
@@ -204,7 +204,7 @@ class SaveDensityMapsToBinaryFile(Output):
         os.makedirs(dir_path)
         den_maps = []
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map[0]
+            image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
                 den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
