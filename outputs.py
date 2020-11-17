@@ -49,14 +49,15 @@ class Demonstrate(Output):
         :param images_and_density_maps: Iterator of img+DM pairs.
         :return: Iterator of unchanged img+DM pairs.
         """
+        max_examples = self.max_examples if self.max_examples is not None else float("inf")
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
-            if cnt < self.max_examples:
+            if cnt < max_examples:
                 cols = 2 if self.show_density_map else 1
                 _, axes = plt.subplots(1, cols, figsize=(20, 4))
                 axes[0].set_title(f"Image {str(cnt)}")
-                axes[0].imshow(image)
+                axes[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
                 if self.show_density_map:
                     axes[1].set_title(f"Density map {str(cnt)}")
                     axes[1].imshow(density_map)
@@ -90,7 +91,8 @@ class SaveImagesToFiles(Output):
         :param images_and_density_maps: Iterator of img+DM pairs
         :return: Iterator of unchanged img+DM pairs
         """
-        os.makedirs(self.dir_path)
+        if not os.path.exists(self.dir_path):
+            os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
@@ -124,7 +126,8 @@ class SaveImagesToBinaryFile(Output):
         :return: Iterator of unchanged img+DM pairs.
         """
         dir_path = os.path.dirname(self.file_path)
-        os.makedirs(dir_path)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
         images = []
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
@@ -160,7 +163,8 @@ class SaveDensityMapsToCSVFiles(Output):
         :param images_and_density_maps: Iterator of img+DM pairs.
         :return: Iterator of unchanged img+DM pairs.
         """
-        os.makedirs(self.dir_path)
+        if not os.path.exists(self.dir_path):
+            os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
@@ -201,7 +205,8 @@ class SaveDensityMapsToBinaryFile(Output):
         :return: Iterator of unchanged img+DM pairs.
         """
         dir_path = os.path.dirname(self.file_path)
-        os.makedirs(dir_path)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
         den_maps = []
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map

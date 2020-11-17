@@ -17,7 +17,7 @@ def get_density_map_gaussian(im, points):
     :param points: List of (X, Y) tuples that point at where human heads are located in a picture.
     :return: Density map constructed from the points.
     """
-    im_density = np.zeros_like(im, dtype=np.float64)
+    im_density = np.zeros_like(im[:, :, 0], dtype=np.float64)
     h, w = im_density.shape
     if points is None:
         return im_density
@@ -210,12 +210,14 @@ class CombinedLoader(Loader):
         :return: Generator of img+DM pairs.
         """
         cnt = 0
+        img_gen = self.img_loader.load()
         if self.den_map_loader is None:
+            gt_gen = self.gt_loader.load()
             try:
                 while True:
-                    img = next(self.img_loader)
+                    img = next(img_gen)
                     try:
-                        gt = next(self.gt_loader)
+                        gt = next(gt_gen)
                     except StopIteration:
                         raise ValueError(f"Missing ground truth for image {str(cnt)}")
                     den_map = get_density_map_gaussian(img, gt)
@@ -224,11 +226,12 @@ class CombinedLoader(Loader):
             except StopIteration:
                 pass
         else:
+            dm_gen = self.den_map_loader.load()
             try:
                 while True:
-                    img = next(self.img_loader)
+                    img = next(img_gen)
                     try:
-                        den_map = next(self.den_map_loader)
+                        den_map = next(dm_gen)
                     except StopIteration:
                         raise ValueError(f"Missing density map for image {str(cnt)}")
                     yield img, den_map

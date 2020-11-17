@@ -45,8 +45,7 @@ class Transformation(Operation):
         :return: Iterable of maybe transformed img+DM pairs.
         """
         for image_and_density_map in images_and_density_maps:
-            image, density_map = image_and_density_map
-            yield self.transform(image, density_map) if random.random() < self.probability else image, density_map
+            yield self.transform(*image_and_density_map) if random.random() < self.probability else image_and_density_map
 
 
 class Crop(Transformation):
@@ -287,9 +286,9 @@ class Normalize(Transformation):
             return Transformation.transform_all(self, images_and_density_maps)
         all_images, all_density_maps = zip(*list(images_and_density_maps))
         if self.method == "featurewise_centering":
-            return all_images - np.mean(all_images), all_density_maps
+            return zip(all_images - np.mean(all_images), all_density_maps)
         elif self.method == "featurewise_std_normalization":
-            return all_images / np.std(all_images), all_density_maps
+            return zip(all_images / np.std(all_images), all_density_maps)
 
 
 class FlipLR(Transformation):
