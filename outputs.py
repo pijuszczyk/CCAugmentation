@@ -70,7 +70,7 @@ class SaveImagesToFiles(Output):
     Output that saves the images to image files, be it PNG, JPG or BMP.
     Each image is saved separately, and the name of the file is deduced from the image's index.
     """
-    def __init__(self, dir_path, file_extension="png"):
+    def __init__(self, dir_path, file_extension="jpg"):
         """
         Define an output that saves the images with the chosen file extension to a given directory. For the list of
         supported extensions, please check opencv-python documentation.

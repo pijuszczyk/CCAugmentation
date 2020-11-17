@@ -77,7 +77,7 @@ class ImageFileLoader(Loader):
     """
     Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
     """
-    def __init__(self, img_dir, file_extension="png"):
+    def __init__(self, img_dir, file_extension="jpg"):
         """
         Create a new image loader that reads all the images with specified file extension in a given directory.
 
