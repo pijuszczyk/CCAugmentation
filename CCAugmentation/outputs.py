@@ -5,7 +5,7 @@ import pickle
 import cv2
 import matplotlib.pyplot as plt
 
-from operations import Operation
+from .operations import Operation
 
 
 class Output(Operation):

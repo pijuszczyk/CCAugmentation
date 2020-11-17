@@ -3,7 +3,7 @@ import random
 import cv2
 import numpy as np
 
-from operations import Operation
+from .operations import Operation
 
 
 class Transformation(Operation):

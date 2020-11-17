@@ -1,6 +1,6 @@
 import os
 
-import loaders
+from CCAugmentation import loaders
 
 
 def _get_SHH_directory(dataset_dir, train_test, part):
