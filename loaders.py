@@ -8,8 +8,15 @@ import numpy as np
 from scipy.io import loadmat
 
 
-# from https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
 def get_density_map_gaussian(im, points):
+    """
+    Create a Gaussian density map from the points.
+    Credits: https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
+
+    :param im: Original image, used only for getting needed shape of the density map.
+    :param points: List of (X, Y) tuples that point at where human heads are located in a picture.
+    :return: Density map constructed from the points.
+    """
     im_density = np.zeros_like(im, dtype=np.float64)
     h, w = im_density.shape
     if points is None:
@@ -58,39 +65,85 @@ def get_density_map_gaussian(im, points):
 
 
 class Loader:
+    """
+    Abstract base loader that should return an iterable of samples, either images, lists of points or density maps.
+    """
     def load(self):
+        """ Method that must be implemented in the subclasses, returning an iterable of samples """
         raise NotImplementedError("load not implemented in the child class")
 
 
 class ImageFileLoader(Loader):
+    """
+    Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
+    """
     def __init__(self, img_dir, file_extension="png"):
+        """
+        Create a new image loader that reads all the images with specified file extension in a given directory.
+
+        :param img_dir: Directory to be searched.
+        :param file_extension: Desired extension of files to be loaded.
+        """
         Loader.__init__(self)
         self.img_dir = img_dir
         self.file_extension = file_extension
 
     def load(self):
+        """
+        Load all images with specified extension from the directory.
+
+        :return: Generator of images in BGR format.
+        """
         for path in sorted(glob(os.path.join(self.img_dir, f"*.{self.file_extension}"))):
             yield cv2.imread(path, cv2.IMREAD_COLOR)
 
 
 class GTPointsMatFileLoader(Loader):
+    """
+    Loader for ground truth data stored as lists of head positions in a Matlab file.
+    """
     def __init__(self, gt_dir, file_extension="mat"):
+        """
+        Create a loader that searches for files with specified extension in a given directory and loads them.
+
+        :param gt_dir: Directory to be searched.
+        :param file_extension: Desired file extension of Matlab files.
+        """
         Loader.__init__(self)
         self.gt_dir = gt_dir
         self.file_extension = file_extension
 
     def load(self):
+        """
+        Load all ground truth samples from the directory.
+
+        :return: Generator of lists of head positions - (X, Y) tuples.
+        """
         for path in sorted(glob(os.path.join(self.gt_dir, f"*.{self.file_extension}"))):
             yield loadmat(path)["image_info"][0, 0][0, 0][0] - 1
 
 
 class DensityMapCSVFileLoader(Loader):
+    """
+    Loader for density maps stored in separate CSV files.
+    """
     def __init__(self, den_map_dir, file_extension="csv"):
+        """
+        Create a loader that searches for files with the given extension in the given directory and loads them.
+
+        :param den_map_dir: Directory to be searched.
+        :param file_extension: Desired extension of files to be loaded.
+        """
         Loader.__init__(self)
         self.den_map_dir = den_map_dir
         self.file_extension = file_extension
 
     def load(self):
+        """
+        Load density maps from all found matching files.
+
+        :return: Generator of density maps.
+        """
         for path in sorted(glob(os.path.join(self.den_map_dir, f"*.{self.file_extension}"))):
             den_map = []
             with open(path, 'r', newline='') as f:
@@ -104,18 +157,43 @@ class DensityMapCSVFileLoader(Loader):
 
 
 class ConcatenatingLoader(Loader):
+    """
+    Loader that doesn't perform any loading on its own but rather concatenates samples from a few sources.
+    """
     def __init__(self, loaders):
+        """
+        Create a loader that concatenates loading results from a few loaders.
+
+        :param loaders: Loaders whose results will be concatenated.
+        """
         Loader.__init__(self)
         self.loaders = loaders
 
     def load(self):
+        """
+        Load all samples from all connected loaders.
+
+        :return: Generator of samples, be it images, GT point lists or density maps.
+        """
         for loader in self.loaders:
             for sample in loader:
                 yield sample
 
 
 class CombinedLoader(Loader):
+    """
+    Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
+    density maps (be it straight from a loader or from transformed on-the-fly GT points).
+    """
     def __init__(self, img_loader, gt_loader, den_map_loader=None):
+        """
+        Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
+        provide density maps related to the images loaded using `img_loader`.
+
+        :param img_loader: Loader that provides an iterable of images.
+        :param gt_loader: Loader that provides an iterable of lists of points.
+        :param den_map_loader: Loader that provides an iterable of density maps.
+        """
         if (gt_loader is None) == (den_map_loader is None):
             raise ValueError("One and only one loader for target must be selected")
 
@@ -125,6 +203,12 @@ class CombinedLoader(Loader):
         self.den_map_loader = den_map_loader
 
     def load(self):
+        """
+        Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
+        GT points to a density map.
+
+        :return: Generator of img+DM pairs.
+        """
         cnt = 0
         if self.den_map_loader is None:
             try:
