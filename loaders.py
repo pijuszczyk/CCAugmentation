@@ -73,9 +73,32 @@ class Loader:
         raise NotImplementedError("load not implemented in the child class")
 
 
-class ImageFileLoader(Loader):
+class BasicImageFileLoader(Loader):
     """
     Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
+    """
+    def __init__(self, img_paths):
+        """
+        Create a new image loader that reads all image files from paths.
+
+        :param img_paths: Paths to all images that are to be loaded.
+        """
+        Loader.__init__(self)
+        self.img_paths = img_paths
+
+    def load(self):
+        """
+        Load all images based on provided paths to files.
+
+        :return: Generator of images in BGR format.
+        """
+        for path in self.img_paths:
+            yield cv2.imread(path, cv2.IMREAD_COLOR)
+
+
+class ImageFileLoader(BasicImageFileLoader):
+    """
+    Loader for all images of some type in a given directory.
     """
     def __init__(self, img_dir, file_extension="jpg"):
         """
@@ -84,67 +107,70 @@ class ImageFileLoader(Loader):
         :param img_dir: Directory to be searched.
         :param file_extension: Desired extension of files to be loaded.
         """
+        paths = sorted(glob(os.path.join(img_dir, f"*.{file_extension}")))
+        BasicImageFileLoader.__init__(self, paths)
+
+
+class BasicGTPointsMatFileLoader(Loader):
+    """
+    Loader for ground truth data stored as lists of head positions in Matlab files.
+    """
+    def __init__(self, gt_paths, getter):
+        """
+        Create a loader that loads all data from the provided file paths using a given getter.
+
+        :param gt_paths: Paths of files that are to be read.
+        :param getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
+        """
         Loader.__init__(self)
-        self.img_dir = img_dir
-        self.file_extension = file_extension
+        self.gt_paths = gt_paths
+        self.getter = getter
 
     def load(self):
         """
-        Load all images with specified extension from the directory.
+        Load all Matlab files from paths.
 
-        :return: Generator of images in BGR format.
+        :return: Generator of lists of head positions - (X, Y) tuples.
         """
-        for path in sorted(glob(os.path.join(self.img_dir, f"*.{self.file_extension}"))):
-            yield cv2.imread(path, cv2.IMREAD_COLOR)
+        for path in self.gt_paths:
+            yield self.getter(loadmat(path))
 
 
-class GTPointsMatFileLoader(Loader):
+class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
     """
-    Loader for ground truth data stored as lists of head positions in a Matlab file.
+    Loader for head positions in all Matlab files in a given directory.
     """
-    def __init__(self, gt_dir, file_extension="mat"):
+    def __init__(self, gt_dir, getter, file_extension="mat"):
         """
         Create a loader that searches for files with specified extension in a given directory and loads them.
 
         :param gt_dir: Directory to be searched.
         :param file_extension: Desired file extension of Matlab files.
         """
-        Loader.__init__(self)
-        self.gt_dir = gt_dir
-        self.file_extension = file_extension
-
-    def load(self):
-        """
-        Load all ground truth samples from the directory.
-
-        :return: Generator of lists of head positions - (X, Y) tuples.
-        """
-        for path in sorted(glob(os.path.join(self.gt_dir, f"*.{self.file_extension}"))):
-            yield loadmat(path)["image_info"][0, 0][0, 0][0] - 1
+        paths = sorted(glob(os.path.join(gt_dir, f"*.{file_extension}")))
+        BasicGTPointsMatFileLoader.__init__(self, paths, getter)
 
 
-class DensityMapCSVFileLoader(Loader):
+class BasicDensityMapCSVFileLoader(Loader):
     """
     Loader for density maps stored in separate CSV files.
     """
-    def __init__(self, den_map_dir, file_extension="csv"):
+    def __init__(self, dm_paths):
         """
-        Create a loader that searches for files with the given extension in the given directory and loads them.
+        Create a loader that loads density maps at specified paths.
 
-        :param den_map_dir: Directory to be searched.
-        :param file_extension: Desired extension of files to be loaded.
+        :param dm_paths: Paths to CSV files with density maps.
         """
         Loader.__init__(self)
-        self.den_map_dir = den_map_dir
-        self.file_extension = file_extension
+        self.dm_paths = dm_paths
 
     def load(self):
         """
-        Load density maps from all found matching files.
+        Load all density maps from all specified paths.
 
         :return: Generator of density maps.
         """
-        for path in sorted(glob(os.path.join(self.den_map_dir, f"*.{self.file_extension}"))):
+        for path in self.dm_paths:
             den_map = []
             with open(path, 'r', newline='') as f:
                 for row in csv.reader(f):
@@ -154,6 +180,21 @@ class DensityMapCSVFileLoader(Loader):
                     den_map.append(den_row)
 
             yield np.array(den_map)
+
+
+class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
+    """
+    Loader for density maps stored in all CSV files in a given directory.
+    """
+    def __init__(self, den_map_dir, file_extension="csv"):
+        """
+        Create a loader that searches for files with the given extension in the given directory and loads them.
+
+        :param den_map_dir: Directory to be searched.
+        :param file_extension: Desired extension of files to be loaded.
+        """
+        paths = sorted(glob(os.path.join(den_map_dir, f"*.{file_extension}")))
+        BasicDensityMapCSVFileLoader.__init__(self, paths)
 
 
 class ConcatenatingLoader(Loader):
