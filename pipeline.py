@@ -1,3 +1,8 @@
+import random
+
+import numpy as np
+
+
 class Pipeline:
     """
     Pipelines define the data preprocessing and augmentation tasks, starting from loading the original data, through
@@ -22,27 +27,33 @@ class Pipeline:
         self.operations = operations
         self.requires_full_dataset_in_memory = any([op.requires_full_dataset_in_memory for op in operations])
 
-    def execute_generate(self):
+    def execute_generate(self, seed=None):
         """
         Execute the pipeline and return an iterable, most probably a generator, of the preprocessed, augmented data
         samples. Minimizes peak memory usage when there is no bottleneck in the pipeline. If you wish to preprocess
         everything in one go and have a list of the results, please consider using `execute_collect`.
 
+        :param seed: Random seed. When it's not None, allows reproducibility of the results.
         :return: Iterable of preprocessed data.
         """
+        if seed is not None:
+            random.seed(seed)
+            np.random.seed(seed)
+
         images_and_density_maps = self.loader.load()
         for operation in self.operations:
             images_and_density_maps = operation.execute(images_and_density_maps)
         return images_and_density_maps
 
-    def execute_collect(self):
+    def execute_collect(self, seed=None):
         """
         Execute the pipeline and return a list of the preprocessed, augmented data samples. In opposition to
         `execute_generate`, this method performs all operations on the whole dataset in one go.
 
+        :param seed: Random seed. When it's not None, allows reproducibility of the results.
         :return: List of preprocessed data.
         """
-        images_and_density_maps = self.execute_generate()
+        images_and_density_maps = self.execute_generate(seed)
         return list(images_and_density_maps)
 
     def summary(self):
