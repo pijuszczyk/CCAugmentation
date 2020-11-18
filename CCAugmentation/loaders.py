@@ -72,6 +72,14 @@ class Loader:
         """ Method that must be implemented in the subclasses, returning an iterable of samples """
         raise NotImplementedError("load not implemented in the child class")
 
+    def get_number_of_loadable_samples(self):
+        """
+        Return number of samples from the dataset that can and will be loaded by the loader, or None if it's unknown.
+
+        :return: Number of samples that can be loaded, including the already loaded ones.
+        """
+        return None
+
 
 class BasicImageFileLoader(Loader):
     """
@@ -85,6 +93,14 @@ class BasicImageFileLoader(Loader):
         """
         Loader.__init__(self)
         self.img_paths = img_paths
+
+    def get_number_of_loadable_samples(self):
+        """
+        Get number of images to load, according to number of specified paths.
+
+        :return: Number of images.
+        """
+        return len(self.img_paths)
 
     def load(self):
         """
@@ -126,6 +142,14 @@ class BasicGTPointsMatFileLoader(Loader):
         self.gt_paths = gt_paths
         self.getter = getter
 
+    def get_number_of_loadable_samples(self):
+        """
+        Get number of GTs to load, according to number of specified paths.
+
+        :return: Number of GTs.
+        """
+        return len(self.gt_paths)
+
     def load(self):
         """
         Load all Matlab files from paths.
@@ -163,6 +187,14 @@ class BasicDensityMapCSVFileLoader(Loader):
         """
         Loader.__init__(self)
         self.dm_paths = dm_paths
+
+    def get_number_of_loadable_samples(self):
+        """
+        Get number of density maps to load, according to number of specified paths.
+
+        :return: Number of density maps.
+        """
+        return len(self.dm_paths)
 
     def load(self):
         """
@@ -210,6 +242,14 @@ class ConcatenatingLoader(Loader):
         Loader.__init__(self)
         self.loaders = loaders
 
+    def get_number_of_loadable_samples(self):
+        """
+        Get number of samples to load throughout loaders.
+
+        :return: Cumulative number of samples.
+        """
+        return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
+
     def load(self):
         """
         Load all samples from all connected loaders.
@@ -242,6 +282,17 @@ class CombinedLoader(Loader):
         self.img_loader = img_loader
         self.gt_loader = gt_loader
         self.den_map_loader = den_map_loader
+
+    def get_number_of_loadable_samples(self):
+        """
+        Get number of full samples (img+DM pairs).
+
+        :return: Number of samples.
+        """
+        if self.den_map_loader is None:
+            return min(self.img_loader.get_number_of_loadable_samples(), self.gt_loader.get_number_of_loadable_samples())
+        else:
+            return min(self.img_loader.get_number_of_loadable_samples(), self.den_map_loader.get_number_of_loadable_samples())
 
     def load(self):
         """
