@@ -234,18 +234,19 @@ class Normalize(Transformation):
     """
     Normalizes image pixel values using one of normalization methods.
     """
-    def __init__(self, method):
+    def __init__(self, method, by_channel=False):
         """
         Create a transformation that normalizes image pixel values using one of the following methods:
 
-        - `range_0_to_1` - values are scaled to be in fixed <0; 1> range
-        - `range_-1_to_1` - values are scaled to be in fixed <-1; 1> range
+        - `range_0_to_1` - values are scaled to be in fixed <0; 1> range mapped to the original <0; 255> range
+        - `range_-1_to_1` - values are scaled to be in fixed <-1; 1> range mapped to the original <0; 255> range
         - `samplewise_centering` - values are translated to make their mean (in respect to a single image) equal to 0
         - `samplewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to a single image) equal to 1
         - `featurewise_centering` - values are translated to make their mean (in respect to all images) equal to 0
         - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all images) equal to 1
 
         :param method: Method that will be used for normalization, one of the above.
+        :param by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel separately and the normalization will also occur by each channel. Else, the values will be normalized by all channels at once.
         """
         if method not in ["range_0_to_1", "range_-1_to_1", "samplewise_centering", "samplewise_std_normalization",
                           "featurewise_centering", "featurewise_std_normalization"]:
@@ -255,6 +256,7 @@ class Normalize(Transformation):
         if method.startswith("featurewise"):
             self.requires_full_dataset_in_memory = True
         self.method = method
+        self.by_channel = by_channel
 
     def transform(self, image, density_map):
         """
@@ -264,14 +266,18 @@ class Normalize(Transformation):
         :param density_map: Density map that won't be affected.
         :return: Pair of transformed image and corresponding density map.
         """
+        mean_std_axes = (0, 1) if self.by_channel else None
+        if self.by_channel and len(image.shape) != 3:
+            image.shape = (*image.shape, 1)
+
         if self.method == "range_-1_to_1":
             return (image - 127.5) / 255.0, density_map
         elif self.method == "range_0_to_1":
             return image / 255.0, density_map
         elif self.method == "samplewise_centering":
-            return image - np.mean(image), density_map
+            return image - np.resize(np.mean(image, mean_std_axes), [*image.shape]), density_map
         elif self.method == "samplewise_std_normalization":
-            return image / np.std(image), density_map
+            return image / np.resize(np.std(image, mean_std_axes), [*image.shape]), density_map
 
     def transform_all(self, images_and_density_maps):
         """
@@ -284,11 +290,17 @@ class Normalize(Transformation):
         """
         if self.method.startswith("range") or self.method.startswith("samplewise"):
             return Transformation.transform_all(self, images_and_density_maps)
+
         all_images, all_density_maps = zip(*list(images_and_density_maps))
+        all_images, all_density_maps = np.array(all_images), np.array(all_density_maps)
+        mean_std_axes = (0, 1, 2) if self.by_channel else None
+        if self.by_channel and len(all_images.shape) != 4:
+            all_images.shape = (*all_images.shape, 1)
+
         if self.method == "featurewise_centering":
-            return zip(all_images - np.mean(all_images), all_density_maps)
+            return zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
         elif self.method == "featurewise_std_normalization":
-            return zip(all_images / np.std(all_images), all_density_maps)
+            return zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
 
 
 class FlipLR(Transformation):
