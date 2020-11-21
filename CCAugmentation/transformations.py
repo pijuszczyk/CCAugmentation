@@ -147,6 +147,53 @@ class Scale(Transformation):
         return new_img, new_den_map
 
 
+class Rotate(Transformation):
+    """
+    Rotates the given image and density map. The rotation can be executed in two ways:
+
+    - The size of the input doesn't change, discarding pixels outside the frame and filling missing pixels in the frame with black
+    - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling missing pixels in the frame with black
+    """
+    def __init__(self, angle, expand=False, probability=1.0):
+        """
+        Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle means counterclockwise rotation.
+
+        :param angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
+        :param expand: Whether to adjust frame size for it to contain all the original pixels.
+        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+        Transformation.__init__(self, probability)
+        self.angle = angle
+        self.expand = expand
+
+    def transform(self, image, density_map):
+        """
+        Rotate the image according to specification.
+
+        :param image: Image to be rotated.
+        :param density_map: Related density map that will be rotated accordingly.
+        :return: Pair of rotated image and rotated accordingly density map.
+        """
+        h, w = image.shape[:2]
+        center_x, center_y = w / 2, h / 2
+        rot_mat = cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
+
+        if self.expand:
+            cos, sin = np.abs(rot_mat[0][:2])
+
+            # calculate width and height that will allow the rotated image to be fully preserved
+            new_w = int(w * cos + h * sin)
+            new_h = int(w * sin + h * cos)
+
+            # add translation to the matrix
+            rot_mat[0, 2] += (new_w / 2) - center_x
+            rot_mat[1, 2] += (new_h / 2) - center_y
+        else:
+            new_w, new_h = w, h
+
+        return cv2.warpAffine(image, rot_mat, (new_w, new_h)), cv2.warpAffine(density_map, rot_mat, (new_w, new_h))
+
+
 class StandardizeSize(Transformation):
     """
     Standardizes image and density map sizes in order to reduce variance in size and allow bigger batches.
