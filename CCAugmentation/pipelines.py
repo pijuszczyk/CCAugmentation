@@ -94,12 +94,14 @@ class Pipeline:
 
         return PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), False)
 
-    def execute_collect(self, seed=None, verbose=True):
+    def execute_collect(self, seed=None, return_np_arrays=False, verbose=True):
         """
-        Execute the pipeline and return a list of the preprocessed, augmented data samples. In opposition to
-        `execute_generate`, this method performs all operations on the whole dataset in one go.
+        Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
+        the other for density maps). In opposition to `execute_generate`, this method performs all operations on
+        the whole dataset in one go.
 
         :param seed: Random seed. When it's not None, it allows reproducibility of the results.
+        :param return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists. Generally, np.arrays are more useful when training a model but they don't support elements of varying size (search for 'ragged array'), so for safety, Python lists are the default output.
         :param verbose: If true, display a progress bar.
         :return: List of preprocessed data.
         """
@@ -109,7 +111,12 @@ class Pipeline:
 
         images_and_density_maps = self._connect_operations()
 
-        return list(PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose))
+        results = PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose)
+        images, density_maps = zip(*results)
+        if return_np_arrays:
+            return np.array(images), np.array(density_maps)
+        else:
+            return images, density_maps
 
     def summary(self):
         """
