@@ -1,5 +1,7 @@
 import random
 
+import numpy as np
+
 
 class Operation:
     """
@@ -17,6 +19,10 @@ class Operation:
     def __str__(self):
         """ Stringify the operation """
         return self.__class__.__name__
+
+    def get_output_samples_number_multiplier(self):
+        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        return 1
 
     def execute(self, images_and_density_maps):
         """ Abstract method that must be implemented in the subclasses, should take and return an iterable of img+DM pairs """
@@ -37,6 +43,10 @@ class Duplicate(Operation):
         Operation.__init__(self)
         self.duplicates_num = duplicates_num
 
+    def get_output_samples_number_multiplier(self):
+        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        return self.duplicates_num
+
     def execute(self, images_and_density_maps):
         """ Duplicates samples """
         for image_and_density_map in images_and_density_maps:
@@ -56,6 +66,10 @@ class Dropout(Operation):
         """
         Operation.__init__(self)
         self.probability = probability
+
+    def get_output_samples_number_multiplier(self):
+        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        return self.probability
 
     def execute(self, images_and_density_maps):
         """ Drops out samples """
@@ -81,6 +95,25 @@ class RandomArgs(Operation):
         self.operation = operation
         self.const_args = const_args
         self.random_args = random_args
+
+    def get_output_samples_number_multiplier(self):
+        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        if self.operation is Duplicate:
+            if "duplicates_num" in self.const_args:
+                return self.const_args["duplicates_num"]
+            elif "duplicates_num" in self.random_args:
+                return np.mean(self.random_args["duplicates_num"])
+            else:
+                raise KeyError("Duplicate operation missing duplicates_num")
+        elif self.operation is Dropout:
+            if "probability" in self.const_args:
+                return self.const_args["probability"]
+            elif "probability" in self.random_args:
+                return np.mean(self.random_args["probability"])
+            else:
+                raise KeyError("Dropout operation missing probability")
+        else:
+            return 1
 
     def _get_op_str(self):
         """

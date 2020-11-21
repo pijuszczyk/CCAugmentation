@@ -3,8 +3,6 @@ import random
 import numpy as np
 from tqdm import tqdm
 
-from .operations import Duplicate, Dropout
-
 
 class PipelineResultsIterator:
     """
@@ -62,13 +60,10 @@ class Pipeline:
         return self.loader.get_number_of_loadable_samples()
 
     def get_expected_output_samples_number(self):
-        """ Starting with the input samples number, check for operations modifying the number and calculate the final size """
+        """ Starting with the input samples number, internally check for operations modifying the number and calculate the final size """
         output_samples_num = self.get_input_samples_number()
         for operation in self.operations:
-            if type(operation) is Duplicate:
-                output_samples_num *= operation.duplicates_num
-            elif type(operation) is Dropout:
-                output_samples_num *= operation.probability
+            output_samples_num *= operation.get_output_samples_number_multiplier()
         return output_samples_num
 
     def _connect_operations(self):
