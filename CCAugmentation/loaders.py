@@ -229,6 +229,36 @@ class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
         BasicDensityMapCSVFileLoader.__init__(self, paths)
 
 
+class VariableLoader(Loader):
+    """
+    Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.
+    """
+    def __init__(self, data):
+        """
+        Create a loader that reads from a variable (list or array most probably) and yields the results.
+
+        :param data: Iterable that has len() with either images or density maps.
+        """
+        self.data = data
+
+    def get_number_of_loadable_samples(self):
+        """
+        Return length of the dataset in the variable.
+
+        :return: Number of samples.
+        """
+        return len(self.data)
+
+    def load(self):
+        """
+        Read the variable and yield samples one by one.
+
+        :return: Generator of either images or density maps.
+        """
+        for sample in self.data:
+            yield sample
+
+
 class ConcatenatingLoader(Loader):
     """
     Loader that doesn't perform any loading on its own but rather concatenates samples from a few sources.
