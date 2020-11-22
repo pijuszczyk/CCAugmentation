@@ -4,7 +4,7 @@ setup(
     name='ccaugmentation',
     version='0.1.0',
     packages=['CCAugmentation', 'CCAugmentation.examples'],
-    url='',
+    url='https://github.com/pijuszczyk/CCAugmentation',
     license='MIT',
     author='Piotr Juszczyk',
     author_email='piotr.a.juszczyk@gmail.com',
