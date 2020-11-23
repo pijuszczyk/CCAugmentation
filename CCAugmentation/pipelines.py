@@ -1,3 +1,4 @@
+import json
 import random
 
 import numpy as np
@@ -132,3 +133,85 @@ class Pipeline:
             print(f"{str(i)}. {str(op)}")
         print("")
         print(f"Requires full dataset in memory: {self.requires_full_dataset_in_memory}")
+
+    def to_json(self):
+        loader_json = {'name': self.loader.__class__.__name__, 'args': self.loader.args}
+        operations_json = [{'name': op.__class__.__name__, 'args': op.args} for op in self.operations]
+        return {'loader': loader_json, 'operations': operations_json}
+
+
+def read_pipeline_from_json(json_path):
+    """
+    Create a new Pipeline with the same configuration as the one deserialized from a JSON file.
+
+    :param json_path: Path to the JSON with serialized Pipeline (configuration).
+    :return: Pipeline object, or None if errors occurred.
+    """
+    def create_instance_invokation(package, name, args):
+        args_strs = []
+        for arg in args.items():
+            if type(arg[1]) is dict and 'name' in arg[1] and 'args' in arg[1]:
+                args_strs.append(f'{arg[0]}={create_instance_invokation(package, arg[1]["name"], args[1]["args"])}')
+            elif type(arg[1]) is str:
+                val = arg[1].replace("\\", "\\\\")
+                args_strs.append(f'{arg[0]}="{val}"')
+            else:
+                args_strs.append(f'{arg[0]}={arg[1]}')
+        return f'{package}.{name}({",".join(args_strs)})'
+
+    with open(json_path, 'r') as f:
+        pipeline_structure = json.load(f)
+
+    import CCAugmentation.examples.loading as cca_ex_load
+    import CCAugmentation.loaders as cca_load
+    _, _ = cca_ex_load, cca_load  # these modules are actually used, don't remove
+
+    loader = None
+    loader_entry = pipeline_structure['loader']
+    loader_name, loader_args = loader_entry['name'], loader_entry['args']
+    for package in ['cca_ex_load', 'cca_load']:
+        try:
+            getattr(eval(package), loader_name)
+            loader = eval(create_instance_invokation(package, loader_name, loader_args))
+            break
+        except AttributeError:
+            pass
+    if loader is None:
+        return None
+
+    import CCAugmentation.operations as cca_op
+    import CCAugmentation.outputs as cca_out
+    import CCAugmentation.transformations as cca_trans
+    _, _, _ = cca_op, cca_out, cca_trans  # these modules are actually used, don't remove
+
+    operations = []
+    operations_entry = pipeline_structure['operations']
+    for op in operations_entry:
+        op_name, op_args = op['name'], op['args']
+        created = False
+        for package in ['cca_op', 'cca_out', 'cca_trans']:
+            try:
+                getattr(eval(package), op_name)
+                inv = create_instance_invokation(package, op_name, op_args)
+                operations.append(eval(inv))
+                created = True
+                break
+            except AttributeError:
+                pass
+        if not created:
+            return None
+
+    return Pipeline(loader, operations)
+
+
+def write_pipeline_to_json(pipeline, json_path, optimized=True):
+    """
+    Serialize Pipeline (configuration) to a JSON file.
+
+    :param pipeline: Pipeline to serialize.
+    :param json_path: Path where the serialized data will be stored.
+    :param optimized: Whether to produce an optimized JSON, or a prettiefied one.
+    :return: None.
+    """
+    with open(json_path, 'w') as f:
+        json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))

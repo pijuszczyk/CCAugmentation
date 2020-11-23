@@ -72,6 +72,11 @@ class Loader:
         """ Method that must be implemented in the subclasses, returning an iterable of samples """
         raise NotImplementedError("load not implemented in the child class")
 
+    @staticmethod
+    def _prepare_args(local_vars):
+        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines"""
+        return {k: v for k, v in local_vars.items() if k != 'self'}
+
     def get_number_of_loadable_samples(self):
         """
         Return number of samples from the dataset that can and will be loaded by the loader, or None if it's unknown.
@@ -92,6 +97,7 @@ class BasicImageFileLoader(Loader):
         :param img_paths: Paths to all images that are to be loaded.
         """
         Loader.__init__(self)
+        self.args = self._prepare_args(locals())
         self.img_paths = img_paths
 
     def get_number_of_loadable_samples(self):
@@ -123,8 +129,10 @@ class ImageFileLoader(BasicImageFileLoader):
         :param img_dir: Directory to be searched.
         :param file_extension: Desired extension of files to be loaded.
         """
+        local = locals().copy()
         paths = sorted(glob(os.path.join(img_dir, f"*.{file_extension}")))
         BasicImageFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)
 
 
 class BasicGTPointsMatFileLoader(Loader):
@@ -139,6 +147,7 @@ class BasicGTPointsMatFileLoader(Loader):
         :param getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
         """
         Loader.__init__(self)
+        self.args = self._prepare_args(locals())
         self.gt_paths = gt_paths
         self.getter = getter
 
@@ -171,8 +180,10 @@ class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
         :param gt_dir: Directory to be searched.
         :param file_extension: Desired file extension of Matlab files.
         """
+        local = locals().copy()
         paths = sorted(glob(os.path.join(gt_dir, f"*.{file_extension}")))
         BasicGTPointsMatFileLoader.__init__(self, paths, getter)
+        self.args = self._prepare_args(local)
 
 
 class BasicDensityMapCSVFileLoader(Loader):
@@ -186,6 +197,7 @@ class BasicDensityMapCSVFileLoader(Loader):
         :param dm_paths: Paths to CSV files with density maps.
         """
         Loader.__init__(self)
+        self.args = self._prepare_args(locals())
         self.dm_paths = dm_paths
 
     def get_number_of_loadable_samples(self):
@@ -225,8 +237,10 @@ class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
         :param den_map_dir: Directory to be searched.
         :param file_extension: Desired extension of files to be loaded.
         """
+        local = locals().copy()
         paths = sorted(glob(os.path.join(den_map_dir, f"*.{file_extension}")))
         BasicDensityMapCSVFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)
 
 
 class VariableLoader(Loader):
@@ -239,6 +253,7 @@ class VariableLoader(Loader):
 
         :param data: Iterable that has len() with either images or density maps.
         """
+        self.args = None  # saving dataset variables, possibly consisting of thousands of samples, to a json file would be dangerous
         self.data = data
 
     def get_number_of_loadable_samples(self):
@@ -270,6 +285,7 @@ class ConcatenatingLoader(Loader):
         :param loaders: Loaders whose results will be concatenated.
         """
         Loader.__init__(self)
+        self.args = [{'name': loader.__class__.__name__, 'args': loader.args} for loader in loaders]
         self.loaders = loaders
 
     def get_number_of_loadable_samples(self):
@@ -309,6 +325,11 @@ class CombinedLoader(Loader):
             raise ValueError("One and only one loader for target must be selected")
 
         Loader.__init__(self)
+        self.args = {
+            'img_loader': {'name': img_loader.__class__.__name__, 'args': img_loader.args},
+            'gt_loader': None if gt_loader is None else {'name': img_loader.__class__.__name__, 'args': img_loader.args},
+            'den_map_loader': None if den_map_loader is None else {'name': den_map_loader.__class__.__name__, 'args': den_map_loader.args}
+        }
         self.img_loader = img_loader
         self.gt_loader = gt_loader
         self.den_map_loader = den_map_loader

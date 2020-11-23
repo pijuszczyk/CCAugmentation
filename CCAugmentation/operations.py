@@ -10,15 +10,29 @@ class Operation:
     def __init__(self):
         """
         Create the Operation.
+
+        args member contains the arguments that were used while creating the operation. It is necessary for loading
+        and saving pipelines.
+
         By default, `requires_full_dataset_in_memory` member variable is set to False to tell that
         the operation works with generators (may process just one sample at a time) and doesn't require the full dataset
         to be stored in the memory. It may be overriden in the subclasses.
         """
+        self.args = self._prepare_args(locals())
         self.requires_full_dataset_in_memory = False
 
     def __str__(self):
         """ Stringify the operation """
         return self.__class__.__name__
+
+    @staticmethod
+    def _prepare_args(local_vars):
+        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines"""
+        return {k: v for k, v in local_vars.items() if k != 'self'}
+
+    def to_json(self):
+        """ Serialize operation configuration to JSON-compatible dict """
+        return {'name': self.__class__.__name__, 'args': self.args}
 
     def get_output_samples_number_multiplier(self):
         """ Return how many img+DM pairs are on average returned as output from a single pair """
@@ -41,6 +55,7 @@ class Duplicate(Operation):
         :param duplicates_num: Each sample will be repeated that number of times.
         """
         Operation.__init__(self)
+        self.args = self._prepare_args(locals())
         self.duplicates_num = duplicates_num
 
     def get_output_samples_number_multiplier(self):
@@ -65,6 +80,7 @@ class Dropout(Operation):
         :param probability: Each sample will be dropped out with this probability, meaning that the estimated number of output images for a dataset with `N` samples is `N*(1-probability)`.
         """
         Operation.__init__(self)
+        self.args = self._prepare_args(locals())
         self.probability = probability
 
     def get_output_samples_number_multiplier(self):
@@ -82,34 +98,40 @@ class RandomArgs(Operation):
     """
     Allows running operations with randomized numeral arguments.
     """
-    def __init__(self, operation, const_args, random_args):
+    def __init__(self, operation, constargs, randomargs):
         """
         Specify randomization by providing the operation to invoke, const arguments that must be passed as they are and
-        random arguments that will be randomized.
+        random arguments that will be randomized. Only standard, defined in the project, operations are allowed and
+        unique names are assumed.
 
-        :param operation: Type of operation that will be invoked. Must come from this, .outputs or .transformations module.
-        :param const_args: Dictionary of constant arguments, i.e. ones whose values (nor names) won't change.
-        :param random_args: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are taken from uniform distribution and are either floats or ints, depending on the types of provided min and max values.
+        :param operation: Type of operation that will be invoked. Class or name of class. Must come from this, .outputs or .transformations module.
+        :param constargs: Dictionary of constant arguments, i.e. ones whose values (nor names) won't change.
+        :param randomargs: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are taken from uniform distribution and are either floats or ints, depending on the types of provided min and max values.
         """
         Operation.__init__(self)
         self.operation = operation
-        self.const_args = const_args
-        self.random_args = random_args
+        self.constargs = constargs
+        self.randomargs = randomargs
+        if type(operation) is str:
+            import CCAugmentation.outputs as cca_out
+            import CCAugmentation.transformations as cca_trans
+            self.operation = eval(self._get_op_str())
+        self.args = {'operation': self.operation.__name__, 'constargs': constargs, 'randomargs': randomargs}
 
     def get_output_samples_number_multiplier(self):
         """ Return how many img+DM pairs are on average returned as output from a single pair """
         if self.operation is Duplicate:
-            if "duplicates_num" in self.const_args:
-                return self.const_args["duplicates_num"]
-            elif "duplicates_num" in self.random_args:
-                return np.mean(self.random_args["duplicates_num"])
+            if "duplicates_num" in self.constargs:
+                return self.constargs["duplicates_num"]
+            elif "duplicates_num" in self.randomargs:
+                return np.mean(self.randomargs["duplicates_num"])
             else:
                 raise KeyError("Duplicate operation missing duplicates_num")
         elif self.operation is Dropout:
-            if "probability" in self.const_args:
-                return self.const_args["probability"]
-            elif "probability" in self.random_args:
-                return np.mean(self.random_args["probability"])
+            if "probability" in self.constargs:
+                return self.constargs["probability"]
+            elif "probability" in self.randomargs:
+                return np.mean(self.randomargs["probability"])
             else:
                 raise KeyError("Dropout operation missing probability")
         else:
@@ -126,7 +148,10 @@ class RandomArgs(Operation):
         import CCAugmentation.outputs as cca_out
         import CCAugmentation.transformations as cca_trans
 
-        op_name_str = self.operation.__name__
+        if type(self.operation) is str:
+            op_name_str = self.operation
+        else:
+            op_name_str = self.operation.__name__
 
         try:
             getattr(cca_trans, op_name_str)
@@ -147,7 +172,7 @@ class RandomArgs(Operation):
         :return: String representing constant arguments.
         """
         const_components = []
-        for k, v in self.const_args.items():
+        for k, v in self.constargs.items():
             v_str = f"'{v}'" if type(v) is str else str(v)
             const_components.append(f"{k}={v_str}")
         return ",".join(const_components)
@@ -159,7 +184,7 @@ class RandomArgs(Operation):
         :return: String representing randomized arguments.
         """
         rand_components = []
-        for key, (min_val, max_val) in self.random_args.items():
+        for key, (min_val, max_val) in self.randomargs.items():
             val = random.uniform(min_val, max_val)
             if type(min_val) is int and type(max_val) is int:
                 val = int(val)

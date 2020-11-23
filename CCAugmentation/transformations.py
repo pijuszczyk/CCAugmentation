@@ -20,6 +20,7 @@ class Transformation(Operation):
         :param probability: Float value between 0 and 1 (inclusive).
         """
         Operation.__init__(self)
+        self.args = self._prepare_args(locals())
         self.probability = probability
 
     def execute(self, images_and_density_maps):
@@ -71,6 +72,7 @@ class Crop(Transformation):
             raise ValueError("Must provide factor or fixed size for both dimensions")
 
         Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
         self.width = width
         self.height = height
         self.x_factor = x_factor
@@ -121,6 +123,7 @@ class Scale(Transformation):
             raise ValueError("Must provide factor or fixed size for both dimensions")
 
         Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
         self.width = width
         self.height = height
         self.x_factor = x_factor
@@ -163,6 +166,7 @@ class Rotate(Transformation):
         :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
         self.angle = angle
         self.expand = expand
 
@@ -209,6 +213,7 @@ class StandardizeSize(Transformation):
         :param std_base_size: Desired length of the longer side of the output images and density maps.
         """
         Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
         self.std_ratios, self.std_bounds = self._prepare_standard_aspect_ratios(std_aspect_ratios)
         self.std_base_size = std_base_size
 
@@ -300,6 +305,7 @@ class Normalize(Transformation):
             raise ValueError(f"Wrong method of normalization selected: {method}")
 
         Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
         if method.startswith("featurewise"):
             self.requires_full_dataset_in_memory = True
         self.method = method
@@ -362,6 +368,7 @@ class FlipLR(Transformation):
         :param probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most cases, should stay at 0.5.
         """
         Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
 
     def transform(self, image, density_map):
         """
@@ -385,6 +392,7 @@ class ToGrayscale(Transformation):
         :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
 
     def transform(self, image, density_map):
         """
@@ -413,6 +421,7 @@ class LambdaTransformation(Transformation):
         :param loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of transformed img+DM pairs. If None, standard loop is used.
         """
         Transformation.__init__(self, probability)
+        self.args = None  # can't save lambda definitions to a human-readable format
         self.transformation = transformation
         self.loop = loop
 

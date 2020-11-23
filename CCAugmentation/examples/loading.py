@@ -25,9 +25,11 @@ class _SHHGTLoader(loaders.GTPointsMatFileLoader):
 
 class SHHLoader(loaders.CombinedLoader):
     def __init__(self, dataset_dir, train_test, part):
+        local = locals().copy()
         img_loader = _SHHImageLoader(dataset_dir, train_test, part)
         gt_loader = _SHHGTLoader(dataset_dir, train_test, part)
         loaders.CombinedLoader.__init__(self, img_loader, gt_loader)
+        self.args = self._prepare_args(local)
 
 
 def _get_NWPU_indices_for_set(dataset_dir, train_val_test):

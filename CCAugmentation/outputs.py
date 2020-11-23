@@ -17,6 +17,7 @@ class Output(Operation):
     def __init__(self):
         """ Trivial constructor """
         Operation.__init__(self)
+        self.args = self._prepare_args(locals())
 
     def execute(self, images_and_density_maps):
         """ See `output` """
@@ -39,6 +40,7 @@ class Demonstrate(Output):
         :param show_density_map: Whether to show the density map right next to the preprocessed image.
         """
         Output.__init__(self)
+        self.args = self._prepare_args(locals())
         self.max_examples = max_examples
         self.show_density_map = show_density_map
 
@@ -80,6 +82,7 @@ class SaveImagesToFiles(Output):
         :param file_extension: File extension and at the same time format of the saved image.
         """
         Output.__init__(self)
+        self.args = self._prepare_args(locals())
         self.dir_path = dir_path
         self.file_extension = file_extension
 
@@ -114,6 +117,7 @@ class SaveImagesToBinaryFile(Output):
         :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
+        self.args = self._prepare_args(locals())
         self.requires_full_dataset_in_memory = True
         self.file_path = file_path
         self.keep_3_dimensions = keep_3_dimensions
@@ -153,6 +157,7 @@ class SaveDensityMapsToCSVFiles(Output):
         :param downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
         """
         Output.__init__(self)
+        self.args = self._prepare_args(locals())
         self.dir_path = dir_path
         self.downscaling = downscaling
 
@@ -192,6 +197,7 @@ class SaveDensityMapsToBinaryFile(Output):
         :param keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
+        self.args = self._prepare_args(locals())
         self.requires_full_dataset_in_memory = True
         self.file_path = file_path
         self.downscaling = downscaling
