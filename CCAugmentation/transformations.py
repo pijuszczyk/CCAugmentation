@@ -434,3 +434,55 @@ class LambdaTransformation(Transformation):
         if self.loop is None:
             return Transformation.transform_all(self, images_and_density_maps)
         return self.loop(images_and_density_maps, self.transformation)
+
+
+class Cutout(Transformation):
+    """
+    Experimental method based on this paper: https://arxiv.org/abs/1708.04552
+    Selects random rectangular regions in an image and zeroes them out. According to the paper, the box should be
+    allowed to encompass some area out of bounds for good performance, although one may also specify a lower probability
+    so that a mix of images with more and less area removed can be found in the dataset. Shape of the cut out box
+    seemed not to be that important so its definition is simplified.
+    """
+    def __init__(self, size, factor=None, cuts_num=1, allow_out_of_bounds=True, probability=1.0):
+        """
+        Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
+        One may specify one and only one size, absolute or relative.
+
+        :param size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
+        :param factor: Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce a square or a rectangle.
+        :param cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be overlays over each other.
+        :param allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of the frame, zeroing out less pixels than expected.
+        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+        if size is not None and factor is not None:
+            raise ValueError("Cannot provide factor and fixed size at the same time")
+        if size is None and factor is None:
+            raise ValueError("Must provide factor or fixed size")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.size = size
+        self.factor = factor
+        self.cuts_num = cuts_num
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        """
+        Cut out random regions based on the settings.
+
+        :param image: Image to be cut.
+        :param density_map: Related density map that will be cut accordingly.
+        :return: Cut image and density map.
+        """
+        new_img, new_den_map = image.copy(), density_map.copy()
+        h, w = image.shape[:2]
+        area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
+        for _ in range(self.cuts_num):
+            if self.allow_out_of_bounds:
+                area_x, area_y = random.randint(0, w - 1), random.randint(0, h - 1)
+            else:
+                area_x, area_y = random.randint(0, w - area_w), random.randint(0, h - area_h)
+            new_img[area_y:area_y+area_h, area_x:area_x+area_w] = 0
+            new_den_map[area_y:area_y+area_h, area_x:area_x+area_w] = 0
+        return new_img, new_den_map
