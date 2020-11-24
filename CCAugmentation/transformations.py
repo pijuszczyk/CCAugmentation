@@ -86,7 +86,7 @@ class Crop(Transformation):
         :param density_map: Density map to be cropped accordingly, with the same size as the image.
         :return: Cropped pair of image and density map.
         """
-        h, w = image.shape
+        h, w = image.shape[:2]
         new_w = round(w * self.x_factor) if self.width is None else self.width
         new_h = round(h * self.y_factor) if self.height is None else self.height
 
@@ -138,7 +138,7 @@ class Scale(Transformation):
         :return: Scaled pair of image and density map.
         """
         if self.width and self.height:
-            h, w = image.shape
+            h, w = image.shape[:2]
             scale_x = self.width / w
             scale_y = self.height / h
 
@@ -258,7 +258,7 @@ class StandardizeSize(Transformation):
         :param density_map: Relevant density map of the same size as image.
         :return: Scaled pair of image and its density map.
         """
-        h, w = image.shape
+        h, w = image.shape[:2]
 
         chosen_std_ratio = self._find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
 
