@@ -1,0 +1,29 @@
+name: Build Package
+
+on: [push]
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install wheel setuptools
+        pip install -r requirements.txt
+    - name: Build package
+      run: |
+        python setup.py sdist bdist_wheel
+    - name: Store package
+      uses: actions/upload-artifact@v2
+      with:
+        name: ccaugmentation-dist
+        path: dist/*
