@@ -356,6 +356,31 @@ class Normalize(Transformation):
             return zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
 
 
+class NormalizeDensityMap(Transformation):
+    """
+    Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on https://arxiv.org/pdf/1907.02724.pdf
+    """
+    def __init__(self, multiplier):
+        """
+        Create a label/density map normalization operation.
+
+        :param multiplier: The values in the density map will be multiplied by that number. Make sure to divide the predicted density maps by the same number when calculating the count.
+        """
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.multiplier = multiplier
+
+    def transform(self, image, density_map):
+        """
+        Multiply the values in the density map.
+
+        :param image: Image that stays the same.
+        :param density_map: Density map that is multiplied.
+        :return: Image and transformed density map.
+        """
+        return image, density_map * self.multiplier
+
+
 class FlipLR(Transformation):
     """
     Horizontal / left-right random flipping transformation.
