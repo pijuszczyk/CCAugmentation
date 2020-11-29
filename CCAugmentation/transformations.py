@@ -51,10 +51,10 @@ class Transformation(Operation):
 
 class Crop(Transformation):
     """
-    Cropping transformation that randomly cuts out and returns a part of an image with specified size (either fixed one
+    Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
     or a fraction of the original one). Density map is also reduced to keep it relevant to the image.
     """
-    def __init__(self, width, height, x_factor=None, y_factor=None, probability=1.0):
+    def __init__(self, width, height, x_factor=None, y_factor=None, centered=False, probability=1.0):
         """
         Define cropping with specified output size, applied with some probability. One may use a combination of
         fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
@@ -64,6 +64,7 @@ class Crop(Transformation):
         :param height: Fixed output height.
         :param x_factor: Output width relative to the input width.
         :param y_factor: Output height relative to the input height.
+        :param centered: Whether crops are taken from the center or at random positions.
         :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
@@ -77,10 +78,11 @@ class Crop(Transformation):
         self.height = height
         self.x_factor = x_factor
         self.y_factor = y_factor
+        self.centered = centered
 
     def transform(self, image, density_map):
         """
-        Crop an image at a random position to specified size.
+        Crop an image at a random position (or center) to specified size.
 
         :param image: Image to be cropped.
         :param density_map: Density map to be cropped accordingly, with the same size as the image.
@@ -90,8 +92,12 @@ class Crop(Transformation):
         new_w = round(w * self.x_factor) if self.width is None else self.width
         new_h = round(h * self.y_factor) if self.height is None else self.height
 
-        x0 = random.randint(0, w - new_w)
-        y0 = random.randint(0, h - new_h)
+        if self.centered:
+            x0 = (w - new_w) // 2
+            y0 = (h - new_h) // 2
+        else:
+            x0 = random.randint(0, w - new_w)
+            y0 = random.randint(0, h - new_h)
         x1 = x0 + new_w
         y1 = y0 + new_h
 
