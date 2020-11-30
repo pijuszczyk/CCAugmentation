@@ -210,7 +210,7 @@ def write_pipeline_to_json(pipeline, json_path, optimized=True):
 
     :param pipeline: Pipeline to serialize.
     :param json_path: Path where the serialized data will be stored.
-    :param optimized: Whether to produce an optimized JSON, or a prettiefied one.
+    :param optimized: Whether to produce an optimized JSON, or a prettified one.
     :return: None.
     """
     with open(json_path, 'w') as f:
