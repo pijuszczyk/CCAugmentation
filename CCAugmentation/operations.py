@@ -1,3 +1,4 @@
+import itertools
 import random
 
 import numpy as np
@@ -212,3 +213,101 @@ class RandomArgs(Operation):
             op = eval(f"{op_str}({args_str})")
             for result in op.execute([image_and_density_map]):
                 yield result
+
+
+class OptimizeBatch(Operation):
+    """
+    Generally, it is required for batches to contain only data samples of the same shape. This is an operation that
+    lays out input tuples in a way that maximizes possible batch size. To deal with the non-matching tuples when
+    the batch still hasn't been completed, a temporary buffer is used to store the non-matching tuples. The user can
+    limit the buffer size so that from time to time it will be cleaned up and the memory usage will be below some
+    threshold; however, when used with too restrictive limit, this can lead to suboptimal batches.
+    """
+    def __init__(self, target_batch_size, max_buffer_size=None):
+        """
+        Construct a batch optimizer that tries to lays out input tuples in a way to allow easy construction of batches
+        of target size at a later stage. The temporary buffer can be limited in size.
+
+        :param target_batch_size: Number of img+DM pairs that the optimizer tries to lay out one after another, preserving shape consistency.
+        :param max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for a better moment to be put into a batch. If None, buffer size is unlimited.
+        """
+        Operation.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.target_batch_size = target_batch_size
+        self.max_buffer_size = float("inf") if max_buffer_size is None else max_buffer_size
+
+    def execute(self, images_and_density_maps):
+        """
+        Optimizes layout of input samples.
+
+        :param images_and_density_maps: Img+DM pairs that will be kind of sorted for batch construction efficiency.
+        :return: Img+DM pairs in optimized order.
+        """
+        if self.max_buffer_size == float("inf"):
+            for image, density_map in sorted(images_and_density_maps, key=lambda t: t[0].shape):
+                yield image, density_map
+            return
+
+        batch = []
+        batch_size = 0
+        batched_image_shape = None
+        buffer = []
+        buffer_size = 0
+
+        loop_cutoff = 1000000
+        for _ in range(loop_cutoff):
+            stop = True  # condition that assures that there is still work to be done; if True, the loop is exited
+
+            for image, density_map in images_and_density_maps:
+                stop = False
+                if image.shape != batched_image_shape:
+                    if buffer_size < self.max_buffer_size and batched_image_shape is not None:
+                        buffer.append((image, density_map))
+                        buffer_size += 1
+                    else:
+                        for batched_image, batched_density_map in batch:
+                            yield batched_image, batched_density_map
+                        batch = [(image, density_map)]
+                        batch_size = 1
+                        batched_image_shape = image.shape
+                        break  # try going through buffer, clearing it
+                else:
+                    batch.append((image, density_map))
+                    batch_size += 1
+
+                if batch_size == self.target_batch_size:
+                    for batched_image, batched_density_map in batch:
+                        yield batched_image, batched_density_map
+                    batch = []
+                    batch_size = 0
+
+            buffer.sort(key=lambda t: t[0].shape)
+            matching_shape_found_in_buffer = False
+            used_images_start, used_images_end = None, buffer_size
+            for i, (image, density_map) in enumerate(buffer):
+                if image.shape == batched_image_shape:
+                    stop = False  # set stop to False only if there are images to take from the buffer to avoid (semi)infinite loops
+                    if not matching_shape_found_in_buffer:
+                        matching_shape_found_in_buffer = True
+                        used_images_start = i
+                    batch.append((image, density_map))
+                    batch_size += 1
+                    if batch_size == self.target_batch_size:
+                        for batched_image, batched_density_map in batch:
+                            yield batched_image, batched_density_map
+                        batch = []
+                        batch_size = 0
+                else:
+                    if matching_shape_found_in_buffer:  # there were images to use in the buffer but there are no more (buffer is sorted so it is known)
+                        used_images_end = i
+                        break
+            if matching_shape_found_in_buffer:
+                buffer = list(itertools.chain(buffer[:used_images_start], buffer[used_images_end:buffer_size]))
+                buffer_size = len(buffer)
+
+            if stop:
+                break
+
+        # return the remains
+        for image, density_map in itertools.chain(batch, buffer):
+            yield image, density_map
