@@ -292,7 +292,7 @@ class Normalize(Transformation):
     """
     Normalizes image pixel values using one of normalization methods.
     """
-    def __init__(self, method, by_channel=False):
+    def __init__(self, method, by_channel=False, means=None, stds=None):
         """
         Create a transformation that normalizes image pixel values using one of the following methods:
 
@@ -305,17 +305,23 @@ class Normalize(Transformation):
 
         :param method: Method that will be used for normalization, one of the above.
         :param by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel separately and the normalization will also occur by each channel. Else, the values will be normalized by all channels at once.
+        :param means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+        :param stds: If not None, the operation uses those standard deviation values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
         """
         if method not in ["range_0_to_1", "range_-1_to_1", "samplewise_centering", "samplewise_std_normalization",
                           "featurewise_centering", "featurewise_std_normalization"]:
             raise ValueError(f"Wrong method of normalization selected: {method}")
+        if method.startswith("range") and (means is not None or stds is not None):
+            raise ValueError(f"Fixed range normalization doesn't require computed mean/std values.")
 
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
-        if method.startswith("featurewise"):
+        if method == "featurewise_centering" and means is None or method == "featurewise_std_normalization" and stds is None:
             self.requires_full_dataset_in_memory = True
         self.method = method
         self.by_channel = by_channel
+        self.means = means
+        self.stds = stds
 
     def transform(self, image, density_map):
         """
@@ -350,16 +356,23 @@ class Normalize(Transformation):
         if self.method.startswith("range") or self.method.startswith("samplewise"):
             return Transformation.transform_all(self, images_and_density_maps)
 
-        all_images, all_density_maps = zip(*list(images_and_density_maps))
-        all_images, all_density_maps = np.array(all_images), np.array(all_density_maps)
-        mean_std_axes = (0, 1, 2) if self.by_channel else None
-        if self.by_channel and len(all_images.shape) != 4:
-            all_images.shape = (*all_images.shape, 1)
+        if self.requires_full_dataset_in_memory:
+            all_images, all_density_maps = zip(*list(images_and_density_maps))
+            all_images, all_density_maps = np.array(all_images), np.array(all_density_maps)
+            mean_std_axes = (0, 1, 2) if self.by_channel else None
+            if self.by_channel and len(all_images.shape) != 4:
+                all_images.shape = (*all_images.shape, 1)
 
-        if self.method == "featurewise_centering":
-            return zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
-        elif self.method == "featurewise_std_normalization":
-            return zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
+            if self.method == "featurewise_centering":
+                return zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
+            elif self.method == "featurewise_std_normalization":
+                return zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
+        else:
+            for image, density_map in images_and_density_maps:
+                if self.method == "featurewise_centering":
+                    yield image - np.resize(self.means, [*image.shape]), density_map
+                elif self.method == "featurewise_std_normalization":
+                    yield image / np.resize(self.stds, [*image.shape]), density_map
 
 
 class NormalizeDensityMap(Transformation):
