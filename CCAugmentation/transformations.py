@@ -156,6 +156,34 @@ class Scale(Transformation):
         return new_img, new_den_map
 
 
+class Downscale(Transformation):
+    """
+    Downscales and then upscales an image, decreasing its quality.
+    """
+    def __init__(self, x_factor=None, y_factor=None, probability=1.0):
+        """
+        Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the original size.
+
+        :param x_factor: Downscaling factor for width.
+        :param y_factor: Downscaling factor for height.
+        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.downscaler = Scale(None, None, x_factor, y_factor, 1.0)
+        self.upscaler = Scale(None, None, 1 / x_factor, 1 / y_factor, 1.0)
+
+    def transform(self, image, density_map):
+        """
+        Decrease an image quality. Density map stays the same.
+
+        :param image: Image to be downscaled and upscaled back to normal.
+        :param density_map: Corresponding density map that won't be affected.
+        :return: Pair of transformed img+DM.
+        """
+        return self.upscaler.transform(*self.downscaler.transform(image, density_map))
+
+
 class Rotate(Transformation):
     """
     Rotates the given image and density map. The rotation can be executed in two ways:
