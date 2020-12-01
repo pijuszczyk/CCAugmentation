@@ -151,8 +151,8 @@ class Scale(Transformation):
             new_img = cv2.resize(image, (self.width, self.height), interpolation=cv2.INTER_CUBIC)
             new_den_map = cv2.resize(density_map, (self.width, self.height), interpolation=cv2.INTER_LINEAR) / scale_x / scale_y
         else:
-            new_img = cv2.resize(image, None, self.x_factor, self.y_factor, interpolation=cv2.INTER_CUBIC)
-            new_den_map = cv2.resize(density_map, None, self.x_factor, self.y_factor, interpolation=cv2.INTER_LINEAR) / self.x_factor / self.y_factor
+            new_img = cv2.resize(image, None, fx=self.x_factor, fy=self.y_factor, interpolation=cv2.INTER_CUBIC)
+            new_den_map = cv2.resize(density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=cv2.INTER_LINEAR) / self.x_factor / self.y_factor
         return new_img, new_den_map
 
 
