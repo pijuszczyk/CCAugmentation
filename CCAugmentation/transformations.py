@@ -354,7 +354,9 @@ class Normalize(Transformation):
         :return: Iterable of transformed img+DM pairs.
         """
         if self.method.startswith("range") or self.method.startswith("samplewise"):
-            return Transformation.transform_all(self, images_and_density_maps)
+            for image, density_map in Transformation.transform_all(self, images_and_density_maps):
+                yield image, density_map
+            return
 
         if self.requires_full_dataset_in_memory:
             all_images, all_density_maps = zip(*list(images_and_density_maps))
