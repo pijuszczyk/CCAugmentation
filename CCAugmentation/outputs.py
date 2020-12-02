@@ -32,17 +32,19 @@ class Demonstrate(Output):
     """
     Output that shows a few examples of preprocessed img+DM pairs using GUI.
     """
-    def __init__(self, max_examples=None, show_density_map=True):
+    def __init__(self, max_examples=None, show_density_map=True, density_map_cmap=None):
         """
         Specify demonstration looks.
 
         :param max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration. If `max_examples` exceeds the actual number of samples, the function ends earlier.
         :param show_density_map: Whether to show the density map right next to the preprocessed image.
+        :param density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to imshow().
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
         self.max_examples = max_examples
         self.show_density_map = show_density_map
+        self.density_map_cmap = density_map_cmap
 
     def output(self, images_and_density_maps):
         """
@@ -62,7 +64,10 @@ class Demonstrate(Output):
                 axes[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
                 if self.show_density_map:
                     axes[1].set_title(f"Density map {str(cnt)}")
-                    axes[1].imshow(density_map)
+                    if self.density_map_cmap is None:
+                        axes[1].imshow(density_map)
+                    else:
+                        axes[1].imshow(density_map, cmap=self.density_map_cmap)
                 plt.show(block=False)
             yield image, density_map
             cnt += 1
