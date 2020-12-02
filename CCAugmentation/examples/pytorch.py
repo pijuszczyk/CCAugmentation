@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def create_iterable_dataset(torch_transforms_module, pipeline_results):
     """
     Create a PyTorch iterable dataset that loads samples from pipeline results.
@@ -41,8 +44,8 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
             self._current_batch_size = 0
 
         def _unload_batch_into_tensors(self):
-            tensor_images = torch_transforms_module.ToTensor()(list(zip(*self._batch))[0])
-            tensor_density_maps = torch_transforms_module.ToTensor()(list(zip(*self._batch))[1])
+            tensor_images = torch_transforms_module.ToTensor()(np.array(tuple(zip(*self._batch))[0]))
+            tensor_density_maps = torch_transforms_module.ToTensor()(np.array(tuple(zip(*self._batch))[1]))
             self._batch = []
             self._current_batch_size = 0
             return tensor_images, tensor_density_maps
@@ -69,5 +72,8 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
                     self._add_to_batch(image, density_map)
             tensor_images, tensor_density_maps = self._unload_batch_into_tensors()
             return tensor_images, tensor_density_maps
+
+        def __iter__(self):
+            return self
 
     return PipelineDataLoader()
