@@ -8,7 +8,7 @@ pipelines.
 
 __title__ = "CCAugmentation"
 __version__ = "0.1.0"
-__author__ = "Piotr Juszczyk, Marcin Konopka"
+__author__ = "Piotr Juszczyk"
 __license__ = "MIT"
 
 from . import examples
