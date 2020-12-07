@@ -180,7 +180,7 @@ class SaveDensityMapsToCSVFiles(Output):
             image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
-                den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
+                den_map_to_save = cv2.resize(den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
             path = os.path.join(self.dir_path, f"GT_{str(cnt)}.csv")
             with open(path, 'w', newline='') as f:
                 csv.writer(f).writerows(den_map_to_save)

@@ -394,9 +394,11 @@ class Normalize(Transformation):
                 all_images.shape = (*all_images.shape, 1)
 
             if self.method == "featurewise_centering":
-                return zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
+                for image, density_map in zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                    yield image, density_map
             elif self.method == "featurewise_std_normalization":
-                return zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps)
+                for image, density_map in zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                    yield image, density_map
         else:
             for image, density_map in images_and_density_maps:
                 if self.method == "featurewise_centering":
