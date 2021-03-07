@@ -69,6 +69,7 @@ class Demonstrate(Output):
                     else:
                         axes[1].imshow(density_map, cmap=self.density_map_cmap)
                 plt.show(block=False)
+                cv2.waitKey(0)
             yield image, density_map
             cnt += 1
 
