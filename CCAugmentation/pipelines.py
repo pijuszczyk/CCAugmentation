@@ -13,19 +13,20 @@ class PipelineResultsIterator:
         """
         Create an iterator for img+DM pairs coming from the pipeline.
 
-        :param images_and_density_maps: Iterator of preprocessed img+DM pairs.
-        :param total_samples: Total expected number of samples on output.
-        :param verbose: Whether to display a progress bar.
+        Args:
+            images_and_density_maps: Iterator of preprocessed img+DM pairs.
+            total_samples: Total expected number of samples on output.
+            verbose: Whether to display a progress bar.
         """
         self._images_and_density_maps = images_and_density_maps
         self._progress = tqdm(total=total_samples) if verbose and total_samples is not None else None
 
     def __iter__(self):
-        """ Return itself """
+        """ Return itself. """
         return self
 
     def __next__(self):
-        """ Return next img+DM pair, updating the progress bar if it's enabled """
+        """ Return next img+DM pair, updating the progress bar if it's enabled. """
         next_result = next(self._images_and_density_maps)
         if self._progress is not None:
             self._progress.update(1)
@@ -49,19 +50,20 @@ class Pipeline:
         """
         Create a new pipeline that loads the data using the given `loader` and performs `operations` on them.
 
-        :param loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of such data.
-        :param operations: List of operations that will be executed on the loaded data.
+        Args:
+            loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of such data.
+            operations: List of operations that will be executed on the loaded data.
         """
         self.loader = loader
         self.operations = operations
         self.requires_full_dataset_in_memory = any([op.requires_full_dataset_in_memory for op in operations])
 
     def get_input_samples_number(self):
-        """ Get number of samples the loader will load """
+        """ Get number of samples the loader will load. """
         return self.loader.get_number_of_loadable_samples()
 
     def get_expected_output_samples_number(self):
-        """ Starting with the input samples number, internally check for operations modifying the number and calculate the final size """
+        """ Starting with the input samples number, internally check for operations modifying the number and calculate the final size. """
         output_samples_num = self.get_input_samples_number()
         for operation in self.operations:
             output_samples_num *= operation.get_output_samples_number_multiplier()
@@ -71,7 +73,8 @@ class Pipeline:
         """
         Connect the loader with all the prepared operations sequentially to create a working pipeline.
 
-        :return: Iterable of img+DM pairs.
+        Returns:
+            Iterable of img+DM pairs.
         """
         images_and_density_maps = self.loader.load()
         for operation in self.operations:
@@ -84,8 +87,11 @@ class Pipeline:
         memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
         have a list of the results, please consider using `execute_collect`.
 
-        :param seed: Random seed. When it's not None, it allows reproducibility of the results.
-        :return: Iterable of preprocessed data.
+        Args:
+            seed: Random seed. When it's not None, it allows reproducibility of the results.
+
+        Returns:
+            Iterable of preprocessed data.
         """
         if seed is not None:
             random.seed(seed)
@@ -101,10 +107,13 @@ class Pipeline:
         the other for density maps). In opposition to `execute_generate`, this method performs all operations on
         the whole dataset in one go.
 
-        :param seed: Random seed. When it's not None, it allows reproducibility of the results.
-        :param return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists. Generally, np.arrays are more useful when training a model but they don't support elements of varying size (search for 'ragged array'), so for safety, Python lists are the default output.
-        :param verbose: If true, display a progress bar.
-        :return: List of preprocessed data.
+        Args:
+            seed: Random seed. When it's not None, it allows reproducibility of the results.
+            return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists. Generally, np.arrays are more useful when training a model but they don't support elements of varying size (search for 'ragged array'), so for safety, Python lists are the default output.
+            verbose: If true, display a progress bar.
+
+        Returns:
+            List of preprocessed data.
         """
         if seed is not None:
             random.seed(seed)
@@ -120,9 +129,7 @@ class Pipeline:
             return images, density_maps
 
     def summary(self):
-        """
-        Print a summary of the pipeline.
-        """
+        """ Print a summary of the pipeline. """
         width = 80
         print("*" * width)
         print("Pipeline summary")
@@ -135,6 +142,7 @@ class Pipeline:
         print(f"Requires full dataset in memory: {self.requires_full_dataset_in_memory}")
 
     def to_json(self):
+        """ Write the pipeline to a dictionary so that it can be easily serialized as JSON. """
         loader_json = {'name': self.loader.__class__.__name__, 'args': self.loader.args}
         operations_json = [{'name': op.__class__.__name__, 'args': op.args} for op in self.operations]
         return {'loader': loader_json, 'operations': operations_json}
@@ -144,8 +152,11 @@ def read_pipeline_from_json(json_path):
     """
     Create a new Pipeline with the same configuration as the one deserialized from a JSON file.
 
-    :param json_path: Path to the JSON with serialized Pipeline (configuration).
-    :return: Pipeline object, or None if errors occurred.
+    Args:
+        json_path: Path to the JSON with serialized Pipeline (configuration).
+
+    Returns:
+        Pipeline object, or None if errors occurred.
     """
     def create_instance_invokation(package, name, args):
         args_strs = []
@@ -208,10 +219,10 @@ def write_pipeline_to_json(pipeline, json_path, optimized=True):
     """
     Serialize Pipeline (configuration) to a JSON file.
 
-    :param pipeline: Pipeline to serialize.
-    :param json_path: Path where the serialized data will be stored.
-    :param optimized: Whether to produce an optimized JSON, or a prettified one.
-    :return: None.
+    Args:
+        pipeline: Pipeline to serialize.
+        json_path: Path where the serialized data will be stored.
+        optimized: Whether to produce an optimized JSON, or a prettified one.
     """
     with open(json_path, 'w') as f:
         json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))

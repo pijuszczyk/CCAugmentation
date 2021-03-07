@@ -17,7 +17,8 @@ class Transformation(Operation):
         """
         Create a new abstract transformation that is applied with specified probability.
 
-        :param probability: Float value between 0 and 1 (inclusive).
+        Args:
+            probability: Float value between 0 and 1 (inclusive).
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
@@ -32,9 +33,12 @@ class Transformation(Operation):
         Abstract method to be implemented in child classes. Most often, this and __init__ methods are the only ones
         that must be defined.
 
-        :param image: Image that will be transformed.
-        :param density_map: Density map that will be transformed according to the image transformation.
-        :return: Transformed pair of image and density map.
+        Args:
+            image: Image that will be transformed.
+            density_map: Density map that will be transformed according to the image transformation.
+
+        Returns:
+            Transformed pair of image and density map.
         """
         raise NotImplementedError("transform method not implemented in the child class")
 
@@ -42,8 +46,11 @@ class Transformation(Operation):
         """
         Execute transformation with earlier specified probability on an iterable of img+DM pairs.
 
-        :param images_and_density_maps: Iterable of img+DM pairs to maybe be transformed.
-        :return: Iterable of maybe transformed img+DM pairs.
+        Args:
+            images_and_density_maps: Iterable of img+DM pairs to maybe be transformed.
+
+        Returns:
+            Iterable of maybe transformed img+DM pairs.
         """
         for image_and_density_map in images_and_density_maps:
             yield self.transform(*image_and_density_map) if random.random() < self.probability else image_and_density_map
@@ -58,14 +65,15 @@ class Crop(Transformation):
         """
         Define cropping with specified output size, applied with some probability. One may use a combination of
         fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
-        dimension - one and only of them can be specified.
+        dimension: one and only of them can be specified.
 
-        :param width: Fixed output width.
-        :param height: Fixed output height.
-        :param x_factor: Output width relative to the input width.
-        :param y_factor: Output height relative to the input height.
-        :param centered: Whether crops are taken from the center or at random positions.
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            centered: Whether crops are taken from the center or at random positions.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
             raise ValueError("Cannot provide factor and fixed size at the same time")
@@ -84,9 +92,12 @@ class Crop(Transformation):
         """
         Crop an image at a random position (or center) to specified size.
 
-        :param image: Image to be cropped.
-        :param density_map: Density map to be cropped accordingly, with the same size as the image.
-        :return: Cropped pair of image and density map.
+        Args:
+            image: Image to be cropped.
+            density_map: Density map to be cropped accordingly, with the same size as the image.
+
+        Returns:
+            Cropped pair of image and density map.
         """
         h, w = image.shape[:2]
         new_w = round(w * self.x_factor) if self.width is None else self.width
@@ -117,11 +128,12 @@ class Scale(Transformation):
         relative size with a given probability. One may use a combination of fixed and relative size for separate image
         dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be specified.
 
-        :param width: Fixed output width.
-        :param height: Fixed output height.
-        :param x_factor: Output width relative to the input width.
-        :param y_factor: Output height relative to the input height.
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
             raise ValueError("Cannot provide factor and fixed size at the same time")
@@ -139,9 +151,12 @@ class Scale(Transformation):
         """
         Scale an image and the corresponding density map to a specified size.
 
-        :param image: Image to be scaled.
-        :param density_map: Density map to be scaled accordingly.
-        :return: Scaled pair of image and density map.
+        Args:
+            image: Image to be scaled.
+            density_map: Density map to be scaled accordingly.
+
+        Returns:
+            Scaled pair of image and density map.
         """
         if self.width and self.height:
             h, w = image.shape[:2]
@@ -164,9 +179,10 @@ class Downscale(Transformation):
         """
         Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the original size.
 
-        :param x_factor: Downscaling factor for width.
-        :param y_factor: Downscaling factor for height.
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            x_factor: Downscaling factor for width.
+            y_factor: Downscaling factor for height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -177,9 +193,12 @@ class Downscale(Transformation):
         """
         Decrease an image quality. Density map stays the same.
 
-        :param image: Image to be downscaled and upscaled back to normal.
-        :param density_map: Corresponding density map that won't be affected.
-        :return: Pair of transformed img+DM.
+        Args:
+            image: Image to be downscaled and upscaled back to normal.
+            density_map: Corresponding density map that won't be affected.
+
+        Returns:
+            Pair of transformed img+DM.
         """
         return self.upscaler.transform(*self.downscaler.transform(image, density_map))
 
@@ -195,9 +214,10 @@ class Rotate(Transformation):
         """
         Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle means counterclockwise rotation.
 
-        :param angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
-        :param expand: Whether to adjust frame size for it to contain all the original pixels.
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
+            expand: Whether to adjust frame size for it to contain all the original pixels.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -208,9 +228,12 @@ class Rotate(Transformation):
         """
         Rotate the image according to specification.
 
-        :param image: Image to be rotated.
-        :param density_map: Related density map that will be rotated accordingly.
-        :return: Pair of rotated image and rotated accordingly density map.
+        Args:
+            image: Image to be rotated.
+            density_map: Related density map that will be rotated accordingly.
+
+        Returns:
+            Pair of rotated image and rotated accordingly density map.
         """
         h, w = image.shape[:2]
         center_x, center_y = w / 2, h / 2
@@ -243,8 +266,9 @@ class StandardizeSize(Transformation):
         """
         Create a size standardization transformation.
 
-        :param std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
-        :param std_base_size: Desired length of the longer side of the output images and density maps.
+        Args:
+            std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
+            std_base_size: Desired length of the longer side of the output images and density maps.
         """
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
@@ -257,8 +281,11 @@ class StandardizeSize(Transformation):
         Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
         Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
 
-        :param std_ratios: Aspect ratios that are allowed for the output images and density maps.
-        :return: Sorted allowed aspect ratios and calculated boundaries between them.
+        Args:
+            std_ratios: Aspect ratios that are allowed for the output images and density maps.
+
+        Returns:
+            Sorted allowed aspect ratios and calculated boundaries between them.
         """
         ratios = sorted(std_ratios)
         boundaries = []
@@ -271,10 +298,13 @@ class StandardizeSize(Transformation):
         """
         Find an allowed aspect ratio that is the most similar to the one provided.
 
-        :param ratio_to_improve: Aspect ratio that maybe can be improved.
-        :param std_ratios: Allowed aspect ratios.
-        :param std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
-        :return: Allowed aspect ratio that is the most similar to the provided one.
+        Args:
+            ratio_to_improve: Aspect ratio that maybe can be improved.
+            std_ratios: Allowed aspect ratios.
+            std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
+
+        Returns:
+            Allowed aspect ratio that is the most similar to the provided one.
         """
         chosen_std_ratio = std_ratios[-1]
         for i in range(len(std_boundaries)):
@@ -288,9 +318,12 @@ class StandardizeSize(Transformation):
         """
         Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.
 
-        :param image: Image with any aspect ratio.
-        :param density_map: Relevant density map of the same size as image.
-        :return: Scaled pair of image and its density map.
+        Args:
+            image: Image with any aspect ratio.
+            density_map: Relevant density map of the same size as image.
+
+        Returns:
+            Scaled pair of image and its density map.
         """
         h, w = image.shape[:2]
 
@@ -331,10 +364,11 @@ class Normalize(Transformation):
         - `featurewise_centering` - values are translated to make their mean (in respect to all images) equal to 0
         - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all images) equal to 1
 
-        :param method: Method that will be used for normalization, one of the above.
-        :param by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel separately and the normalization will also occur by each channel. Else, the values will be normalized by all channels at once.
-        :param means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
-        :param stds: If not None, the operation uses those standard deviation values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+        Args:
+            method: Method that will be used for normalization, one of the above.
+            by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel separately and the normalization will also occur by each channel. Else, the values will be normalized by all channels at once.
+            means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+            stds: If not None, the operation uses those standard deviation values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
         """
         if method not in ["range_0_to_1", "range_-1_to_1", "samplewise_centering", "samplewise_std_normalization",
                           "featurewise_centering", "featurewise_std_normalization"]:
@@ -355,9 +389,12 @@ class Normalize(Transformation):
         """
         Transform the given image, return the untouched density map.
 
-        :param image: Image whose pixel values will be normalized.
-        :param density_map: Density map that won't be affected.
-        :return: Pair of transformed image and corresponding density map.
+        Args:
+            image: Image whose pixel values will be normalized.
+            density_map: Density map that won't be affected.
+
+        Returns:
+            Pair of transformed image and corresponding density map.
         """
         mean_std_axes = (0, 1) if self.by_channel else None
         if self.by_channel and len(image.shape) != 3:
@@ -378,8 +415,11 @@ class Normalize(Transformation):
         Behaves the same like the base class implementation when using a method that doesn't require full dataset to be
         in memory, or first collects all samples and then transforms them otherwise.
 
-        :param images_and_density_maps: Iterable of pairs of images and corresponding density maps.
-        :return: Iterable of transformed img+DM pairs.
+        Args:
+            images_and_density_maps: Iterable of pairs of images and corresponding density maps.
+
+        Returns:
+            Iterable of transformed img+DM pairs.
         """
         if self.method.startswith("range") or self.method.startswith("samplewise"):
             for image, density_map in Transformation.transform_all(self, images_and_density_maps):
@@ -415,7 +455,8 @@ class NormalizeDensityMap(Transformation):
         """
         Create a label/density map normalization operation.
 
-        :param multiplier: The values in the density map will be multiplied by that number. Make sure to divide the predicted density maps by the same number when calculating the count.
+        Args:
+            multiplier: The values in the density map will be multiplied by that number. Make sure to divide the predicted density maps by the same number when calculating the count.
         """
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
@@ -425,9 +466,12 @@ class NormalizeDensityMap(Transformation):
         """
         Multiply the values in the density map.
 
-        :param image: Image that stays the same.
-        :param density_map: Density map that is multiplied.
-        :return: Image and transformed density map.
+        Args:
+            image: Image that stays the same.
+            density_map: Density map that is multiplied.
+
+        Returns:
+            Image and transformed density map.
         """
         return image, density_map * self.multiplier
 
@@ -441,7 +485,8 @@ class FlipLR(Transformation):
         Create LR flipping transformation that flips with the given probability. In most cases, should stay at 0.5
         (equal chances).
 
-        :param probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most cases, should stay at 0.5.
+        Args:
+            probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most cases, should stay at 0.5.
         """
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -450,9 +495,12 @@ class FlipLR(Transformation):
         """
         Horizontally flip the image and its density map.
 
-        :param image: Input image.
-        :param density_map: Corresponding density map.
-        :return: Flipped image and density map.
+        Args:
+            image: Input image.
+            density_map: Corresponding density map.
+
+        Returns:
+            Flipped image and density map.
         """
         return np.fliplr(image), np.fliplr(density_map)
 
@@ -465,7 +513,8 @@ class ToGrayscale(Transformation):
         """
         Create the transformation applied with the given probability.
 
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -474,9 +523,12 @@ class ToGrayscale(Transformation):
         """
         Transform the image to grayscale.
 
-        :param image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases, the transformation doesn't provide any real effect.
-        :param density_map: Density map that won't be affected.
-        :return: Pair of grayscale image and its density map.
+        Args:
+            image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases, the transformation doesn't provide any real effect.
+            density_map: Density map that won't be affected.
+
+        Returns:
+            Pair of grayscale image and its density map.
         """
         return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), density_map
 
@@ -492,9 +544,10 @@ class LambdaTransformation(Transformation):
         Create a custom transformation that applies a given transformation lambda over all samples. Alternatively, a
         custom loop lambda can be given, e.g. to collect all samples before executing a transformation on them.
 
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
-        :param transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
-        :param loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of transformed img+DM pairs. If None, standard loop is used.
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+            transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
+            loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of transformed img+DM pairs. If None, standard loop is used.
         """
         Transformation.__init__(self, probability)
         self.args = None  # can't save lambda definitions to a human-readable format
@@ -525,11 +578,12 @@ class Cutout(Transformation):
         Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
         One may specify one and only one size, absolute or relative.
 
-        :param size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
-        :param factor: Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce a square or a rectangle.
-        :param cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be overlays over each other.
-        :param allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of the frame, zeroing out less pixels than expected.
-        :param probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        Args:
+            size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
+            factor: Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce a square or a rectangle.
+            cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be overlays over each other.
+            allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of the frame, zeroing out less pixels than expected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if size is not None and factor is not None:
             raise ValueError("Cannot provide factor and fixed size at the same time")
@@ -547,9 +601,12 @@ class Cutout(Transformation):
         """
         Cut out random regions based on the settings.
 
-        :param image: Image to be cut.
-        :param density_map: Related density map that will be cut accordingly.
-        :return: Cut image and density map.
+        Args:
+            image: Image to be cut.
+            density_map: Related density map that will be cut accordingly.
+
+        Returns:
+            Cut image and density map.
         """
         new_img, new_den_map = image.copy(), density_map.copy()
         h, w = image.shape[:2]

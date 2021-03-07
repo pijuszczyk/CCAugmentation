@@ -5,9 +5,12 @@ def create_iterable_dataset(torch_transforms_module, pipeline_results):
     """
     Create a PyTorch iterable dataset that loads samples from pipeline results.
 
-    :param torch_transforms_module: The imported torch.transforms module.
-    :param pipeline_results: Pipeline results iterator.
-    :return: Dataset that has valid PyTorch images saved as tensors and density maps.
+    Args:
+        torch_transforms_module: The imported torch.transforms module.
+        pipeline_results: Pipeline results iterator.
+
+    Returns:
+        Dataset that has valid PyTorch images saved as tensors and density maps.
     """
     class PipelineDataset:
         def __init__(self):
@@ -29,10 +32,13 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
     results in a way that batches are created only from samples with the same shape. If not enough samples of the same
     shape were present in a row, incomplete batches are returned.
 
-    :param torch_transforms_module: The imported torch.transforms module.
-    :param dataset: Dataset that yields tuples of image and density map.
-    :param batch_size: Preferred batch size.
-    :return: Iterator of batches of data from the dataset.
+    Args:
+        torch_transforms_module: The imported torch.transforms module.
+        dataset: Dataset that yields tuples of image and density map.
+        batch_size: Preferred batch size.
+
+    Returns:
+        Iterator of batches of data from the dataset.
     """
     class PipelineDataLoader:
         def __init__(self):
