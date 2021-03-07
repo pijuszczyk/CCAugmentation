@@ -13,9 +13,12 @@ def get_density_map_gaussian(im, points):
     Create a Gaussian density map from the points.
     Credits: https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
 
-    :param im: Original image, used only for getting needed shape of the density map.
-    :param points: List of (X, Y) tuples that point at where human heads are located in a picture.
-    :return: Density map constructed from the points.
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
     """
     im_density = np.zeros_like(im[:, :, 0], dtype=np.float64)
     h, w = im_density.shape
@@ -81,7 +84,8 @@ class Loader:
         """
         Return number of samples from the dataset that can and will be loaded by the loader, or None if it's unknown.
 
-        :return: Number of samples that can be loaded, including the already loaded ones.
+        Returns:
+            Number of samples that can be loaded, including the already loaded ones.
         """
         return None
 
@@ -94,7 +98,8 @@ class BasicImageFileLoader(Loader):
         """
         Create a new image loader that reads all image files from paths.
 
-        :param img_paths: Paths to all images that are to be loaded.
+        Args:
+            img_paths: Paths to all images that are to be loaded.
         """
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
@@ -104,7 +109,8 @@ class BasicImageFileLoader(Loader):
         """
         Get number of images to load, according to number of specified paths.
 
-        :return: Number of images.
+        Returns:
+            Number of images.
         """
         return len(self.img_paths)
 
@@ -112,7 +118,8 @@ class BasicImageFileLoader(Loader):
         """
         Load all images based on provided paths to files.
 
-        :return: Generator of images in BGR format.
+        Returns:
+            Generator of images in BGR format.
         """
         for path in self.img_paths:
             yield cv2.imread(path, cv2.IMREAD_COLOR)
@@ -126,8 +133,9 @@ class ImageFileLoader(BasicImageFileLoader):
         """
         Create a new image loader that reads all the images with specified file extension in a given directory.
 
-        :param img_dir: Directory to be searched.
-        :param file_extension: Desired extension of files to be loaded.
+        Args:
+            img_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
         """
         local = locals().copy()
         paths = sorted(glob(os.path.join(img_dir, f"*.{file_extension}")))
@@ -143,8 +151,9 @@ class BasicGTPointsMatFileLoader(Loader):
         """
         Create a loader that loads all data from the provided file paths using a given getter.
 
-        :param gt_paths: Paths of files that are to be read.
-        :param getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
+        Args:
+            gt_paths: Paths of files that are to be read.
+            getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
         """
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
@@ -155,7 +164,8 @@ class BasicGTPointsMatFileLoader(Loader):
         """
         Get number of GTs to load, according to number of specified paths.
 
-        :return: Number of GTs.
+        Returns:
+            Number of GTs.
         """
         return len(self.gt_paths)
 
@@ -163,7 +173,8 @@ class BasicGTPointsMatFileLoader(Loader):
         """
         Load all Matlab files from paths.
 
-        :return: Generator of lists of head positions - (X, Y) tuples.
+        Returns:
+            Generator of lists of head positions - (X, Y) tuples.
         """
         for path in self.gt_paths:
             yield self.getter(loadmat(path))
@@ -177,8 +188,9 @@ class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
         """
         Create a loader that searches for files with specified extension in a given directory and loads them.
 
-        :param gt_dir: Directory to be searched.
-        :param file_extension: Desired file extension of Matlab files.
+        Args:
+            gt_dir: Directory to be searched.
+            file_extension: Desired file extension of Matlab files.
         """
         local = locals().copy()
         paths = sorted(glob(os.path.join(gt_dir, f"*.{file_extension}")))
@@ -194,7 +206,8 @@ class BasicDensityMapCSVFileLoader(Loader):
         """
         Create a loader that loads density maps at specified paths.
 
-        :param dm_paths: Paths to CSV files with density maps.
+        Args:
+            dm_paths: Paths to CSV files with density maps.
         """
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
@@ -204,7 +217,8 @@ class BasicDensityMapCSVFileLoader(Loader):
         """
         Get number of density maps to load, according to number of specified paths.
 
-        :return: Number of density maps.
+        Returns:
+            Number of density maps.
         """
         return len(self.dm_paths)
 
@@ -212,7 +226,8 @@ class BasicDensityMapCSVFileLoader(Loader):
         """
         Load all density maps from all specified paths.
 
-        :return: Generator of density maps.
+        Returns:
+            Generator of density maps.
         """
         for path in self.dm_paths:
             den_map = []
@@ -234,8 +249,9 @@ class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
         """
         Create a loader that searches for files with the given extension in the given directory and loads them.
 
-        :param den_map_dir: Directory to be searched.
-        :param file_extension: Desired extension of files to be loaded.
+        Args:
+            den_map_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
         """
         local = locals().copy()
         paths = sorted(glob(os.path.join(den_map_dir, f"*.{file_extension}")))
@@ -251,7 +267,8 @@ class VariableLoader(Loader):
         """
         Create a loader that reads from a variable (list or array most probably) and yields the results.
 
-        :param data: Iterable that has len() with either images or density maps.
+        Args:
+            data: Iterable that has len() with either images or density maps.
         """
         self.args = None  # saving dataset variables, possibly consisting of thousands of samples, to a json file would be dangerous
         self.data = data
@@ -260,7 +277,8 @@ class VariableLoader(Loader):
         """
         Return length of the dataset in the variable.
 
-        :return: Number of samples.
+        Returns:
+            Number of samples.
         """
         return len(self.data)
 
@@ -268,7 +286,8 @@ class VariableLoader(Loader):
         """
         Read the variable and yield samples one by one.
 
-        :return: Generator of either images or density maps.
+        Returns:
+            Generator of either images or density maps.
         """
         for sample in self.data:
             yield sample
@@ -282,7 +301,8 @@ class ConcatenatingLoader(Loader):
         """
         Create a loader that concatenates loading results from a few loaders.
 
-        :param loaders: Loaders whose results will be concatenated.
+        Args:
+            loaders: Loaders whose results will be concatenated.
         """
         Loader.__init__(self)
         self.args = [{'name': loader.__class__.__name__, 'args': loader.args} for loader in loaders]
@@ -292,7 +312,8 @@ class ConcatenatingLoader(Loader):
         """
         Get number of samples to load throughout loaders.
 
-        :return: Cumulative number of samples.
+        Returns:
+            Cumulative number of samples.
         """
         return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
 
@@ -300,7 +321,8 @@ class ConcatenatingLoader(Loader):
         """
         Load all samples from all connected loaders.
 
-        :return: Generator of samples, be it images, GT point lists or density maps.
+        Returns:
+            Generator of samples, be it images, GT point lists or density maps.
         """
         for loader in self.loaders:
             for sample in loader:
@@ -317,9 +339,10 @@ class CombinedLoader(Loader):
         Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
         provide density maps related to the images loaded using `img_loader`.
 
-        :param img_loader: Loader that provides an iterable of images.
-        :param gt_loader: Loader that provides an iterable of lists of points.
-        :param den_map_loader: Loader that provides an iterable of density maps.
+        Args:
+            img_loader: Loader that provides an iterable of images.
+            gt_loader: Loader that provides an iterable of lists of points.
+            den_map_loader: Loader that provides an iterable of density maps.
         """
         if (gt_loader is None) == (den_map_loader is None):
             raise ValueError("One and only one loader for target must be selected")
@@ -338,7 +361,8 @@ class CombinedLoader(Loader):
         """
         Get number of full samples (img+DM pairs).
 
-        :return: Number of samples.
+        Returns:
+            Number of samples.
         """
         if self.den_map_loader is None:
             return min(self.img_loader.get_number_of_loadable_samples(), self.gt_loader.get_number_of_loadable_samples())
@@ -350,7 +374,8 @@ class CombinedLoader(Loader):
         Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
         GT points to a density map.
 
-        :return: Generator of img+DM pairs.
+        Returns:
+            Generator of img+DM pairs.
         """
         cnt = 0
         img_gen = self.img_loader.load()

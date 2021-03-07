@@ -36,9 +36,10 @@ class Demonstrate(Output):
         """
         Specify demonstration looks.
 
-        :param max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration. If `max_examples` exceeds the actual number of samples, the function ends earlier.
-        :param show_density_map: Whether to show the density map right next to the preprocessed image.
-        :param density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to imshow().
+        Args:
+            max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration. If `max_examples` exceeds the actual number of samples, the function ends earlier.
+            show_density_map: Whether to show the density map right next to the preprocessed image.
+            density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to imshow().
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -50,8 +51,11 @@ class Demonstrate(Output):
         """
         Show examples of preprocessed data.
 
-        :param images_and_density_maps: Iterator of img+DM pairs.
-        :return: Iterator of unchanged img+DM pairs.
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
         """
         max_examples = self.max_examples if self.max_examples is not None else float("inf")
         cnt = 0
@@ -84,8 +88,9 @@ class SaveImagesToFiles(Output):
         Define an output that saves the images with the chosen file extension to a given directory. For the list of
         supported extensions, please check opencv-python documentation.
 
-        :param dir_path: Directory where all the images will be saved.
-        :param file_extension: File extension and at the same time format of the saved image.
+        Args:
+            dir_path: Directory where all the images will be saved.
+            file_extension: File extension and at the same time format of the saved image.
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -97,8 +102,11 @@ class SaveImagesToFiles(Output):
         Save the images in a given directory, making the directory if necessary. File names are constructed using
         image's index, starting from 0.
 
-        :param images_and_density_maps: Iterator of img+DM pairs
-        :return: Iterator of unchanged img+DM pairs
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
         """
         if not os.path.exists(self.dir_path):
             os.makedirs(self.dir_path)
@@ -119,7 +127,8 @@ class SaveImagesToBinaryFile(Output):
         """
         Defines the output operation.
 
-        :param file_path: Path where the file with all the images will be saved.
+        Args:
+            file_path: Path where the file with all the images will be saved.
         :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
@@ -132,8 +141,11 @@ class SaveImagesToBinaryFile(Output):
         """
         Save the images to a binary file.
 
-        :param images_and_density_maps: Iterator of img+DM pairs.
-        :return: Iterator of unchanged img+DM pairs.
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
         """
         dir_path = os.path.dirname(self.file_path)
         if not os.path.exists(dir_path):
@@ -159,8 +171,9 @@ class SaveDensityMapsToCSVFiles(Output):
         Define output that saves to a given directory. Optionally, downscaling may be used when the density maps are
         expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
 
-        :param dir_path: Directory where the CSV files will be saved.
-        :param downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
+        Args:
+            dir_path: Directory where the CSV files will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -171,8 +184,11 @@ class SaveDensityMapsToCSVFiles(Output):
         """
         Save the density maps to files.
 
-        :param images_and_density_maps: Iterator of img+DM pairs.
-        :return: Iterator of unchanged img+DM pairs.
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
         """
         if not os.path.exists(self.dir_path):
             os.makedirs(self.dir_path)
@@ -198,8 +214,9 @@ class SaveDensityMapsToBinaryFile(Output):
         Define output that saves to a given path. Optionally, downscaling may be used when the density maps are
         expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
 
-        :param file_path: Path where the file with all the density maps will be saved.
-        :param downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
+        Args:
+            file_path: Path where the file with all the density maps will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
         :param keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
@@ -213,8 +230,11 @@ class SaveDensityMapsToBinaryFile(Output):
         """
         Save the density maps to a file.
 
-        :param images_and_density_maps: Iterator of img+DM pairs.
-        :return: Iterator of unchanged img+DM pairs.
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
         """
         dir_path = os.path.dirname(self.file_path)
         if not os.path.exists(dir_path):

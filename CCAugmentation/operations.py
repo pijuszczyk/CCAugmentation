@@ -23,24 +23,24 @@ class Operation:
         self.requires_full_dataset_in_memory = False
 
     def __str__(self):
-        """ Stringify the operation """
+        """ Stringify the operation. """
         return self.__class__.__name__
 
     @staticmethod
     def _prepare_args(local_vars):
-        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines"""
+        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines. """
         return {k: v for k, v in local_vars.items() if k != 'self'}
 
     def to_json(self):
-        """ Serialize operation configuration to JSON-compatible dict """
+        """ Serialize operation configuration to JSON-compatible dict. """
         return {'name': self.__class__.__name__, 'args': self.args}
 
     def get_output_samples_number_multiplier(self):
-        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return 1
 
     def execute(self, images_and_density_maps):
-        """ Abstract method that must be implemented in the subclasses, should take and return an iterable of img+DM pairs """
+        """ Abstract method that must be implemented in the subclasses, should take and return an iterable of img+DM pairs. """
         raise NotImplementedError("execute method not implemented in the child class")
 
 
@@ -53,18 +53,19 @@ class Duplicate(Operation):
         """
         Define duplication.
 
-        :param duplicates_num: Each sample will be repeated that number of times.
+        Args:
+            duplicates_num: Each sample will be repeated that number of times.
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.duplicates_num = duplicates_num
 
     def get_output_samples_number_multiplier(self):
-        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return self.duplicates_num
 
     def execute(self, images_and_density_maps):
-        """ Duplicates samples """
+        """ Duplicates samples. """
         for image_and_density_map in images_and_density_maps:
             for i in range(self.duplicates_num):
                 yield image_and_density_map
@@ -78,18 +79,19 @@ class Dropout(Operation):
         """
         Define dropout.
 
-        :param probability: Each sample will be dropped out with this probability, meaning that the estimated number of output images for a dataset with `N` samples is `N*(1-probability)`.
+        Args:
+            probability: Each sample will be dropped out with this probability, meaning that the estimated number of output images for a dataset with `N` samples is `N*(1-probability)`.
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.probability = probability
 
     def get_output_samples_number_multiplier(self):
-        """ Return how many img+DM pairs are on average returned as output from a single pair """
+        """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return 1.0 - self.probability
 
     def execute(self, images_and_density_maps):
-        """ Drops out samples """
+        """ Drops out samples. """
         for image_and_density_map in images_and_density_maps:
             if random.random() >= self.probability:
                 yield image_and_density_map
@@ -105,9 +107,10 @@ class RandomArgs(Operation):
         random arguments that will be randomized. Only standard, defined in the project, operations are allowed and
         unique names are assumed.
 
-        :param operation: Type of operation that will be invoked. Class or name of class. Must come from this, .outputs or .transformations module.
-        :param constargs: Dictionary of constant arguments, i.e. ones whose values (nor names) won't change.
-        :param randomargs: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are taken from uniform distribution and are either floats or ints, depending on the types of provided min and max values.
+        Args:
+            operation: Type of operation that will be invoked. Class or name of class. Must come from this, .outputs or .transformations module.
+            constargs: Dictionary of constant arguments, i.e. ones whose values (nor names) won't change.
+            randomargs: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are taken from uniform distribution and are either floats or ints, depending on the types of provided min and max values.
         """
         Operation.__init__(self)
         self.operation = operation
@@ -144,7 +147,8 @@ class RandomArgs(Operation):
         means, a prefix with module name is added when necessary. Only operations from this, .outputs and
         .transformations modules are supported.
 
-        :return: Potentially prefixed operation name.
+        Returns:
+            Potentially prefixed operation name.
         """
         import CCAugmentation.outputs as cca_out
         import CCAugmentation.transformations as cca_trans
@@ -170,7 +174,8 @@ class RandomArgs(Operation):
         """
         Transform dictionary of constant arguments to string that can be used inside parentheses in eval().
 
-        :return: String representing constant arguments.
+        Returns:
+            String representing constant arguments.
         """
         const_components = []
         for k, v in self.constargs.items():
@@ -182,7 +187,8 @@ class RandomArgs(Operation):
         """
         Randomize, cast and transform to string the arguments that are to be randomized.
 
-        :return: String representing randomized arguments.
+        Returns:
+            String representing randomized arguments.
         """
         rand_components = []
         for key, (min_val, max_val) in self.randomargs.items():
@@ -196,8 +202,11 @@ class RandomArgs(Operation):
         """
         Create and execute the given operation with a set of constant and randomized arguments.
 
-        :param images_and_density_maps: Iterable of img+DM pairs that are to be used in the operation.
-        :return: Result img+DM pairs from the operation.
+        Args:
+            images_and_density_maps: Iterable of img+DM pairs that are to be used in the operation.
+
+        Returns:
+            Result img+DM pairs from the operation.
         """
         # these imports are used in eval(), don't remove them
         import CCAugmentation.outputs as cca_out
@@ -228,8 +237,9 @@ class OptimizeBatch(Operation):
         Construct a batch optimizer that tries to lays out input tuples in a way to allow easy construction of batches
         of target size at a later stage. The temporary buffer can be limited in size.
 
-        :param target_batch_size: Number of img+DM pairs that the optimizer tries to lay out one after another, preserving shape consistency.
-        :param max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for a better moment to be put into a batch. If None, buffer size is unlimited.
+        Args:
+            target_batch_size: Number of img+DM pairs that the optimizer tries to lay out one after another, preserving shape consistency.
+            max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for a better moment to be put into a batch. If None, buffer size is unlimited.
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
@@ -240,8 +250,11 @@ class OptimizeBatch(Operation):
         """
         Optimizes layout of input samples.
 
-        :param images_and_density_maps: Img+DM pairs that will be kind of sorted for batch construction efficiency.
-        :return: Img+DM pairs in optimized order.
+        Args:
+            images_and_density_maps: Img+DM pairs that will be kind of sorted for batch construction efficiency.
+
+        Returns:
+            Img+DM pairs in optimized order.
         """
         if self.max_buffer_size == float("inf"):
             for image, density_map in sorted(images_and_density_maps, key=lambda t: t[0].shape):
