@@ -65,7 +65,7 @@ class Pipeline:
         output_samples_num = self.get_input_samples_number()
         for operation in self.operations:
             output_samples_num *= operation.get_output_samples_number_multiplier()
-        return output_samples_num
+        return round(output_samples_num)
 
     def _connect_operations(self):
         """

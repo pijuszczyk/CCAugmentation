@@ -86,7 +86,7 @@ class Dropout(Operation):
 
     def get_output_samples_number_multiplier(self):
         """ Return how many img+DM pairs are on average returned as output from a single pair """
-        return self.probability
+        return 1.0 - self.probability
 
     def execute(self, images_and_density_maps):
         """ Drops out samples """
