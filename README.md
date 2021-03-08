@@ -73,3 +73,8 @@ Loading the data from ShanghaiTech dataset and taking crops with 1/4 size:
     print(len(train_img), len(train_dm))
 
 To see more examples of usage, please see our [experiment environment repository](https://github.com/m-konopka/CCAugmentation-Experiments-Env).
+
+You can also preview the documentation for this project in a browser, using *pdoc3* docs generation. Here's how you can easily do this:
+
+    $ pip install pdoc3
+    $ pdoc --html --output-dir docs CCAugmentation
