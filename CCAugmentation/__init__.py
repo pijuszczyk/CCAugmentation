@@ -11,11 +11,11 @@ __version__ = "0.1.0"
 __author__ = "Piotr Juszczyk"
 __license__ = "MIT"
 
-from . import examples
+from . import integrations
 from . import loaders
 from . import operations
 from . import outputs
 from .pipelines import Pipeline
 from . import transformations
 
-__all__ = ["examples", "loaders", "operations", "outputs", "pipelines", "transformations"]
+__all__ = ["integrations", "loaders", "operations", "outputs", "pipelines", "transformations"]

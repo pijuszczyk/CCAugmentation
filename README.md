@@ -50,6 +50,11 @@ Available loaders are:
 - **ConcatenatingLoader**
 - **CombinedLoader**
 
+You can also use builtin integrations for:
+- **PyTorch**
+- **ShangaiTech dataset**
+- **NWPU dataset**
+
 For more information about the specific topics, please refer to the related comments in the code.
 
 ## How to use
@@ -61,7 +66,7 @@ Loading the data from ShanghaiTech dataset and taking crops with 1/4 size:
     
     
     train_data_pipeline = cca.Pipeline(
-        cca.examples.loading.SHHLoader("/data/ShanghaiTech/", "train", "B"),
+        cca.integrations.loading.SHHLoader("/data/ShanghaiTech/", "train", "B"),
         [
             ccat.Crop(None, None, 1/4, 1/4)
         ]
