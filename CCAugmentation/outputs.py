@@ -1,9 +1,9 @@
-import csv
-import os
-import pickle
+import csv as _csv
+import os as _os
+import pickle as _pickle
 
-import cv2
-import matplotlib.pyplot as plt
+import cv2 as _cv2
+import matplotlib.pyplot as _plt
 
 from .operations import Operation
 
@@ -63,17 +63,17 @@ class Demonstrate(Output):
             image, density_map = image_and_density_map
             if cnt < max_examples:
                 cols = 2 if self.show_density_map else 1
-                _, axes = plt.subplots(1, cols, figsize=(20, 4))
+                _, axes = _plt.subplots(1, cols, figsize=(20, 4))
                 axes[0].set_title(f"Image {str(cnt)}")
-                axes[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                axes[0].imshow(_cv2.cvtColor(image, _cv2.COLOR_BGR2RGB))
                 if self.show_density_map:
                     axes[1].set_title(f"Density map {str(cnt)}")
                     if self.density_map_cmap is None:
                         axes[1].imshow(density_map)
                     else:
                         axes[1].imshow(density_map, cmap=self.density_map_cmap)
-                plt.show(block=False)
-                cv2.waitKey(0)
+                _plt.show(block=False)
+                _cv2.waitKey(0)
             yield image, density_map
             cnt += 1
 
@@ -108,13 +108,13 @@ class SaveImagesToFiles(Output):
         Returns:
             Iterator of unchanged img+DM pairs.
         """
-        if not os.path.exists(self.dir_path):
-            os.makedirs(self.dir_path)
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
-            path = os.path.join(self.dir_path, f"IMG_{str(cnt)}.{self.file_extension}")
-            cv2.imwrite(path, image)
+            path = _os.path.join(self.dir_path, f"IMG_{str(cnt)}.{self.file_extension}")
+            _cv2.imwrite(path, image)
             yield image, density_map
             cnt += 1
 
@@ -147,9 +147,9 @@ class SaveImagesToBinaryFile(Output):
         Returns:
             Iterator of unchanged img+DM pairs.
         """
-        dir_path = os.path.dirname(self.file_path)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
         images = []
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
@@ -159,7 +159,7 @@ class SaveImagesToBinaryFile(Output):
                 images.append(image)
             yield image, density_map
         with open(self.file_path, 'wb') as f:
-            pickle.dump(images, f)
+            _pickle.dump(images, f)
 
 
 class SaveDensityMapsToCSVFiles(Output):
@@ -190,17 +190,17 @@ class SaveDensityMapsToCSVFiles(Output):
         Returns:
             Iterator of unchanged img+DM pairs.
         """
-        if not os.path.exists(self.dir_path):
-            os.makedirs(self.dir_path)
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
         cnt = 0
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
-                den_map_to_save = cv2.resize(den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
-            path = os.path.join(self.dir_path, f"GT_{str(cnt)}.csv")
+                den_map_to_save = _cv2.resize(den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR) / self.downscaling ** 2
+            path = _os.path.join(self.dir_path, f"GT_{str(cnt)}.csv")
             with open(path, 'w', newline='') as f:
-                csv.writer(f).writerows(den_map_to_save)
+                _csv.writer(f).writerows(den_map_to_save)
             yield image, density_map
             cnt += 1
 
@@ -236,18 +236,18 @@ class SaveDensityMapsToBinaryFile(Output):
         Returns:
             Iterator of unchanged img+DM pairs.
         """
-        dir_path = os.path.dirname(self.file_path)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
         den_maps = []
         for image_and_density_map in images_and_density_maps:
             image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
-                den_map_to_save = cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=cv2.INTER_LINEAR) / self.downscaling ** 2
+                den_map_to_save = _cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR) / self.downscaling ** 2
             if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
                 den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
             den_maps.append(den_map_to_save)
             yield image, density_map
         with open(self.file_path, 'wb') as f:
-            pickle.dump(den_maps, f)
+            _pickle.dump(den_maps, f)

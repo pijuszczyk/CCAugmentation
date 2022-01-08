@@ -1,7 +1,7 @@
-import random
+import random as _random
 
-import cv2
-import numpy as np
+import cv2 as _cv2
+import numpy as _np
 
 from .operations import Operation
 
@@ -53,7 +53,7 @@ class Transformation(Operation):
             Iterable of maybe transformed img+DM pairs.
         """
         for image_and_density_map in images_and_density_maps:
-            yield self.transform(*image_and_density_map) if random.random() < self.probability else image_and_density_map
+            yield self.transform(*image_and_density_map) if _random.random() < self.probability else image_and_density_map
 
 
 class Crop(Transformation):
@@ -107,8 +107,8 @@ class Crop(Transformation):
             x0 = (w - new_w) // 2
             y0 = (h - new_h) // 2
         else:
-            x0 = random.randint(0, w - new_w)
-            y0 = random.randint(0, h - new_h)
+            x0 = _random.randint(0, w - new_w)
+            y0 = _random.randint(0, h - new_h)
         x1 = x0 + new_w
         y1 = y0 + new_h
 
@@ -163,11 +163,11 @@ class Scale(Transformation):
             scale_x = self.width / w
             scale_y = self.height / h
 
-            new_img = cv2.resize(image, (self.width, self.height), interpolation=cv2.INTER_CUBIC)
-            new_den_map = cv2.resize(density_map, (self.width, self.height), interpolation=cv2.INTER_LINEAR) / scale_x / scale_y
+            new_img = _cv2.resize(image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC)
+            new_den_map = _cv2.resize(density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
         else:
-            new_img = cv2.resize(image, None, fx=self.x_factor, fy=self.y_factor, interpolation=cv2.INTER_CUBIC)
-            new_den_map = cv2.resize(density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=cv2.INTER_LINEAR) / self.x_factor / self.y_factor
+            new_img = _cv2.resize(image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC)
+            new_den_map = _cv2.resize(density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR) / self.x_factor / self.y_factor
         return new_img, new_den_map
 
 
@@ -237,10 +237,10 @@ class Rotate(Transformation):
         """
         h, w = image.shape[:2]
         center_x, center_y = w / 2, h / 2
-        rot_mat = cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
+        rot_mat = _cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
 
         if self.expand:
-            cos, sin = np.abs(rot_mat[0][:2])
+            cos, sin = _np.abs(rot_mat[0][:2])
 
             # calculate width and height that will allow the rotated image to be fully preserved
             new_w = int(w * cos + h * sin)
@@ -252,7 +252,7 @@ class Rotate(Transformation):
         else:
             new_w, new_h = w, h
 
-        return cv2.warpAffine(image, rot_mat, (new_w, new_h)), cv2.warpAffine(density_map, rot_mat, (new_w, new_h))
+        return _cv2.warpAffine(image, rot_mat, (new_w, new_h)), _cv2.warpAffine(density_map, rot_mat, (new_w, new_h))
 
 
 class StandardizeSize(Transformation):
@@ -343,8 +343,8 @@ class StandardizeSize(Transformation):
         scale_x = new_w / w
         scale_y = new_h / h
 
-        new_img = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
-        new_den_map = cv2.resize(density_map, (new_w, new_h), interpolation=cv2.INTER_LINEAR) / scale_x / scale_y
+        new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
+        new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
 
         return new_img, new_den_map
 
@@ -405,9 +405,9 @@ class Normalize(Transformation):
         elif self.method == "range_0_to_1":
             return image / 255.0, density_map
         elif self.method == "samplewise_centering":
-            return image - np.resize(np.mean(image, mean_std_axes), [*image.shape]), density_map
+            return image - _np.resize(_np.mean(image, mean_std_axes), [*image.shape]), density_map
         elif self.method == "samplewise_std_normalization":
-            return image / np.resize(np.std(image, mean_std_axes), [*image.shape]), density_map
+            return image / _np.resize(_np.std(image, mean_std_axes), [*image.shape]), density_map
 
     def transform_all(self, images_and_density_maps):
         """
@@ -428,23 +428,23 @@ class Normalize(Transformation):
 
         if self.requires_full_dataset_in_memory:
             all_images, all_density_maps = zip(*list(images_and_density_maps))
-            all_images, all_density_maps = np.array(all_images), np.array(all_density_maps)
+            all_images, all_density_maps = _np.array(all_images), _np.array(all_density_maps)
             mean_std_axes = (0, 1, 2) if self.by_channel else None
             if self.by_channel and len(all_images.shape) != 4:
                 all_images.shape = (*all_images.shape, 1)
 
             if self.method == "featurewise_centering":
-                for image, density_map in zip(all_images - np.resize(np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                for image, density_map in zip(all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
                     yield image, density_map
             elif self.method == "featurewise_std_normalization":
-                for image, density_map in zip(all_images / np.resize(np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                for image, density_map in zip(all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
                     yield image, density_map
         else:
             for image, density_map in images_and_density_maps:
                 if self.method == "featurewise_centering":
-                    yield image - np.resize(self.means, [*image.shape]), density_map
+                    yield image - _np.resize(self.means, [*image.shape]), density_map
                 elif self.method == "featurewise_std_normalization":
-                    yield image / np.resize(self.stds, [*image.shape]), density_map
+                    yield image / _np.resize(self.stds, [*image.shape]), density_map
 
 
 class NormalizeDensityMap(Transformation):
@@ -502,7 +502,7 @@ class FlipLR(Transformation):
         Returns:
             Flipped image and density map.
         """
-        return np.fliplr(image), np.fliplr(density_map)
+        return _np.fliplr(image), _np.fliplr(density_map)
 
 
 class ToGrayscale(Transformation):
@@ -530,7 +530,7 @@ class ToGrayscale(Transformation):
         Returns:
             Pair of grayscale image and its density map.
         """
-        return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), density_map
+        return _cv2.cvtColor(image, _cv2.COLOR_BGR2GRAY), density_map
 
 
 class LambdaTransformation(Transformation):
@@ -613,9 +613,9 @@ class Cutout(Transformation):
         area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
         for _ in range(self.cuts_num):
             if self.allow_out_of_bounds:
-                area_x, area_y = random.randint(0, w - 1), random.randint(0, h - 1)
+                area_x, area_y = _random.randint(0, w - 1), _random.randint(0, h - 1)
             else:
-                area_x, area_y = random.randint(0, w - area_w), random.randint(0, h - area_h)
+                area_x, area_y = _random.randint(0, w - area_w), _random.randint(0, h - area_h)
             new_img[area_y:area_y+area_h, area_x:area_x+area_w] = 0
             new_den_map[area_y:area_y+area_h, area_x:area_x+area_w] = 0
         return new_img, new_den_map
