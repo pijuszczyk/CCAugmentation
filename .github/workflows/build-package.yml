@@ -28,13 +28,21 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install wheel setuptools
         pip install -r requirements.txt
     - name: Build package
-      if: matrix.python-version == env.PYTHON_MAIN_VERSION
       run: |
+        pip install wheel setuptools
         python setup.py sdist bdist_wheel
-    - name: Store package
+    - name: Install package
+      run: |
+        pip install .
+        pip list
+    - name: Lint with flake8
+      uses: py-actions/flake8@v2
+      with:
+        exclude: "*/__init__.py"
+        max-line-length: "120"
+    - name: Upload package artifact
       if: matrix.python-version == env.PYTHON_MAIN_VERSION
       uses: actions/upload-artifact@v2
       with:
