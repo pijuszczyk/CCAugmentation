@@ -17,7 +17,7 @@ class Operation:
 
         By default, `requires_full_dataset_in_memory` member variable is set to False to tell that
         the operation works with generators (may process just one sample at a time) and doesn't require the full dataset
-        to be stored in the memory. It may be overriden in the subclasses.
+        to be stored in the memory. It may be overridden in the subclasses.
         """
         self.args = self._prepare_args(locals())
         self.requires_full_dataset_in_memory = False
@@ -28,7 +28,8 @@ class Operation:
 
     @staticmethod
     def _prepare_args(local_vars):
-        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines. """
+        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving
+        pipelines. """
         return {k: v for k, v in local_vars.items() if k != 'self'}
 
     def to_json(self):
@@ -40,7 +41,8 @@ class Operation:
         return 1
 
     def execute(self, images_and_density_maps):
-        """ Abstract method that must be implemented in the subclasses, should take and return an iterable of img+DM pairs. """
+        """ Abstract method that must be implemented in the subclasses, should take and return an iterable of
+        img+DM pairs. """
         raise NotImplementedError("execute method not implemented in the child class")
 
 
@@ -80,7 +82,8 @@ class Dropout(Operation):
         Define dropout.
 
         Args:
-            probability: Each sample will be dropped out with this probability, meaning that the estimated number of output images for a dataset with `N` samples is `N*(1-probability)`.
+            probability: Each sample will be dropped out with this probability, meaning that the estimated number of
+                output images for a dataset with `N` samples is `N*(1-probability)`.
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
@@ -108,17 +111,20 @@ class RandomArgs(Operation):
         unique names are assumed.
 
         Args:
-            operation: Type of operation that will be invoked. Class or name of class. Must come from this, .outputs or .transformations module.
+            operation: Type of operation that will be invoked. Class or name of class. Must come from this, .outputs or
+                .transformations module.
             constargs: Dictionary of constant arguments, i.e. ones whose values (nor names) won't change.
-            randomargs: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are taken from uniform distribution and are either floats or ints, depending on the types of provided min and max values.
+            randomargs: Dictionary of randomized arguments specified as (min, max) tuple for each arg name. Values are
+                taken from uniform distribution and are either floats or ints, depending on the types of provided
+                min and max values.
         """
         Operation.__init__(self)
         self.operation = operation
         self.constargs = constargs
         self.randomargs = randomargs
         if type(operation) is str:
-            import CCAugmentation.outputs as cca_out
-            import CCAugmentation.transformations as cca_trans
+            import CCAugmentation.outputs as cca_out  # noqa: F401
+            import CCAugmentation.transformations as cca_trans  # noqa: F401
             self.operation = eval(self._get_op_str())
         self.args = {'operation': self.operation.__name__, 'constargs': constargs, 'randomargs': randomargs}
 
@@ -238,8 +244,10 @@ class OptimizeBatch(Operation):
         of target size at a later stage. The temporary buffer can be limited in size.
 
         Args:
-            target_batch_size: Number of img+DM pairs that the optimizer tries to lay out one after another, preserving shape consistency.
-            max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for a better moment to be put into a batch. If None, buffer size is unlimited.
+            target_batch_size: Number of img+DM pairs that the optimizer tries to lay out one after another, preserving
+                shape consistency.
+            max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for
+                a better moment to be put into a batch. If None, buffer size is unlimited.
         """
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
@@ -299,7 +307,8 @@ class OptimizeBatch(Operation):
             used_images_start, used_images_end = None, buffer_size
             for i, (image, density_map) in enumerate(buffer):
                 if image.shape == batched_image_shape:
-                    stop = False  # set stop to False only if there are images to take from the buffer to avoid (semi)infinite loops
+                    # set stop to False only if there are images to take from the buffer to avoid (semi)infinite loops
+                    stop = False
                     if not matching_shape_found_in_buffer:
                         matching_shape_found_in_buffer = True
                         used_images_start = i
@@ -311,7 +320,8 @@ class OptimizeBatch(Operation):
                         batch = []
                         batch_size = 0
                 else:
-                    if matching_shape_found_in_buffer:  # there were images to use in the buffer but there are no more (buffer is sorted so it is known)
+                    if matching_shape_found_in_buffer:
+                        # there were images to use in the buffer but there are no more (buffer is sorted so it is known)
                         used_images_end = i
                         break
             if matching_shape_found_in_buffer:

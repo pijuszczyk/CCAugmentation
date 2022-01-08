@@ -52,8 +52,8 @@ class Transformation(Operation):
         Returns:
             Iterable of maybe transformed img+DM pairs.
         """
-        for image_and_density_map in images_and_density_maps:
-            yield self.transform(*image_and_density_map) if _random.random() < self.probability else image_and_density_map
+        for img_and_den_map in images_and_density_maps:
+            yield self.transform(*img_and_den_map) if _random.random() < self.probability else img_and_den_map
 
 
 class Crop(Transformation):
@@ -126,7 +126,8 @@ class Scale(Transformation):
         """
         Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
         relative size with a given probability. One may use a combination of fixed and relative size for separate image
-        dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be specified.
+        dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be
+        specified.
 
         Args:
             width: Fixed output width.
@@ -163,11 +164,19 @@ class Scale(Transformation):
             scale_x = self.width / w
             scale_y = self.height / h
 
-            new_img = _cv2.resize(image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC)
-            new_den_map = _cv2.resize(density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+            new_img = _cv2.resize(
+                image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR
+            ) / scale_x / scale_y
         else:
-            new_img = _cv2.resize(image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC)
-            new_den_map = _cv2.resize(density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR) / self.x_factor / self.y_factor
+            new_img = _cv2.resize(
+                image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR
+            ) / self.x_factor / self.y_factor
         return new_img, new_den_map
 
 
@@ -177,7 +186,8 @@ class Downscale(Transformation):
     """
     def __init__(self, x_factor=None, y_factor=None, probability=1.0):
         """
-        Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the original size.
+        Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
+        original size.
 
         Args:
             x_factor: Downscaling factor for width.
@@ -207,12 +217,15 @@ class Rotate(Transformation):
     """
     Rotates the given image and density map. The rotation can be executed in two ways:
 
-    - The size of the input doesn't change, discarding pixels outside the frame and filling missing pixels in the frame with black
-    - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling missing pixels in the frame with black
+    - The size of the input doesn't change, discarding pixels outside the frame and filling missing pixels in the frame
+        with black
+    - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling
+        missing pixels in the frame with black
     """
     def __init__(self, angle, expand=False, probability=1.0):
         """
-        Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle means counterclockwise rotation.
+        Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle
+        means counterclockwise rotation.
 
         Args:
             angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
@@ -267,7 +280,9 @@ class StandardizeSize(Transformation):
         Create a size standardization transformation.
 
         Args:
-            std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
+            std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output
+                images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from
+                horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
             std_base_size: Desired length of the longer side of the output images and density maps.
         """
         Transformation.__init__(self, 1.0)
@@ -360,25 +375,32 @@ class Normalize(Transformation):
         - `range_0_to_1` - values are scaled to be in fixed <0; 1> range mapped to the original <0; 255> range
         - `range_-1_to_1` - values are scaled to be in fixed <-1; 1> range mapped to the original <0; 255> range
         - `samplewise_centering` - values are translated to make their mean (in respect to a single image) equal to 0
-        - `samplewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to a single image) equal to 1
+        - `samplewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to
+            a single image) equal to 1
         - `featurewise_centering` - values are translated to make their mean (in respect to all images) equal to 0
-        - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all images) equal to 1
+        - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all
+            images) equal to 1
 
         Args:
             method: Method that will be used for normalization, one of the above.
-            by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel separately and the normalization will also occur by each channel. Else, the values will be normalized by all channels at once.
-            means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
-            stds: If not None, the operation uses those standard deviation values instead of computing them on its own. Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+            by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel
+                separately and the normalization will also occur by each channel. Else, the values will be normalized
+                by all channels at once.
+            means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies
+                depending on the normalization. Currently, only featurewise normalization uses it.
+            stds: If not None, the operation uses those standard deviation values instead of computing them on its own.
+                Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
         """
         if method not in ["range_0_to_1", "range_-1_to_1", "samplewise_centering", "samplewise_std_normalization",
                           "featurewise_centering", "featurewise_std_normalization"]:
             raise ValueError(f"Wrong method of normalization selected: {method}")
         if method.startswith("range") and (means is not None or stds is not None):
-            raise ValueError(f"Fixed range normalization doesn't require computed mean/std values.")
+            raise ValueError("Fixed range normalization doesn't require computed mean/std values.")
 
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
-        if method == "featurewise_centering" and means is None or method == "featurewise_std_normalization" and stds is None:
+        if (method == "featurewise_centering" and means is None) or \
+                (method == "featurewise_std_normalization" and stds is None):
             self.requires_full_dataset_in_memory = True
         self.method = method
         self.by_channel = by_channel
@@ -387,7 +409,7 @@ class Normalize(Transformation):
 
     def transform(self, image, density_map):
         """
-        Transform the given image, return the untouched density map.
+        Transform the given image, return with the untouched density map.
 
         Args:
             image: Image whose pixel values will be normalized.
@@ -434,10 +456,14 @@ class Normalize(Transformation):
                 all_images.shape = (*all_images.shape, 1)
 
             if self.method == "featurewise_centering":
-                for image, density_map in zip(all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                for image, density_map in zip(
+                        all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
                     yield image, density_map
             elif self.method == "featurewise_std_normalization":
-                for image, density_map in zip(all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]), all_density_maps):
+                for image, density_map in zip(
+                        all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
                     yield image, density_map
         else:
             for image, density_map in images_and_density_maps:
@@ -449,14 +475,16 @@ class Normalize(Transformation):
 
 class NormalizeDensityMap(Transformation):
     """
-    Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on https://arxiv.org/pdf/1907.02724.pdf
+    Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on
+    https://arxiv.org/pdf/1907.02724.pdf
     """
     def __init__(self, multiplier):
         """
         Create a label/density map normalization operation.
 
         Args:
-            multiplier: The values in the density map will be multiplied by that number. Make sure to divide the predicted density maps by the same number when calculating the count.
+            multiplier: The values in the density map will be multiplied by that number. Make sure to divide
+                the predicted density maps by the same number when calculating the count.
         """
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
@@ -486,7 +514,8 @@ class FlipLR(Transformation):
         (equal chances).
 
         Args:
-            probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most cases, should stay at 0.5.
+            probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most
+                cases, should stay at 0.5.
         """
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -524,7 +553,8 @@ class ToGrayscale(Transformation):
         Transform the image to grayscale.
 
         Args:
-            image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases, the transformation doesn't provide any real effect.
+            image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases,
+                the transformation doesn't provide any real effect.
             density_map: Density map that won't be affected.
 
         Returns:
@@ -547,7 +577,8 @@ class LambdaTransformation(Transformation):
         Args:
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
             transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
-            loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of transformed img+DM pairs. If None, standard loop is used.
+            loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of
+                transformed img+DM pairs. If None, standard loop is used.
         """
         Transformation.__init__(self, probability)
         self.args = None  # can't save lambda definitions to a human-readable format
@@ -559,7 +590,8 @@ class LambdaTransformation(Transformation):
         return self.transformation(image, density_map)
 
     def transform_all(self, images_and_density_maps):
-        """ If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard loop. """
+        """ If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
+        loop. """
         if self.loop is None:
             return Transformation.transform_all(self, images_and_density_maps)
         return self.loop(images_and_density_maps, self.transformation)
@@ -580,9 +612,12 @@ class Cutout(Transformation):
 
         Args:
             size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
-            factor: Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce a square or a rectangle.
-            cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be overlays over each other.
-            allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of the frame, zeroing out less pixels than expected.
+            factor: Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce
+                a square or a rectangle.
+            cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be
+                overlays over each other.
+            allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of
+                the frame, zeroing out less pixels than expected.
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if size is not None and factor is not None:

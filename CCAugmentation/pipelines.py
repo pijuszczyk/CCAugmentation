@@ -51,7 +51,8 @@ class Pipeline:
         Create a new pipeline that loads the data using the given `loader` and performs `operations` on them.
 
         Args:
-            loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of such data.
+            loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of
+                such data.
             operations: List of operations that will be executed on the loaded data.
         """
         self.loader = loader
@@ -63,7 +64,8 @@ class Pipeline:
         return self.loader.get_number_of_loadable_samples()
 
     def get_expected_output_samples_number(self):
-        """ Starting with the input samples number, internally check for operations modifying the number and calculate the final size. """
+        """ Starting with the input samples number, internally check for operations modifying the number and calculate
+        the final size. """
         output_samples_num = self.get_input_samples_number()
         for operation in self.operations:
             output_samples_num *= operation.get_output_samples_number_multiplier()
@@ -109,7 +111,9 @@ class Pipeline:
 
         Args:
             seed: Random seed. When it's not None, it allows reproducibility of the results.
-            return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists. Generally, np.arrays are more useful when training a model but they don't support elements of varying size (search for 'ragged array'), so for safety, Python lists are the default output.
+            return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists.
+                Generally, np.arrays are more useful when training a model but they don't support elements of
+                varying size (search for 'ragged array'), so for safety, Python lists are the default output.
             verbose: If true, display a progress bar.
 
         Returns:
