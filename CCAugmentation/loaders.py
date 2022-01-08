@@ -11,7 +11,8 @@ from scipy.io import loadmat as _loadmat
 def get_density_map_gaussian(im, points):
     """
     Create a Gaussian density map from the points.
-    Credits: https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
+    Credits:
+    https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
 
     Args:
         im: Original image, used only for getting needed shape of the density map.
@@ -61,7 +62,10 @@ def get_density_map_gaussian(im, points):
             change_H = True
         x1h, y1h, x2h, y2h = 1 + dfx1, 1 + dfy1, f_sz - dfx2, f_sz - dfy2
         if change_H is True:
-            H = _np.multiply(_cv2.getGaussianKernel(y2h - y1h + 1, sigma), (_cv2.getGaussianKernel(x2h - x1h + 1, sigma)).T)
+            H = _np.multiply(
+                _cv2.getGaussianKernel(y2h - y1h + 1, sigma),
+                (_cv2.getGaussianKernel(x2h - x1h + 1, sigma)).T
+            )
         im_density[y1:y2, x1:x2] += H
 
     return im_density
@@ -77,7 +81,8 @@ class Loader:
 
     @staticmethod
     def _prepare_args(local_vars):
-        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving pipelines"""
+        """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and
+        saving pipelines"""
         return {k: v for k, v in local_vars.items() if k != 'self'}
 
     def get_number_of_loadable_samples(self):
@@ -270,7 +275,8 @@ class VariableLoader(Loader):
         Args:
             data: Iterable that has len() with either images or density maps.
         """
-        self.args = None  # saving dataset variables, possibly consisting of thousands of samples, to a json file would be dangerous
+        # saving dataset variables (possibly consisting of thousands of samples) to a json file would be dangerous
+        self.args = None
         self.data = data
 
     def get_number_of_loadable_samples(self):
@@ -350,8 +356,12 @@ class CombinedLoader(Loader):
         Loader.__init__(self)
         self.args = {
             'img_loader': {'name': img_loader.__class__.__name__, 'args': img_loader.args},
-            'gt_loader': None if gt_loader is None else {'name': img_loader.__class__.__name__, 'args': img_loader.args},
-            'den_map_loader': None if den_map_loader is None else {'name': den_map_loader.__class__.__name__, 'args': den_map_loader.args}
+            'gt_loader': None if gt_loader is None else {
+                'name': img_loader.__class__.__name__, 'args': img_loader.args
+            },
+            'den_map_loader': None if den_map_loader is None else {
+                'name': den_map_loader.__class__.__name__, 'args': den_map_loader.args
+            }
         }
         self.img_loader = img_loader
         self.gt_loader = gt_loader
@@ -365,9 +375,11 @@ class CombinedLoader(Loader):
             Number of samples.
         """
         if self.den_map_loader is None:
-            return min(self.img_loader.get_number_of_loadable_samples(), self.gt_loader.get_number_of_loadable_samples())
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.gt_loader.get_number_of_loadable_samples())
         else:
-            return min(self.img_loader.get_number_of_loadable_samples(), self.den_map_loader.get_number_of_loadable_samples())
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.den_map_loader.get_number_of_loadable_samples())
 
     def load(self):
         """

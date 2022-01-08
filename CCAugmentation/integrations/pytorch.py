@@ -44,7 +44,10 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
         def __init__(self):
             self.dataset = dataset
             self.batch_size = batch_size
-            self._loaded_data = sorted([(image, density_map) for (image, density_map) in self.dataset], key=lambda t: t[0].shape)
+            self._loaded_data = sorted(
+                [(image, density_map) for (image, density_map) in self.dataset],
+                key=lambda t: t[0].shape
+            )
             self._iterator = iter(self._loaded_data)
             self._batch = []
             self._current_batch_size = 0

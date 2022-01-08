@@ -24,7 +24,8 @@ class Output(Operation):
         return self.output(images_and_density_maps)
 
     def output(self, images_and_density_maps):
-        """ Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged img+DM pairs, while generating some side-effect output """
+        """ Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
+        img+DM pairs, while generating some side-effect output """
         raise NotImplementedError("output method not implemented in the child class")
 
 
@@ -37,9 +38,11 @@ class Demonstrate(Output):
         Specify demonstration looks.
 
         Args:
-            max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration. If `max_examples` exceeds the actual number of samples, the function ends earlier.
+            max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration.
+                If `max_examples` exceeds the actual number of samples, the function ends earlier.
             show_density_map: Whether to show the density map right next to the preprocessed image.
-            density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to imshow().
+            density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to
+                imshow().
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -129,7 +132,8 @@ class SaveImagesToBinaryFile(Output):
 
         Args:
             file_path: Path where the file with all the images will be saved.
-        :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
+        :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays
+            with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -173,7 +177,8 @@ class SaveDensityMapsToCSVFiles(Output):
 
         Args:
             dir_path: Directory where the CSV files will be saved.
-            downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -197,7 +202,9 @@ class SaveDensityMapsToCSVFiles(Output):
             image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
-                den_map_to_save = _cv2.resize(den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR) / self.downscaling ** 2
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
             path = _os.path.join(self.dir_path, f"GT_{str(cnt)}.csv")
             with open(path, 'w', newline='') as f:
                 _csv.writer(f).writerows(den_map_to_save)
@@ -216,8 +223,10 @@ class SaveDensityMapsToBinaryFile(Output):
 
         Args:
             file_path: Path where the file with all the density maps will be saved.
-            downscaling: If not None, downscales the density maps by a given factor - for example, when using `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
-        :param keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
+            keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2]
+                (indicating channels number) left out instead of being 1. This fixes their shape.
         """
         Output.__init__(self)
         self.args = self._prepare_args(locals())
@@ -244,7 +253,9 @@ class SaveDensityMapsToBinaryFile(Output):
             image, density_map = image_and_density_map
             den_map_to_save = density_map
             if self.downscaling is not None:
-                den_map_to_save = _cv2.resize(den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR) / self.downscaling ** 2
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
             if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
                 den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
             den_maps.append(den_map_to_save)
