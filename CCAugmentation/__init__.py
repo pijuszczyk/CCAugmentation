@@ -13,9 +13,12 @@ __license__ = "MIT"
 
 from . import integrations
 from . import loaders
+from .loaders import *
 from . import operations
+from .operations import *
 from . import outputs
-from .pipelines import Pipeline
+from .outputs import *
+from . import pipelines
+from .pipelines import *
 from . import transformations
-
-__all__ = ["integrations", "loaders", "operations", "outputs", "pipelines", "transformations"]
+from .transformations import *

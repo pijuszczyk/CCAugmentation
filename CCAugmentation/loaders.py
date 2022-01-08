@@ -1,11 +1,11 @@
-import csv
-import math
-import os
-from glob import glob
+import csv as _csv
+import math as _math
+import os as _os
+from glob import glob as _glob
 
-import cv2
-import numpy as np
-from scipy.io import loadmat
+import cv2 as _cv2
+import numpy as _np
+from scipy.io import loadmat as _loadmat
 
 
 def get_density_map_gaussian(im, points):
@@ -20,7 +20,7 @@ def get_density_map_gaussian(im, points):
     Returns:
         Density map constructed from the points.
     """
-    im_density = np.zeros_like(im[:, :, 0], dtype=np.float64)
+    im_density = _np.zeros_like(im[:, :, 0], dtype=_np.float64)
     h, w = im_density.shape
     if points is None:
         return im_density
@@ -32,9 +32,9 @@ def get_density_map_gaussian(im, points):
     for j in range(points.shape[0]):
         f_sz = 15
         sigma = 4.0
-        H = np.multiply(cv2.getGaussianKernel(f_sz, sigma), (cv2.getGaussianKernel(f_sz, sigma)).T)
-        x = min(w-1, max(0, abs(int(math.floor(points[j, 0])))))
-        y = min(h-1, max(0, abs(int(math.floor(points[j, 1])))))
+        H = _np.multiply(_cv2.getGaussianKernel(f_sz, sigma), (_cv2.getGaussianKernel(f_sz, sigma)).T)
+        x = min(w-1, max(0, abs(int(_math.floor(points[j, 0])))))
+        y = min(h-1, max(0, abs(int(_math.floor(points[j, 1])))))
         if x >= w or y >= h:
             continue
         x1 = x - f_sz//2 + 0
@@ -61,7 +61,7 @@ def get_density_map_gaussian(im, points):
             change_H = True
         x1h, y1h, x2h, y2h = 1 + dfx1, 1 + dfy1, f_sz - dfx2, f_sz - dfy2
         if change_H is True:
-            H = np.multiply(cv2.getGaussianKernel(y2h-y1h+1, sigma), (cv2.getGaussianKernel(x2h-x1h+1, sigma)).T)
+            H = _np.multiply(_cv2.getGaussianKernel(y2h - y1h + 1, sigma), (_cv2.getGaussianKernel(x2h - x1h + 1, sigma)).T)
         im_density[y1:y2, x1:x2] += H
 
     return im_density
@@ -122,7 +122,7 @@ class BasicImageFileLoader(Loader):
             Generator of images in BGR format.
         """
         for path in self.img_paths:
-            yield cv2.imread(path, cv2.IMREAD_COLOR)
+            yield _cv2.imread(path, _cv2.IMREAD_COLOR)
 
 
 class ImageFileLoader(BasicImageFileLoader):
@@ -138,7 +138,7 @@ class ImageFileLoader(BasicImageFileLoader):
             file_extension: Desired extension of files to be loaded.
         """
         local = locals().copy()
-        paths = sorted(glob(os.path.join(img_dir, f"*.{file_extension}")))
+        paths = sorted(_glob(_os.path.join(img_dir, f"*.{file_extension}")))
         BasicImageFileLoader.__init__(self, paths)
         self.args = self._prepare_args(local)
 
@@ -177,7 +177,7 @@ class BasicGTPointsMatFileLoader(Loader):
             Generator of lists of head positions - (X, Y) tuples.
         """
         for path in self.gt_paths:
-            yield self.getter(loadmat(path))
+            yield self.getter(_loadmat(path))
 
 
 class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
@@ -193,7 +193,7 @@ class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
             file_extension: Desired file extension of Matlab files.
         """
         local = locals().copy()
-        paths = sorted(glob(os.path.join(gt_dir, f"*.{file_extension}")))
+        paths = sorted(_glob(_os.path.join(gt_dir, f"*.{file_extension}")))
         BasicGTPointsMatFileLoader.__init__(self, paths, getter)
         self.args = self._prepare_args(local)
 
@@ -232,13 +232,13 @@ class BasicDensityMapCSVFileLoader(Loader):
         for path in self.dm_paths:
             den_map = []
             with open(path, 'r', newline='') as f:
-                for row in csv.reader(f):
+                for row in _csv.reader(f):
                     den_row = []
                     for cell in row:
                         den_row.append(float(cell))
                     den_map.append(den_row)
 
-            yield np.array(den_map)
+            yield _np.array(den_map)
 
 
 class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
@@ -254,7 +254,7 @@ class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
             file_extension: Desired extension of files to be loaded.
         """
         local = locals().copy()
-        paths = sorted(glob(os.path.join(den_map_dir, f"*.{file_extension}")))
+        paths = sorted(_glob(_os.path.join(den_map_dir, f"*.{file_extension}")))
         BasicDensityMapCSVFileLoader.__init__(self, paths)
         self.args = self._prepare_args(local)
 

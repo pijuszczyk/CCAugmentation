@@ -1,8 +1,8 @@
-import json
-import random
+import json as _json
+import random as _random
 
-import numpy as np
-from tqdm import tqdm
+import numpy as _np
+from tqdm import tqdm as _tqdm
 
 
 class PipelineResultsIterator:
@@ -19,7 +19,7 @@ class PipelineResultsIterator:
             verbose: Whether to display a progress bar.
         """
         self._images_and_density_maps = images_and_density_maps
-        self._progress = tqdm(total=total_samples) if verbose and total_samples is not None else None
+        self._progress = _tqdm(total=total_samples) if verbose and total_samples is not None else None
 
     def __iter__(self):
         """ Return itself. """
@@ -94,8 +94,8 @@ class Pipeline:
             Iterable of preprocessed data.
         """
         if seed is not None:
-            random.seed(seed)
-            np.random.seed(seed)
+            _random.seed(seed)
+            _np.random.seed(seed)
 
         images_and_density_maps = self._connect_operations()
 
@@ -116,15 +116,15 @@ class Pipeline:
             List of preprocessed data.
         """
         if seed is not None:
-            random.seed(seed)
-            np.random.seed(seed)
+            _random.seed(seed)
+            _np.random.seed(seed)
 
         images_and_density_maps = self._connect_operations()
 
         results = PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose)
         images, density_maps = zip(*results)
         if return_np_arrays:
-            return np.array(images), np.array(density_maps)
+            return _np.array(images), _np.array(density_maps)
         else:
             return images, density_maps
 
@@ -171,7 +171,7 @@ def read_pipeline_from_json(json_path):
         return f'{package}.{name}({",".join(args_strs)})'
 
     with open(json_path, 'r') as f:
-        pipeline_structure = json.load(f)
+        pipeline_structure = _json.load(f)
 
     import CCAugmentation.examples.loading as cca_ex_load
     import CCAugmentation.loaders as cca_load
@@ -225,4 +225,4 @@ def write_pipeline_to_json(pipeline, json_path, optimized=True):
         optimized: Whether to produce an optimized JSON, or a prettified one.
     """
     with open(json_path, 'w') as f:
-        json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))
+        _json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))

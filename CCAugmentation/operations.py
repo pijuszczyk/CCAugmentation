@@ -1,7 +1,7 @@
-import itertools
-import random
+import itertools as _itertools
+import random as _random
 
-import numpy as np
+import numpy as _np
 
 
 class Operation:
@@ -93,7 +93,7 @@ class Dropout(Operation):
     def execute(self, images_and_density_maps):
         """ Drops out samples. """
         for image_and_density_map in images_and_density_maps:
-            if random.random() >= self.probability:
+            if _random.random() >= self.probability:
                 yield image_and_density_map
 
 
@@ -128,14 +128,14 @@ class RandomArgs(Operation):
             if "duplicates_num" in self.constargs:
                 return self.constargs["duplicates_num"]
             elif "duplicates_num" in self.randomargs:
-                return np.mean(self.randomargs["duplicates_num"])
+                return _np.mean(self.randomargs["duplicates_num"])
             else:
                 raise KeyError("Duplicate operation missing duplicates_num")
         elif self.operation is Dropout:
             if "probability" in self.constargs:
                 return self.constargs["probability"]
             elif "probability" in self.randomargs:
-                return np.mean(self.randomargs["probability"])
+                return _np.mean(self.randomargs["probability"])
             else:
                 raise KeyError("Dropout operation missing probability")
         else:
@@ -192,7 +192,7 @@ class RandomArgs(Operation):
         """
         rand_components = []
         for key, (min_val, max_val) in self.randomargs.items():
-            val = random.uniform(min_val, max_val)
+            val = _random.uniform(min_val, max_val)
             if type(min_val) is int and type(max_val) is int:
                 val = int(val)
             rand_components.append(f"{key}={str(val)}")
@@ -315,12 +315,12 @@ class OptimizeBatch(Operation):
                         used_images_end = i
                         break
             if matching_shape_found_in_buffer:
-                buffer = list(itertools.chain(buffer[:used_images_start], buffer[used_images_end:buffer_size]))
+                buffer = list(_itertools.chain(buffer[:used_images_start], buffer[used_images_end:buffer_size]))
                 buffer_size = len(buffer)
 
             if stop:
                 break
 
         # return the remains
-        for image, density_map in itertools.chain(batch, buffer):
+        for image, density_map in _itertools.chain(batch, buffer):
             yield image, density_map

@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as _np
 
 
 def create_iterable_dataset(torch_transforms_module, pipeline_results):
@@ -50,8 +50,8 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
             self._current_batch_size = 0
 
         def _unload_batch_into_tensors(self):
-            tensor_images = torch_transforms_module.ToTensor()(np.array(tuple(zip(*self._batch))[0]))
-            tensor_density_maps = torch_transforms_module.ToTensor()(np.array(tuple(zip(*self._batch))[1]))
+            tensor_images = torch_transforms_module.ToTensor()(_np.array(tuple(zip(*self._batch))[0]))
+            tensor_density_maps = torch_transforms_module.ToTensor()(_np.array(tuple(zip(*self._batch))[1]))
             self._batch = []
             self._current_batch_size = 0
             return tensor_images, tensor_density_maps
