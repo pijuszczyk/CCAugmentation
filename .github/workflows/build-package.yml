@@ -1,5 +1,8 @@
 name: Build Package
 
+env:
+  PYTHON_MAIN_VERSION: "3.10"
+
 on: [push]
 
 jobs:
@@ -7,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: ${{ matrix.python-version }}
     - uses: actions/cache@v2
       with:
         path: ~/.cache/pip
@@ -26,10 +31,12 @@ jobs:
         pip install wheel setuptools
         pip install -r requirements.txt
     - name: Build package
+      if: matrix.python-version == env.PYTHON_MAIN_VERSION
       run: |
         python setup.py sdist bdist_wheel
     - name: Store package
+      if: matrix.python-version == env.PYTHON_MAIN_VERSION
       uses: actions/upload-artifact@v2
       with:
-        name: ccaugmentation-dist
+        name: ccaugmentation-dist-py${{ matrix.python-version }}
         path: dist/*
