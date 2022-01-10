@@ -1,5 +1,7 @@
 # CCAugmentation
 
+[![Build Package](https://github.com/pijuszczyk/CCAugmentation/actions/workflows/build-package.yml/badge.svg?branch=master)](https://github.com/pijuszczyk/CCAugmentation/actions/workflows/build-package.yml)
+
 Data preprocessing and augmentation framework that is designed for working with crowd counting datasets.
 It supports multitude of simple as well as advanced transformations
 and is based on pipelines which allow a flexible flow of data between loaders, transformations and outputs.
