@@ -39,5 +39,6 @@ setup(
                 'all of them to be combined using pipelines.',
     long_description=README,
     long_description_content_type='text/markdown',
-    install_requires=REQUIREMENTS
+    install_requires=REQUIREMENTS,
+    python_requires='>=3.6'
 )
