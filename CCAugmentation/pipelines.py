@@ -162,11 +162,11 @@ def read_pipeline_from_json(json_path):
     Returns:
         Pipeline object, or None if errors occurred.
     """
-    def create_instance_invokation(package, name, args):
+    def create_instance_invocation(package, name, args):
         args_strs = []
         for arg in args.items():
             if type(arg[1]) is dict and 'name' in arg[1] and 'args' in arg[1]:
-                args_strs.append(f'{arg[0]}={create_instance_invokation(package, arg[1]["name"], args[1]["args"])}')
+                args_strs.append(f'{arg[0]}={create_instance_invocation(package, arg[1]["name"], args[1]["args"])}')
             elif type(arg[1]) is str:
                 val = arg[1].replace("\\", "\\\\")
                 args_strs.append(f'{arg[0]}="{val}"')
@@ -177,43 +177,34 @@ def read_pipeline_from_json(json_path):
     with open(json_path, 'r') as f:
         pipeline_structure = _json.load(f)
 
-    import CCAugmentation.examples.loading as cca_ex_load
-    import CCAugmentation.loaders as cca_load
-    _, _ = cca_ex_load, cca_load  # these modules are actually used, don't remove
+    import CCAugmentation.integrations.datasets as cca_int_ds
+    import CCAugmentation as cca
+    _ = cca_int_ds, cca  # these modules are actually used, don't remove
 
     loader = None
     loader_entry = pipeline_structure['loader']
     loader_name, loader_args = loader_entry['name'], loader_entry['args']
-    for package in ['cca_ex_load', 'cca_load']:
+    for package in ['cca_int_ds', 'cca']:
         try:
             getattr(eval(package), loader_name)
-            loader = eval(create_instance_invokation(package, loader_name, loader_args))
+            loader = eval(create_instance_invocation(package, loader_name, loader_args))
             break
         except AttributeError:
             pass
     if loader is None:
         return None
 
-    import CCAugmentation.operations as cca_op
-    import CCAugmentation.outputs as cca_out
-    import CCAugmentation.transformations as cca_trans
-    _, _, _ = cca_op, cca_out, cca_trans  # these modules are actually used, don't remove
-
     operations = []
     operations_entry = pipeline_structure['operations']
+    package = 'cca'
     for op in operations_entry:
         op_name, op_args = op['name'], op['args']
-        created = False
-        for package in ['cca_op', 'cca_out', 'cca_trans']:
-            try:
-                getattr(eval(package), op_name)
-                inv = create_instance_invokation(package, op_name, op_args)
-                operations.append(eval(inv))
-                created = True
-                break
-            except AttributeError:
-                pass
-        if not created:
+        try:
+            getattr(eval(package), op_name)
+            inv = create_instance_invocation(package, op_name, op_args)
+            operations.append(eval(inv))
+            break
+        except AttributeError:
             return None
 
     return Pipeline(loader, operations)
