@@ -123,8 +123,8 @@ class RandomArgs(Operation):
         self.constargs = constargs
         self.randomargs = randomargs
         if type(operation) is str:
-            import CCAugmentation.outputs as cca_out  # noqa: F401
-            import CCAugmentation.transformations as cca_trans  # noqa: F401
+            import CCAugmentation as cca
+            _ = cca  # the module is actually used, don't remove
             self.operation = eval(self._get_op_str())
         self.args = {'operation': self.operation.__name__, 'constargs': constargs, 'randomargs': randomargs}
 
@@ -156,8 +156,7 @@ class RandomArgs(Operation):
         Returns:
             Potentially prefixed operation name.
         """
-        import CCAugmentation.outputs as cca_out
-        import CCAugmentation.transformations as cca_trans
+        import CCAugmentation as cca
 
         if type(self.operation) is str:
             op_name_str = self.operation
@@ -165,14 +164,10 @@ class RandomArgs(Operation):
             op_name_str = self.operation.__name__
 
         try:
-            getattr(cca_trans, op_name_str)
-            op_str = f"cca_trans.{op_name_str}"
+            getattr(cca, op_name_str)
+            op_str = f"cca.{op_name_str}"
         except AttributeError:
-            try:
-                getattr(cca_out, op_name_str)
-                op_str = f"cca_out.{op_name_str}"
-            except AttributeError:
-                op_str = op_name_str
+            op_str = op_name_str
 
         return op_str
 
@@ -215,9 +210,8 @@ class RandomArgs(Operation):
             Result img+DM pairs from the operation.
         """
         # these imports are used in eval(), don't remove them
-        import CCAugmentation.outputs as cca_out
-        import CCAugmentation.transformations as cca_trans
-        _ = cca_out, cca_trans
+        import CCAugmentation as cca
+        _ = cca
 
         op_str = self._get_op_str()
         const_str = self._get_const_str()
