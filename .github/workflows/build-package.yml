@@ -14,12 +14,14 @@ jobs:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
+    - name: Prepare cache
+      uses: actions/cache@v2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -48,3 +50,13 @@ jobs:
       with:
         name: ccaugmentation-dist-py${{ matrix.python-version }}
         path: dist/*
+    - name: Generate documentation
+      run: |
+        pip install pdoc3
+        pdoc --html --output-dir docs CCAugmentation
+    - name: Deploy documentation
+      if: github.ref == 'refs/heads/master' && matrix.python-version == env.PYTHON_MAIN_VERSION
+      uses: JamesIves/github-pages-deploy-action@v4.2.2
+      with:
+        branch: gh-pages
+        folder: docs
