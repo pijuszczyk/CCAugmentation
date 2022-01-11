@@ -302,10 +302,8 @@ class StandardizeSize(Transformation):
         Returns:
             Sorted allowed aspect ratios and calculated boundaries between them.
         """
-        ratios = sorted(std_ratios)
-        boundaries = []
-        for i in range(1, len(ratios)):
-            boundaries.append((ratios[i - 1] + ratios[i]) / 2)
+        ratios = _np.sort(_np.array(std_ratios))
+        boundaries = _np.array([(prev + curr) / 2 for (prev, curr) in zip(ratios[:-1], ratios[1:])])
         return ratios, boundaries
 
     @staticmethod
@@ -321,13 +319,12 @@ class StandardizeSize(Transformation):
         Returns:
             Allowed aspect ratio that is the most similar to the provided one.
         """
-        chosen_std_ratio = std_ratios[-1]
-        for i in range(len(std_boundaries)):
-            if ratio_to_improve < std_boundaries[i]:
-                chosen_std_ratio = std_ratios[i]
-                break
-
-        return chosen_std_ratio
+        last_matching_boundary_idx = _np.nonzero(ratio_to_improve < std_boundaries)[0]
+        if last_matching_boundary_idx.shape[0] > 0:
+            chosen_std_ratio_idx = last_matching_boundary_idx[0]
+        else:
+            chosen_std_ratio_idx = std_ratios.shape[0] - 1
+        return std_ratios[chosen_std_ratio_idx]
 
     def transform(self, image, density_map):
         """
@@ -646,11 +643,20 @@ class Cutout(Transformation):
         new_img, new_den_map = image.copy(), density_map.copy()
         h, w = image.shape[:2]
         area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
-        for _ in range(self.cuts_num):
-            if self.allow_out_of_bounds:
-                area_x, area_y = _random.randint(0, w - 1), _random.randint(0, h - 1)
-            else:
-                area_x, area_y = _random.randint(0, w - area_w), _random.randint(0, h - area_h)
-            new_img[area_y:area_y+area_h, area_x:area_x+area_w] = 0
-            new_den_map[area_y:area_y+area_h, area_x:area_x+area_w] = 0
+        if self.allow_out_of_bounds:
+            min_area_x, min_area_y, max_area_x, max_area_y = -area_w, -area_h, w - 1, h - 1
+            for _ in range(self.cuts_num):
+                area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+                area_x1, area_y1 = max(0, area_x), max(0, area_y)
+                area_x2, area_y2 = min(w, area_x + area_w), min(h, area_y + area_h)
+                new_img[area_y1:area_y2, area_x1:area_x2] = 0
+                new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
+        else:
+            min_area_x, min_area_y, max_area_x, max_area_y = 0, 0, w - area_w, h - area_h
+            for _ in range(self.cuts_num):
+                area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+                area_x1, area_y1 = area_x, area_y
+                area_x2, area_y2 = area_x + area_w, area_y + area_h
+                new_img[area_y1:area_y2, area_x1:area_x2] = 0
+                new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
         return new_img, new_den_map
