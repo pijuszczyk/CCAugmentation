@@ -38,67 +38,37 @@ def create_iterable_dataset(pipeline_results):
     return PipelineDataset()
 
 
-def create_data_loader(dataset, batch_size):
+def collate_variadic_size_samples_with_crop(samples):
     """
-    Create a loader similar to PyTorch DataLoader but only with a single thread and no shuffling. Allows batching
-    results in a way that batches are created only from samples with the same shape. If not enough samples of the same
-    shape were present in a row, incomplete batches are returned.
+    Collate (image, density map) samples into PyTorch Tensor batches. Deals with inconsistent sample sizes by cropping
+    samples into minimum common shapes. To be used in PyTorch DataLoader as collate_fn argument. Note: it is highly
+    recommended to apply OptimizeBatch transformation when dealing with shape-inconsistent datasets.
 
     Args:
-        dataset: Dataset that yields tuples of image and density map.
-        batch_size: Preferred batch size.
-
+        samples: Image and density map pairs to be put into a batch.
     Returns:
-        Iterator of batches of data from the dataset.
+        Two tensors - one with images and one with density maps.
     """
-    import torchvision.transforms as torch_transforms
+    import random
+    import torch
 
-    class PipelineDataLoader:
-        def __init__(self):
-            self.dataset = dataset
-            self.batch_size = batch_size
-            self._loaded_data = sorted(
-                [(image, density_map) for (image, density_map) in self.dataset],
-                key=lambda t: t[0].shape
-            )
-            self._iterator = iter(self._loaded_data)
-            self._batch = []
-            self._current_batch_size = 0
+    def crop(image, density_map, new_w, new_h):
+        # very similar to transformations._crop but with color dimension being first instead of last
+        h, w = image.shape[1:]
 
-        def _unload_batch_into_tensors(self):
-            tensor_images = torch_transforms.ToTensor()(_np.array(tuple(zip(*self._batch))[0]))
-            tensor_density_maps = torch_transforms.ToTensor()(_np.array(tuple(zip(*self._batch))[1]))
-            self._batch = []
-            self._current_batch_size = 0
-            return tensor_images, tensor_density_maps
+        x0 = random.randint(0, w - new_w)
+        y0 = random.randint(0, h - new_h)
+        x1 = x0 + new_w
+        y1 = y0 + new_h
 
-        def _add_to_batch(self, image, density_map):
-            self._batch.append((image, density_map))
-            self._current_batch_size += 1
+        new_img = image[:, y0:y1, x0:x1]
+        new_den_map = density_map[y0:y1, x0:x1]
 
-        def __len__(self):
-            return len(self._loaded_data)
+        return new_img, new_den_map
 
-        def __next__(self):
-            for _ in range(self._current_batch_size, self.batch_size):
-                try:
-                    image, density_map = next(self._iterator)
-                except StopIteration:
-                    self._iterator = iter(self._loaded_data)
-                    raise
-                if self._current_batch_size != 0 and self._batch[0][0].shape != image.shape:
-                    tensor_images, tensor_density_maps = self._unload_batch_into_tensors()
-                    self._add_to_batch(image, density_map)
-                    return tensor_images, tensor_density_maps
-                else:
-                    self._add_to_batch(image, density_map)
-            tensor_images, tensor_density_maps = self._unload_batch_into_tensors()
-            return tensor_images, tensor_density_maps
-
-        def __iter__(self):
-            self._iterator = iter(self._loaded_data)
-            self._batch = []
-            self._current_batch_size = 0
-            return self
-
-    return PipelineDataLoader()
+    imgs, dms = [it for it in zip(*samples)]
+    shapes = _np.array([img.shape[-2:] for img in imgs])
+    if _np.any(shapes != shapes[0]):
+        min_h, min_w = _np.min(shapes, 0)
+        imgs, dms = [it for it in zip(*[crop(img, dm, min_w, min_h) for img, dm in zip(imgs, dms)])]
+    return torch.stack(imgs), torch.tensor(dms, dtype=torch.float32)
