@@ -56,6 +56,24 @@ class Transformation(Operation):
             yield self.transform(*img_and_den_map) if _random.random() < self.probability else img_and_den_map
 
 
+def _crop(image, density_map, new_w, new_h, centered):
+    h, w = image.shape[:2]
+
+    if centered:
+        x0 = (w - new_w) // 2
+        y0 = (h - new_h) // 2
+    else:
+        x0 = _random.randint(0, w - new_w)
+        y0 = _random.randint(0, h - new_h)
+    x1 = x0 + new_w
+    y1 = y0 + new_h
+
+    new_img = image[y0:y1, x0:x1]
+    new_den_map = density_map[y0:y1, x0:x1]
+
+    return new_img, new_den_map
+
+
 class Crop(Transformation):
     """
     Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
@@ -102,20 +120,7 @@ class Crop(Transformation):
         h, w = image.shape[:2]
         new_w = round(w * self.x_factor) if self.width is None else self.width
         new_h = round(h * self.y_factor) if self.height is None else self.height
-
-        if self.centered:
-            x0 = (w - new_w) // 2
-            y0 = (h - new_h) // 2
-        else:
-            x0 = _random.randint(0, w - new_w)
-            y0 = _random.randint(0, h - new_h)
-        x1 = x0 + new_w
-        y1 = y0 + new_h
-
-        new_img = image[y0:y1, x0:x1]
-        new_den_map = density_map[y0:y1, x0:x1]
-
-        return new_img, new_den_map
+        return _crop(image, density_map, new_w, new_h, self.centered)
 
 
 class Scale(Transformation):
@@ -359,6 +364,44 @@ class StandardizeSize(Transformation):
         new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
 
         return new_img, new_den_map
+
+
+class OmitDownscalingPixels(Transformation):
+    """
+    Removes pixels that were lost due to downscaling (either by using a CCA transformation or by doing Pooling) by
+    performing a centered crop.
+    """
+    def __init__(self, x_factor=None, y_factor=None):
+        """
+        Create a centered cropping transformation that omits pixels lost due to downscaling. For example, given an input
+        image of 401x404 size, when it is downscaled by a factor of 4 in both dimensions (e.g. by doing
+        2 2x2 MaxPoolings and then interpolating using a factor of 4), the final size of the image is 400x400. This
+        transformation automatically resizes images and density maps to match the expected cut shape.
+
+        Args:
+            x_factor: By what factor was the input downscaled horizontally. Leave it None to omit horizontal crop.
+            y_factor: By what factor was the input downscaled vertically. Leave it None to omit vertical crop.
+        """
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+
+    def transform(self, image, density_map):
+        """
+        Transform the given image and density map.
+
+        Args:
+            image: Image that was downscaled.
+            density_map: Density map that was downscaled.
+
+        Returns:
+            Pair of transformed image and density map.
+        """
+        h, w = image.shape[:2]
+        new_w = w - (w % self.x_factor) if self.x_factor is not None else w
+        new_h = h - (h % self.y_factor) if self.y_factor is not None else h
+        return _crop(image, density_map, new_w, new_h, True)
 
 
 class Normalize(Transformation):
