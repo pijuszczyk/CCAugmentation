@@ -96,6 +96,9 @@ def create_data_loader(dataset, batch_size):
             return tensor_images, tensor_density_maps
 
         def __iter__(self):
+            self._iterator = iter(self._loaded_data)
+            self._batch = []
+            self._current_batch_size = 0
             return self
 
     return PipelineDataLoader()
