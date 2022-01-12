@@ -29,8 +29,11 @@ def create_iterable_dataset(pipeline_results):
             ])
 
         def __iter__(self):
-            for image, density_map in self.images_and_density_maps:
-                yield self.image_transform(image.copy().astype("float32")), density_map.copy().astype("float32")
+            return self
+
+        def __next__(self):
+            image, density_map = next(self.images_and_density_maps)
+            return self.image_transform(image.copy().astype("float32")), density_map.copy().astype("float32")
 
     return PipelineDataset()
 
