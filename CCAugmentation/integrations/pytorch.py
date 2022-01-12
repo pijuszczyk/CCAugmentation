@@ -1,22 +1,31 @@
+# IMPORTANT
+# Additional packages are required to effectively use the functionality below:
+# - torch
+# - torchvision
+
+
 import numpy as _np
 
 
-def create_iterable_dataset(torch_transforms_module, pipeline_results):
+def create_iterable_dataset(pipeline_results):
     """
     Create a PyTorch iterable dataset that loads samples from pipeline results.
 
     Args:
-        torch_transforms_module: The imported torch.transforms module.
         pipeline_results: Pipeline results iterator.
 
     Returns:
         Dataset that has valid PyTorch images saved as tensors and density maps.
     """
-    class PipelineDataset:
+    from torch.utils.data import IterableDataset
+    import torchvision.transforms as torch_transforms
+
+    class PipelineDataset(IterableDataset):
         def __init__(self):
+            IterableDataset.__init__(self)
             self.images_and_density_maps = pipeline_results
-            self.image_transform = torch_transforms_module.Compose([
-                torch_transforms_module.ToTensor()
+            self.image_transform = torch_transforms.Compose([
+                torch_transforms.ToTensor()
             ])
 
         def __iter__(self):
@@ -26,20 +35,21 @@ def create_iterable_dataset(torch_transforms_module, pipeline_results):
     return PipelineDataset()
 
 
-def create_data_loader(torch_transforms_module, dataset, batch_size):
+def create_data_loader(dataset, batch_size):
     """
     Create a loader similar to PyTorch DataLoader but only with a single thread and no shuffling. Allows batching
     results in a way that batches are created only from samples with the same shape. If not enough samples of the same
     shape were present in a row, incomplete batches are returned.
 
     Args:
-        torch_transforms_module: The imported torch.transforms module.
         dataset: Dataset that yields tuples of image and density map.
         batch_size: Preferred batch size.
 
     Returns:
         Iterator of batches of data from the dataset.
     """
+    import torchvision.transforms as torch_transforms
+
     class PipelineDataLoader:
         def __init__(self):
             self.dataset = dataset
@@ -53,8 +63,8 @@ def create_data_loader(torch_transforms_module, dataset, batch_size):
             self._current_batch_size = 0
 
         def _unload_batch_into_tensors(self):
-            tensor_images = torch_transforms_module.ToTensor()(_np.array(tuple(zip(*self._batch))[0]))
-            tensor_density_maps = torch_transforms_module.ToTensor()(_np.array(tuple(zip(*self._batch))[1]))
+            tensor_images = torch_transforms.ToTensor()(_np.array(tuple(zip(*self._batch))[0]))
+            tensor_density_maps = torch_transforms.ToTensor()(_np.array(tuple(zip(*self._batch))[1]))
             self._batch = []
             self._current_batch_size = 0
             return tensor_images, tensor_density_maps
