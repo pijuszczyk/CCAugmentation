@@ -1,4 +1,3 @@
-import itertools as _itertools
 import random as _random
 
 import numpy as _np
@@ -274,7 +273,8 @@ class OptimizeBatch(Operation):
                 yield image, density_map
             return
 
-        batch = []
+        # an additional iterator to be able to continue iterating over samples and not start over when we get a list
+        samples_iter = iter(images_and_density_maps)
         batch_size = 0
         batched_image_shape = None
         buffer = []
@@ -282,60 +282,70 @@ class OptimizeBatch(Operation):
 
         loop_cutoff = 1000000
         for _ in range(loop_cutoff):
-            stop = True  # condition that assures that there is still work to be done; if True, the loop is exited
+            still_receiving_samples = False
 
-            for image, density_map in images_and_density_maps:
-                stop = False
+            # iteration over fresh samples
+            for image, density_map in samples_iter:
+                still_receiving_samples = True
                 if image.shape != batched_image_shape:
+                    # if we need to (and can) save the sample for later
                     if buffer_size < self.max_buffer_size and batched_image_shape is not None:
                         buffer.append((image, density_map))
                         buffer_size += 1
                     else:
-                        for batched_image, batched_density_map in batch:
-                            yield batched_image, batched_density_map
-                        batch = [(image, density_map)]
+                        yield image, density_map
                         batch_size = 1
                         batched_image_shape = image.shape
-                        break  # try going through buffer, clearing it
+                        break  # try going through the buffer, clearing it
                 else:
-                    batch.append((image, density_map))
+                    yield image, density_map
                     batch_size += 1
 
-                if batch_size == self.target_batch_size:
-                    for batched_image, batched_density_map in batch:
-                        yield batched_image, batched_density_map
-                    batch = []
-                    batch_size = 0
+            batch_size %= self.target_batch_size
+            if batch_size == 0 and self.target_batch_size > 1:
+                # batch size being 0 after breaking out of loop when target batch size > 1 can only be achieved by
+                # finishing the batch just at the end of iterating over fresh samples, we can use that fact
+                still_receiving_samples = False
+                batch_size = 0
+                batched_image_shape = None
 
+            # quickly sort the buffer to make matching easier
             buffer.sort(key=lambda t: t[0].shape)
-            matching_shape_found_in_buffer = False
-            used_images_start, used_images_end = None, buffer_size
-            for i, (image, density_map) in enumerate(buffer):
-                if image.shape == batched_image_shape:
-                    # set stop to False only if there are images to take from the buffer to avoid (semi)infinite loops
-                    stop = False
-                    if not matching_shape_found_in_buffer:
-                        matching_shape_found_in_buffer = True
-                        used_images_start = i
-                    batch.append((image, density_map))
-                    batch_size += 1
-                    if batch_size == self.target_batch_size:
-                        for batched_image, batched_density_map in batch:
-                            yield batched_image, batched_density_map
-                        batch = []
-                        batch_size = 0
+
+            if buffer_size > 0:
+                matching_shape_found_in_buffer = False
+                used_images_start, used_images_end = None, buffer_size
+
+                if batched_image_shape is None:
+                    # select some shape not to aimlessly iterate over buffer
+                    batched_image_shape = buffer[0][0].shape
+
+                for i, (image, density_map) in enumerate(buffer):
+                    if image.shape == batched_image_shape:
+                        if not matching_shape_found_in_buffer:
+                            matching_shape_found_in_buffer = True
+                            used_images_start = i
+                        yield image, density_map
+                        batch_size += 1
+                    else:
+                        if matching_shape_found_in_buffer:
+                            # there were images to use in the buffer but there are no more
+                            # (buffer is sorted so it is known)
+                            used_images_end = i
+                            break
+                if matching_shape_found_in_buffer:
+                    # remove from buffer what we used for the batch
+                    del buffer[used_images_start:used_images_end]
+                    buffer_size -= (used_images_end - used_images_start)
+
+                if still_receiving_samples:
+                    # prepare for continuing batch collection from fresh samples
+                    batch_size %= self.target_batch_size
                 else:
-                    if matching_shape_found_in_buffer:
-                        # there were images to use in the buffer but there are no more (buffer is sorted so it is known)
-                        used_images_end = i
-                        break
-            if matching_shape_found_in_buffer:
-                buffer = list(_itertools.chain(buffer[:used_images_start], buffer[used_images_end:buffer_size]))
-                buffer_size = len(buffer)
-
-            if stop:
+                    # there's no more matching samples to receive and no more matching samples in the buffer, so
+                    # reset the batch
+                    batch_size = 0
+                    batched_image_shape = None
+            # if buffer is empty and we ran out of fresh samples
+            elif not still_receiving_samples:
                 break
-
-        # return the remains
-        for image, density_map in _itertools.chain(batch, buffer):
-            yield image, density_map
