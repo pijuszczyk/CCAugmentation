@@ -106,6 +106,9 @@ class BasicImageFileLoader(Loader):
         Args:
             img_paths: Paths to all images that are to be loaded.
         """
+        if len(img_paths) == 0:
+            raise ValueError("At least one path must be specified")
+
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
         self.img_paths = img_paths
@@ -160,6 +163,9 @@ class BasicGTPointsMatFileLoader(Loader):
             gt_paths: Paths of files that are to be read.
             getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
         """
+        if len(gt_paths) == 0:
+            raise ValueError("At least one path must be specified")
+
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
         self.gt_paths = gt_paths
@@ -214,6 +220,9 @@ class BasicDensityMapCSVFileLoader(Loader):
         Args:
             dm_paths: Paths to CSV files with density maps.
         """
+        if len(dm_paths) == 0:
+            raise ValueError("At least one path must be specified")
+
         Loader.__init__(self)
         self.args = self._prepare_args(locals())
         self.dm_paths = dm_paths

@@ -18,6 +18,9 @@ class PipelineResultsIterator:
             total_samples: Total expected number of samples on output.
             verbose: Whether to display a progress bar.
         """
+        if total_samples is not None and total_samples <= 0:
+            raise ValueError("Total samples must be an integer greater than 0")
+
         self._images_and_density_maps = images_and_density_maps
         self._progress = _tqdm(total=total_samples) if verbose and total_samples is not None else None
 

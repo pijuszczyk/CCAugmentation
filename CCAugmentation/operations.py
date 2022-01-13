@@ -58,6 +58,9 @@ class Duplicate(Operation):
         Args:
             duplicates_num: Each sample will be repeated that number of times.
         """
+        if duplicates_num <= 0:
+            raise ValueError("Number of duplicates must be greater than 0")
+
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.duplicates_num = duplicates_num
@@ -85,6 +88,9 @@ class Dropout(Operation):
             probability: Each sample will be dropped out with this probability, meaning that the estimated number of
                 output images for a dataset with `N` samples is `N*(1-probability)`.
         """
+        if not 0.0 <= probability <= 1.0:
+            raise ValueError("Probability must be between 0 and 1")
+
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.probability = probability
@@ -243,6 +249,11 @@ class OptimizeBatch(Operation):
             max_buffer_size: Maximum number of img+DM pairs that can rest in the temporary buffer, waiting for
                 a better moment to be put into a batch. If None, buffer size is unlimited.
         """
+        if target_batch_size <= 0:
+            raise ValueError("Target batch size must be greater than 0")
+        if max_buffer_size is not None and max_buffer_size <= 0:
+            raise ValueError("Max buffer size must be greater than 0. If you wish not to set a limit, please use None")
+
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.target_batch_size = target_batch_size
