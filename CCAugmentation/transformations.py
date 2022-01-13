@@ -674,6 +674,34 @@ class LambdaTransformation(Transformation):
         return self.loop(images_and_density_maps, self.transformation)
 
 
+def _get_random_area(img_w, img_h, area_w, area_h, allow_out_of_bounds):
+    """
+    Get coordinates of a randomly placed rectangular area. Note that actual area size may differ from (area_h, area_w)
+    if out of bounds selection is enabled and an area on the border is chosen.
+
+    Args:
+        img_w: Width of the image to be sampled from.
+        img_h: Height of the image to be sampled from.
+        area_w: Width of area to be obtained. In case of out of bounds selection, it's only the max width.
+        area_h: Height of area to be obtained. In case of out of bounds selection, it's only the max height.
+        allow_out_of_bounds: If true, area is free to be placed partially outside the image.
+
+    Returns:
+        Tuple with start X, start Y, end X, end Y.
+    """
+    if allow_out_of_bounds:
+        min_area_x, min_area_y, max_area_x, max_area_y = -area_w, -area_h, img_w - 1, img_h - 1
+        area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+        area_x1, area_y1 = max(0, area_x), max(0, area_y)
+        area_x2, area_y2 = min(img_w, area_x + area_w), min(img_h, area_y + area_h)
+    else:
+        min_area_x, min_area_y, max_area_x, max_area_y = 0, 0, img_w - area_w, img_h - area_h
+        area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+        area_x1, area_y1 = area_x, area_y
+        area_x2, area_y2 = area_x + area_w, area_y + area_h
+    return area_x1, area_y1, area_x2, area_y2
+
+
 class Cutout(Transformation):
     """
     Experimental method based on this paper: https://arxiv.org/abs/1708.04552
@@ -729,20 +757,77 @@ class Cutout(Transformation):
         new_img, new_den_map = image.copy(), density_map.copy()
         h, w = image.shape[:2]
         area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
-        if self.allow_out_of_bounds:
-            min_area_x, min_area_y, max_area_x, max_area_y = -area_w, -area_h, w - 1, h - 1
-            for _ in range(self.cuts_num):
-                area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
-                area_x1, area_y1 = max(0, area_x), max(0, area_y)
-                area_x2, area_y2 = min(w, area_x + area_w), min(h, area_y + area_h)
-                new_img[area_y1:area_y2, area_x1:area_x2] = 0
-                new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
-        else:
-            min_area_x, min_area_y, max_area_x, max_area_y = 0, 0, w - area_w, h - area_h
-            for _ in range(self.cuts_num):
-                area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
-                area_x1, area_y1 = area_x, area_y
-                area_x2, area_y2 = area_x + area_w, area_y + area_h
-                new_img[area_y1:area_y2, area_x1:area_x2] = 0
-                new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
+        for _ in range(self.cuts_num):
+            area_x1, area_y1, area_x2, area_y2 = _get_random_area(w, h, area_w, area_h, self.allow_out_of_bounds)
+            new_img[area_y1:area_y2, area_x1:area_x2] = 0
+            new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
         return new_img, new_den_map
+
+
+class Copyout(Transformation):
+    """
+    Experimental method based on this paper: https://arxiv.org/abs/1909.00390
+    Copies square areas of specified size from random position from random image to a random position in currently
+    transformed image. When out of bounds copying is allowed, the area may become a rectangle when placed on an edge.
+    However, out of bounds selection doesn't apply to the destination image.
+    """
+    def __init__(self, size, allow_out_of_bounds=True, probability=1.0):
+        """
+        Create copyout transformation.
+
+        Args:
+            size: Size of the extent that will be copied from one image to another (along with the density data).
+            allow_out_of_bounds: Whether to allow selection of area partially outside the source image frame.
+                Destination area selection is unaffected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+        if size <= 0:
+            raise ValueError("Size must be an integer greater than 0")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.size = size
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        """ Transformation of a single image+density map pair without loading other pairs is not supported. """
+        raise NotImplementedError("Only transforming the whole dataset at once is currently supported for Copyout")
+
+    def transform_all(self, images_and_density_maps):
+        """
+        Create a generator that for each image and density map pair generates a transformed pair.
+
+        Args:
+            images_and_density_maps: Iterable of tuples of image and density map. Both are affected by the operation.
+
+        Returns:
+            Generator of tuples with transformed image and density map.
+        """
+        imgs_dms = list(images_and_density_maps)
+        images_num = len(imgs_dms)
+        for img, dm in imgs_dms:
+            src_index = _np.random.randint(0, images_num)
+            src_img, src_dm = imgs_dms[src_index]
+
+            src_h, src_w = src_img.shape[:2]
+            dest_h, dest_w = img.shape[:2]
+            area_h, area_w = self.size, self.size
+
+            src_area_x1, src_area_y1, src_area_x2, src_area_y2 = \
+                _get_random_area(src_w, src_h, area_w, area_h, self.allow_out_of_bounds)
+
+            if self.allow_out_of_bounds:
+                # shape of the area may have changed
+                area_w, area_h = src_area_x2 - src_area_x1, src_area_y2 - src_area_y1
+
+            dest_area_x1, dest_area_y1, dest_area_x2, dest_area_y2 = \
+                _get_random_area(dest_w, dest_h, area_w, area_h, False)
+
+            new_img, new_dm = img.copy(), dm.copy()
+            new_img[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_img[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+            new_dm[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_dm[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+
+            yield new_img, new_dm
