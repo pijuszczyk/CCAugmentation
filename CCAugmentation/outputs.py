@@ -44,6 +44,10 @@ class Demonstrate(Output):
             density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn't passed to
                 imshow().
         """
+        if max_examples is not None and max_examples < 1:
+            raise ValueError("Max examples number must be an integer greater than 0. If you wish to set no limit, "
+                             "please use None")
+
         Output.__init__(self)
         self.args = self._prepare_args(locals())
         self.max_examples = max_examples
@@ -180,6 +184,9 @@ class SaveDensityMapsToCSVFiles(Output):
             downscaling: If not None, downscales the density maps by a given factor - for example, when using
                 `downscaling` equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.
         """
+        if downscaling is not None and not 0.0 < downscaling <= 1.0:
+            raise ValueError("Downscaling factor must be between 0 (exclusive) and 1 (inclusive)")
+
         Output.__init__(self)
         self.args = self._prepare_args(locals())
         self.dir_path = dir_path
@@ -228,6 +235,9 @@ class SaveDensityMapsToBinaryFile(Output):
             keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2]
                 (indicating channels number) left out instead of being 1. This fixes their shape.
         """
+        if downscaling is not None and not 0.0 < downscaling <= 1.0:
+            raise ValueError("Downscaling factor must be between 0 (exclusive) and 1 (inclusive)")
+
         Output.__init__(self)
         self.args = self._prepare_args(locals())
         self.requires_full_dataset_in_memory = True

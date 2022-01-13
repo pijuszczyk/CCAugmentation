@@ -4,11 +4,11 @@ from CCAugmentation import loaders
 
 
 def _get_SHH_directory(dataset_dir, train_test, part):
-    if train_test not in ["train", "test"]:
+    if train_test.lower() not in ["train", "test"]:
         raise ValueError("train_test must be either equal to 'train' or 'test'")
     if part.upper() not in ['A', 'B']:
         raise ValueError("Only 'A' and 'B' parts are allowed")
-    return _os.path.join(dataset_dir, f"part_{part}", f"{train_test}_data")
+    return _os.path.join(dataset_dir, f"part_{part.upper()}", f"{train_test.lower()}_data")
 
 
 class _SHHImageLoader(loaders.ImageFileLoader):
@@ -33,9 +33,9 @@ class SHHLoader(loaders.CombinedLoader):
 
 
 def _get_NWPU_indices_for_set(dataset_dir, train_val_test):
-    if train_val_test not in ["train", "val", "test"]:
+    if train_val_test.lower() not in ["train", "val", "test"]:
         raise ValueError("train_val_test must be either equal to 'train', 'val' or 'test'")
-    list_file_path = _os.path.join(dataset_dir, f"{train_val_test}.txt")
+    list_file_path = _os.path.join(dataset_dir, f"{train_val_test.lower()}.txt")
     indices = []
     with open(list_file_path, 'r') as f:
         for line in f:

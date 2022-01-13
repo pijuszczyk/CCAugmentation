@@ -20,6 +20,9 @@ class Transformation(Operation):
         Args:
             probability: Float value between 0 and 1 (inclusive).
         """
+        if not 0.0 <= probability <= 1.0:
+            raise ValueError("Probability must be between 0 and 1")
+
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
         self.probability = probability
@@ -97,6 +100,14 @@ class Crop(Transformation):
             raise ValueError("Cannot provide factor and fixed size at the same time")
         if (width is None and x_factor is None) or (height is None and y_factor is None):
             raise ValueError("Must provide factor or fixed size for both dimensions")
+        if width is not None and width <= 0:
+            raise ValueError("Width must be greater than 0 (and less than/equal original width)")
+        if height is not None and height <= 0:
+            raise ValueError("Height must be greater than 0 (and less than/equal original height)")
+        if x_factor is not None and not 0.0 < x_factor <= 1.0:
+            raise ValueError("Width factor must be between 0 (exclusive) and 1 (inclusive)")
+        if y_factor is not None and not 0.0 < y_factor <= 1.0:
+            raise ValueError("Height factor must be between 0 (exclusive) and 1 (inclusive)")
 
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -145,6 +156,14 @@ class Scale(Transformation):
             raise ValueError("Cannot provide factor and fixed size at the same time")
         if (width is None and x_factor is None) or (height is None and y_factor is None):
             raise ValueError("Must provide factor or fixed size for both dimensions")
+        if width is not None and width <= 0:
+            raise ValueError("Width must be greater than 0 (and less than/equal original width)")
+        if height is not None and height <= 0:
+            raise ValueError("Height must be greater than 0 (and less than/equal original height)")
+        if x_factor is not None and not 0.0 < x_factor <= 1.0:
+            raise ValueError("Width factor must be between 0 (exclusive) and 1 (inclusive)")
+        if y_factor is not None and not 0.0 < y_factor <= 1.0:
+            raise ValueError("Height factor must be between 0 (exclusive) and 1 (inclusive)")
 
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
@@ -189,16 +208,21 @@ class Downscale(Transformation):
     """
     Downscales and then upscales an image, decreasing its quality.
     """
-    def __init__(self, x_factor=None, y_factor=None, probability=1.0):
+    def __init__(self, x_factor, y_factor, probability=1.0):
         """
         Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
-        original size.
+        original size. Note that some pixels may be lost due to integer rounding, leading to a slightly different size.
 
         Args:
             x_factor: Downscaling factor for width.
             y_factor: Downscaling factor for height.
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
+        if not 0.0 < x_factor <= 1.0:
+            raise ValueError("Width factor must be between 0 (exclusive) and 1 (inclusive)")
+        if not 0.0 < y_factor <= 1.0:
+            raise ValueError("Height factor must be between 0 (exclusive) and 1 (inclusive)")
+
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
         self.downscaler = Scale(None, None, x_factor, y_factor, 1.0)
@@ -290,6 +314,11 @@ class StandardizeSize(Transformation):
                 horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
             std_base_size: Desired length of the longer side of the output images and density maps.
         """
+        if len(std_aspect_ratios) == 0:
+            raise ValueError("At least 1 allowed aspect ratio must be entered")
+        if std_base_size <= 0:
+            raise ValueError("Base size must be greater than 0")
+
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
         self.std_ratios, self.std_bounds = self._prepare_standard_aspect_ratios(std_aspect_ratios)
@@ -382,6 +411,11 @@ class OmitDownscalingPixels(Transformation):
             x_factor: By what factor was the input downscaled horizontally. Leave it None to omit horizontal crop.
             y_factor: By what factor was the input downscaled vertically. Leave it None to omit vertical crop.
         """
+        if x_factor is not None and x_factor < 1:
+            raise ValueError("Width factor must be an integer greater than/equal 1")
+        if y_factor is not None and y_factor < 1:
+            raise ValueError("Height factor must be an integer greater than/equal 1")
+
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
         self.x_factor = x_factor
@@ -526,6 +560,9 @@ class NormalizeDensityMap(Transformation):
             multiplier: The values in the density map will be multiplied by that number. Make sure to divide
                 the predicted density maps by the same number when calculating the count.
         """
+        if multiplier <= 0.0:
+            raise ValueError("Multiplier must be greater than 0")
+
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
         self.multiplier = multiplier
@@ -664,6 +701,12 @@ class Cutout(Transformation):
             raise ValueError("Cannot provide factor and fixed size at the same time")
         if size is None and factor is None:
             raise ValueError("Must provide factor or fixed size")
+        if size is not None and size <= 0:
+            raise ValueError("Size must be greater than 0 (and less than/equal smaller original image dimension")
+        if factor is not None and not 0.0 < factor <= 1.0:
+            raise ValueError("Factor must be between 0 (exclusive) and 1 (inclusive)")
+        if cuts_num < 1:
+            raise ValueError("Number of cuts must be an integer greater than 0")
 
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
