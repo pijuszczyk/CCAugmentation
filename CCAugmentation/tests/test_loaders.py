@@ -39,6 +39,13 @@ class CombinedLoaderTests(unittest.TestCase):
             dm_loader = cca.DensityMapCSVFileLoader('dm/')
         self.assertRaises(ValueError, lambda: cca.CombinedLoader(img_loader, gt_loader, dm_loader))
 
+    def test_invalid_converter(self):
+        with unittest.mock.patch('glob._iglob', return_value=['img1.jpg']):
+            img_loader = cca.ImageFileLoader('img/')
+        with unittest.mock.patch('glob._iglob', return_value=['gt1.mat']):
+            gt_loader = cca.GTPointsMatFileLoader('ground_truth/', lambda v: v["annPoints"])
+        self.assertRaises(ValueError, lambda: cca.CombinedLoader(img_loader, gt_loader, gt_to_dm_converter='wroong'))
+
 
 if __name__ == '__main__':
     unittest.main()

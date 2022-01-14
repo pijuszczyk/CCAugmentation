@@ -24,11 +24,11 @@ class _SHHGTLoader(loaders.GTPointsMatFileLoader):
 
 
 class SHHLoader(loaders.CombinedLoader):
-    def __init__(self, dataset_dir, train_test, part):
+    def __init__(self, dataset_dir, train_test, part, gt_to_dm_converter='gaussian'):
         local = locals().copy()
         img_loader = _SHHImageLoader(dataset_dir, train_test, part)
         gt_loader = _SHHGTLoader(dataset_dir, train_test, part)
-        loaders.CombinedLoader.__init__(self, img_loader, gt_loader)
+        loaders.CombinedLoader.__init__(self, img_loader, gt_loader, gt_to_dm_converter=gt_to_dm_converter)
         self.args = self._prepare_args(local)
 
 
@@ -59,7 +59,7 @@ class _NWPUGTLoader(loaders.BasicGTPointsMatFileLoader):
 
 
 class NWPULoader(loaders.CombinedLoader):
-    def __init__(self, dataset_dir, train_val_test):
+    def __init__(self, dataset_dir, train_val_test, gt_to_dm_converter='gaussian'):
         img_loader = _NWPUImageLoader(dataset_dir, train_val_test)
         gt_loader = _NWPUGTLoader(dataset_dir, train_val_test)
-        loaders.CombinedLoader.__init__(self, img_loader, gt_loader)
+        loaders.CombinedLoader.__init__(self, img_loader, gt_loader, gt_to_dm_converter=gt_to_dm_converter)
