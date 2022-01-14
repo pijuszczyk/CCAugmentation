@@ -87,8 +87,8 @@ class Dropout(Operation):
             probability: Each sample will be dropped out with this probability, meaning that the estimated number of
                 output images for a dataset with `N` samples is `N*(1-probability)`.
         """
-        if not 0.0 <= probability <= 1.0:
-            raise ValueError("Probability must be between 0 and 1")
+        if not 0.0 <= probability < 1.0:
+            raise ValueError("Probability must be between 0 (inclusive) and 1 (exclusive)")
 
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
