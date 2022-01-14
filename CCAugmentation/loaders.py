@@ -5,6 +5,8 @@ from glob import glob as _glob
 
 import cv2 as _cv2
 import numpy as _np
+from scipy.ndimage.filters import gaussian_filter as _gaussian_filter
+from scipy.spatial import KDTree as _KDTree
 from scipy.io import loadmat as _loadmat
 
 
@@ -68,6 +70,46 @@ def get_density_map_gaussian(im, points):
             )
         im_density[y1:y2, x1:x2] += H
 
+    return im_density
+
+
+def get_density_map_geometry_adaptive_gaussian_kernel(im, points):
+    """
+    Create a density map using Geometry-Adaptive Gaussian kernel proposed in:
+    https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf
+
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
+    """
+    h, w = im.shape[:2]
+    im_density = _np.zeros((h, w), dtype=_np.float32)
+    if len(points) == 0:
+        return im_density
+
+    for point in points:
+        x = _np.clip(round(point[0]), 0, w-1)
+        y = _np.clip(round(point[1]), 0, h-1)
+        im_density[y, x] = 1
+
+    if len(points) == 1:
+        sigma = 0
+        im_density += _gaussian_filter(points, sigma, mode='constant')
+        return im_density
+
+    tree = _KDTree(points, leafsize=2048)
+    distances, _ = tree.query(points, k=3)
+
+    beta = 0.3
+
+    for i, point in enumerate(points):
+        point_2d = _np.zeros(im_density.shape, dtype=_np.floa32)
+        point_2d[point[1], point[0]] = 1.
+        sigma = (distances[i][1] + distances[i][2] + distances[i][3]) * beta
+        im_density += _gaussian_filter(points, sigma, mode='constant')
     return im_density
 
 
@@ -349,18 +391,24 @@ class CombinedLoader(Loader):
     Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
     density maps (be it straight from a loader or from transformed on-the-fly GT points).
     """
-    def __init__(self, img_loader, gt_loader, den_map_loader=None):
+    def __init__(self, img_loader, gt_loader, den_map_loader=None, gt_to_dm_converter='gaussian'):
         """
         Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
-        provide density maps related to the images loaded using `img_loader`.
+        provide density maps related to the images loaded using `img_loader`. If using ground truth loader, you may
+        also customize how the points will be converted to a density map by specifying `gt_to_dm_converter`.
 
         Args:
             img_loader: Loader that provides an iterable of images.
             gt_loader: Loader that provides an iterable of lists of points.
             den_map_loader: Loader that provides an iterable of density maps.
+            gt_to_dm_converter: How the points from the ground truth will be converted to a density map, should such
+                conversion happen - when using gt_loader.
         """
         if (gt_loader is None) == (den_map_loader is None):
             raise ValueError("One and only one loader for target must be selected")
+        if gt_to_dm_converter not in ['gaussian', 'geometry-adaptive gaussian']:
+            raise ValueError("Only two converters are available: 'gaussian' and 'geometry-adaptive gaussian'. Please"
+                             "use one of them.")
 
         Loader.__init__(self)
         self.args = {
@@ -375,6 +423,8 @@ class CombinedLoader(Loader):
         self.img_loader = img_loader
         self.gt_loader = gt_loader
         self.den_map_loader = den_map_loader
+        self.gt_to_dm_converter = get_density_map_gaussian if 'gaussian' \
+            else get_density_map_geometry_adaptive_gaussian_kernel
 
     def get_number_of_loadable_samples(self):
         """
@@ -409,7 +459,7 @@ class CombinedLoader(Loader):
                         gt = next(gt_gen)
                     except StopIteration:
                         raise ValueError(f"Missing ground truth for image {str(cnt)}")
-                    den_map = get_density_map_gaussian(img, gt)
+                    den_map = self.gt_to_dm_converter(img, gt)
                     yield img, den_map
                     cnt += 1
             except StopIteration:
