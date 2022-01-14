@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>CCAugmentation.outputs API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>CCAugmentation.outputs</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import csv as _csv
+import os as _os
+import pickle as _pickle
+
+import cv2 as _cv2
+import matplotlib.pyplot as _plt
+
+from .operations import Operation
+
+
+class Output(Operation):
+    &#34;&#34;&#34;
+    Abstract base class for operations that don&#39;t modify the processed samples but generate some output.
+    Note that when using augmentation on-the-fly, using Output classes is not needed and one may just collect the data
+    from the pipeline repeatedly.
+    &#34;&#34;&#34;
+    def __init__(self):
+        &#34;&#34;&#34; Trivial constructor &#34;&#34;&#34;
+        Operation.__init__(self)
+        self.args = self._prepare_args(locals())
+
+    def execute(self, images_and_density_maps):
+        &#34;&#34;&#34; See `output` &#34;&#34;&#34;
+        return self.output(images_and_density_maps)
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34; Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
+        img+DM pairs, while generating some side-effect output &#34;&#34;&#34;
+        raise NotImplementedError(&#34;output method not implemented in the child class&#34;)
+
+
+class Demonstrate(Output):
+    &#34;&#34;&#34;
+    Output that shows a few examples of preprocessed img+DM pairs using GUI.
+    &#34;&#34;&#34;
+    def __init__(self, max_examples=None, show_density_map=True, density_map_cmap=None):
+        &#34;&#34;&#34;
+        Specify demonstration looks.
+
+        Args:
+            max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration.
+                If `max_examples` exceeds the actual number of samples, the function ends earlier.
+            show_density_map: Whether to show the density map right next to the preprocessed image.
+            density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn&#39;t passed to
+                imshow().
+        &#34;&#34;&#34;
+        if max_examples is not None and max_examples &lt; 1:
+            raise ValueError(&#34;Max examples number must be an integer greater than 0. If you wish to set no limit, &#34;
+                             &#34;please use None&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.max_examples = max_examples
+        self.show_density_map = show_density_map
+        self.density_map_cmap = density_map_cmap
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Show examples of preprocessed data.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        max_examples = self.max_examples if self.max_examples is not None else float(&#34;inf&#34;)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            if cnt &lt; max_examples:
+                cols = 2 if self.show_density_map else 1
+                _, axes = _plt.subplots(1, cols, figsize=(20, 4))
+                axes[0].set_title(f&#34;Image {str(cnt)}&#34;)
+                axes[0].imshow(_cv2.cvtColor(image, _cv2.COLOR_BGR2RGB))
+                if self.show_density_map:
+                    axes[1].set_title(f&#34;Density map {str(cnt)}&#34;)
+                    if self.density_map_cmap is None:
+                        axes[1].imshow(density_map)
+                    else:
+                        axes[1].imshow(density_map, cmap=self.density_map_cmap)
+                _plt.show(block=False)
+                _cv2.waitKey(0)
+            yield image, density_map
+            cnt += 1
+
+
+class SaveImagesToFiles(Output):
+    &#34;&#34;&#34;
+    Output that saves the images to image files, be it PNG, JPG or BMP.
+    Each image is saved separately, and the name of the file is deduced from the image&#39;s index.
+    &#34;&#34;&#34;
+    def __init__(self, dir_path, file_extension=&#34;jpg&#34;):
+        &#34;&#34;&#34;
+        Define an output that saves the images with the chosen file extension to a given directory. For the list of
+        supported extensions, please check opencv-python documentation.
+
+        Args:
+            dir_path: Directory where all the images will be saved.
+            file_extension: File extension and at the same time format of the saved image.
+        &#34;&#34;&#34;
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dir_path = dir_path
+        self.file_extension = file_extension
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the images in a given directory, making the directory if necessary. File names are constructed using
+        image&#39;s index, starting from 0.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            path = _os.path.join(self.dir_path, f&#34;IMG_{str(cnt)}.{self.file_extension}&#34;)
+            _cv2.imwrite(path, image)
+            yield image, density_map
+            cnt += 1
+
+
+class SaveImagesToBinaryFile(Output):
+    &#34;&#34;&#34;
+    Output that saves all the images in form of a serialized list to a single binary file, allowing faster loading.
+    &#34;&#34;&#34;
+    def __init__(self, file_path, keep_3_dimensions=True):
+        &#34;&#34;&#34;
+        Defines the output operation.
+
+        Args:
+            file_path: Path where the file with all the images will be saved.
+        :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays
+            with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
+        &#34;&#34;&#34;
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.file_path = file_path
+        self.keep_3_dimensions = keep_3_dimensions
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the images to a binary file.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
+        images = []
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            if self.keep_3_dimensions and len(image.shape) != 3:
+                images.append(image.copy().reshape(*image.shape, 1))
+            else:
+                images.append(image)
+            yield image, density_map
+        with open(self.file_path, &#39;wb&#39;) as f:
+            _pickle.dump(images, f)
+
+
+class SaveDensityMapsToCSVFiles(Output):
+    &#34;&#34;&#34;
+    Output that saves density maps to CSV files, one density map per file.
+    &#34;&#34;&#34;
+    def __init__(self, dir_path, downscaling=None):
+        &#34;&#34;&#34;
+        Define output that saves to a given directory. Optionally, downscaling may be used when the density maps are
+        expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
+
+        Args:
+            dir_path: Directory where the CSV files will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps&#39; widths and heights will be reduced to 1/4ths the original.
+        &#34;&#34;&#34;
+        if downscaling is not None and not 0.0 &lt; downscaling &lt;= 1.0:
+            raise ValueError(&#34;Downscaling factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dir_path = dir_path
+        self.downscaling = downscaling
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the density maps to files.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
+            path = _os.path.join(self.dir_path, f&#34;GT_{str(cnt)}.csv&#34;)
+            with open(path, &#39;w&#39;, newline=&#39;&#39;) as f:
+                _csv.writer(f).writerows(den_map_to_save)
+            yield image, density_map
+            cnt += 1
+
+
+class SaveDensityMapsToBinaryFile(Output):
+    &#34;&#34;&#34;
+    Output that saves density maps in form of serialized lists to a single large binary file, allowing faster loading.
+    &#34;&#34;&#34;
+    def __init__(self, file_path, downscaling=None, keep_3_dimensions=True):
+        &#34;&#34;&#34;
+        Define output that saves to a given path. Optionally, downscaling may be used when the density maps are
+        expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
+
+        Args:
+            file_path: Path where the file with all the density maps will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps&#39; widths and heights will be reduced to 1/4ths the original.
+            keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2]
+                (indicating channels number) left out instead of being 1. This fixes their shape.
+        &#34;&#34;&#34;
+        if downscaling is not None and not 0.0 &lt; downscaling &lt;= 1.0:
+            raise ValueError(&#34;Downscaling factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.file_path = file_path
+        self.downscaling = downscaling
+        self.keep_3_dimensions = keep_3_dimensions
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the density maps to a file.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
+        den_maps = []
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
+            if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
+                den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
+            den_maps.append(den_map_to_save)
+            yield image, density_map
+        with open(self.file_path, &#39;wb&#39;) as f:
+            _pickle.dump(den_maps, f)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="CCAugmentation.outputs.Demonstrate"><code class="flex name class">
+<span>class <span class="ident">Demonstrate</span></span>
+<span>(</span><span>max_examples=None, show_density_map=True, density_map_cmap=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output that shows a few examples of preprocessed img+DM pairs using GUI.</p>
+<p>Specify demonstration looks.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>max_examples</code></strong></dt>
+<dd>Number of examples that will be shown. The examples are taken from the beginning of iteration.
+If <code>max_examples</code> exceeds the actual number of samples, the function ends earlier.</dd>
+<dt><strong><code>show_density_map</code></strong></dt>
+<dd>Whether to show the density map right next to the preprocessed image.</dd>
+<dt><strong><code>density_map_cmap</code></strong></dt>
+<dd>CMAP to use if and when plotting the density map. If None, the argument isn't passed to
+imshow().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Demonstrate(Output):
+    &#34;&#34;&#34;
+    Output that shows a few examples of preprocessed img+DM pairs using GUI.
+    &#34;&#34;&#34;
+    def __init__(self, max_examples=None, show_density_map=True, density_map_cmap=None):
+        &#34;&#34;&#34;
+        Specify demonstration looks.
+
+        Args:
+            max_examples: Number of examples that will be shown. The examples are taken from the beginning of iteration.
+                If `max_examples` exceeds the actual number of samples, the function ends earlier.
+            show_density_map: Whether to show the density map right next to the preprocessed image.
+            density_map_cmap: CMAP to use if and when plotting the density map. If None, the argument isn&#39;t passed to
+                imshow().
+        &#34;&#34;&#34;
+        if max_examples is not None and max_examples &lt; 1:
+            raise ValueError(&#34;Max examples number must be an integer greater than 0. If you wish to set no limit, &#34;
+                             &#34;please use None&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.max_examples = max_examples
+        self.show_density_map = show_density_map
+        self.density_map_cmap = density_map_cmap
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Show examples of preprocessed data.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        max_examples = self.max_examples if self.max_examples is not None else float(&#34;inf&#34;)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            if cnt &lt; max_examples:
+                cols = 2 if self.show_density_map else 1
+                _, axes = _plt.subplots(1, cols, figsize=(20, 4))
+                axes[0].set_title(f&#34;Image {str(cnt)}&#34;)
+                axes[0].imshow(_cv2.cvtColor(image, _cv2.COLOR_BGR2RGB))
+                if self.show_density_map:
+                    axes[1].set_title(f&#34;Density map {str(cnt)}&#34;)
+                    if self.density_map_cmap is None:
+                        axes[1].imshow(density_map)
+                    else:
+                        axes[1].imshow(density_map, cmap=self.density_map_cmap)
+                _plt.show(block=False)
+                _cv2.waitKey(0)
+            yield image, density_map
+            cnt += 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.Demonstrate.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Show examples of preprocessed data.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of img+DM pairs.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterator of unchanged img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Show examples of preprocessed data.
+
+    Args:
+        images_and_density_maps: Iterator of img+DM pairs.
+
+    Returns:
+        Iterator of unchanged img+DM pairs.
+    &#34;&#34;&#34;
+    max_examples = self.max_examples if self.max_examples is not None else float(&#34;inf&#34;)
+    cnt = 0
+    for image_and_density_map in images_and_density_maps:
+        image, density_map = image_and_density_map
+        if cnt &lt; max_examples:
+            cols = 2 if self.show_density_map else 1
+            _, axes = _plt.subplots(1, cols, figsize=(20, 4))
+            axes[0].set_title(f&#34;Image {str(cnt)}&#34;)
+            axes[0].imshow(_cv2.cvtColor(image, _cv2.COLOR_BGR2RGB))
+            if self.show_density_map:
+                axes[1].set_title(f&#34;Density map {str(cnt)}&#34;)
+                if self.density_map_cmap is None:
+                    axes[1].imshow(density_map)
+                else:
+                    axes[1].imshow(density_map, cmap=self.density_map_cmap)
+            _plt.show(block=False)
+            _cv2.waitKey(0)
+        yield image, density_map
+        cnt += 1</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.outputs.Output"><code class="flex name class">
+<span>class <span class="ident">Output</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract base class for operations that don't modify the processed samples but generate some output.
+Note that when using augmentation on-the-fly, using Output classes is not needed and one may just collect the data
+from the pipeline repeatedly.</p>
+<p>Trivial constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Output(Operation):
+    &#34;&#34;&#34;
+    Abstract base class for operations that don&#39;t modify the processed samples but generate some output.
+    Note that when using augmentation on-the-fly, using Output classes is not needed and one may just collect the data
+    from the pipeline repeatedly.
+    &#34;&#34;&#34;
+    def __init__(self):
+        &#34;&#34;&#34; Trivial constructor &#34;&#34;&#34;
+        Operation.__init__(self)
+        self.args = self._prepare_args(locals())
+
+    def execute(self, images_and_density_maps):
+        &#34;&#34;&#34; See `output` &#34;&#34;&#34;
+        return self.output(images_and_density_maps)
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34; Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
+        img+DM pairs, while generating some side-effect output &#34;&#34;&#34;
+        raise NotImplementedError(&#34;output method not implemented in the child class&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Demonstrate" href="#CCAugmentation.outputs.Demonstrate">Demonstrate</a></li>
+<li><a title="CCAugmentation.outputs.SaveDensityMapsToBinaryFile" href="#CCAugmentation.outputs.SaveDensityMapsToBinaryFile">SaveDensityMapsToBinaryFile</a></li>
+<li><a title="CCAugmentation.outputs.SaveDensityMapsToCSVFiles" href="#CCAugmentation.outputs.SaveDensityMapsToCSVFiles">SaveDensityMapsToCSVFiles</a></li>
+<li><a title="CCAugmentation.outputs.SaveImagesToBinaryFile" href="#CCAugmentation.outputs.SaveImagesToBinaryFile">SaveImagesToBinaryFile</a></li>
+<li><a title="CCAugmentation.outputs.SaveImagesToFiles" href="#CCAugmentation.outputs.SaveImagesToFiles">SaveImagesToFiles</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.Output.execute"><code class="name flex">
+<span>def <span class="ident">execute</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>See <code>output</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute(self, images_and_density_maps):
+    &#34;&#34;&#34; See `output` &#34;&#34;&#34;
+    return self.output(images_and_density_maps)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.outputs.Output.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
+img+DM pairs, while generating some side-effect output</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34; Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
+    img+DM pairs, while generating some side-effect output &#34;&#34;&#34;
+    raise NotImplementedError(&#34;output method not implemented in the child class&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.operations.Operation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.operations.Operation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.outputs.SaveDensityMapsToBinaryFile"><code class="flex name class">
+<span>class <span class="ident">SaveDensityMapsToBinaryFile</span></span>
+<span>(</span><span>file_path, downscaling=None, keep_3_dimensions=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output that saves density maps in form of serialized lists to a single large binary file, allowing faster loading.</p>
+<p>Define output that saves to a given path. Optionally, downscaling may be used when the density maps are
+expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>Path where the file with all the density maps will be saved.</dd>
+<dt><strong><code>downscaling</code></strong></dt>
+<dd>If not None, downscales the density maps by a given factor - for example, when using
+<code>downscaling</code> equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.</dd>
+<dt><strong><code>keep_3_dimensions</code></strong></dt>
+<dd>The numerical representations of density maps may be numpy arrays with shape[2]
+(indicating channels number) left out instead of being 1. This fixes their shape.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SaveDensityMapsToBinaryFile(Output):
+    &#34;&#34;&#34;
+    Output that saves density maps in form of serialized lists to a single large binary file, allowing faster loading.
+    &#34;&#34;&#34;
+    def __init__(self, file_path, downscaling=None, keep_3_dimensions=True):
+        &#34;&#34;&#34;
+        Define output that saves to a given path. Optionally, downscaling may be used when the density maps are
+        expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
+
+        Args:
+            file_path: Path where the file with all the density maps will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps&#39; widths and heights will be reduced to 1/4ths the original.
+            keep_3_dimensions: The numerical representations of density maps may be numpy arrays with shape[2]
+                (indicating channels number) left out instead of being 1. This fixes their shape.
+        &#34;&#34;&#34;
+        if downscaling is not None and not 0.0 &lt; downscaling &lt;= 1.0:
+            raise ValueError(&#34;Downscaling factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.file_path = file_path
+        self.downscaling = downscaling
+        self.keep_3_dimensions = keep_3_dimensions
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the density maps to a file.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
+        den_maps = []
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
+            if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
+                den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
+            den_maps.append(den_map_to_save)
+            yield image, density_map
+        with open(self.file_path, &#39;wb&#39;) as f:
+            _pickle.dump(den_maps, f)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.SaveDensityMapsToBinaryFile.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the density maps to a file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of img+DM pairs.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterator of unchanged img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Save the density maps to a file.
+
+    Args:
+        images_and_density_maps: Iterator of img+DM pairs.
+
+    Returns:
+        Iterator of unchanged img+DM pairs.
+    &#34;&#34;&#34;
+    dir_path = _os.path.dirname(self.file_path)
+    if not _os.path.exists(dir_path):
+        _os.makedirs(dir_path)
+    den_maps = []
+    for image_and_density_map in images_and_density_maps:
+        image, density_map = image_and_density_map
+        den_map_to_save = density_map
+        if self.downscaling is not None:
+            den_map_to_save = _cv2.resize(
+                den_map_to_save, None, self.downscaling, self.downscaling, interpolation=_cv2.INTER_LINEAR
+            ) / self.downscaling ** 2
+        if self.keep_3_dimensions and len(den_map_to_save.shape) != 3:
+            den_map_to_save = den_map_to_save.copy().reshape(*den_map_to_save.shape, 1)
+        den_maps.append(den_map_to_save)
+        yield image, density_map
+    with open(self.file_path, &#39;wb&#39;) as f:
+        _pickle.dump(den_maps, f)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.outputs.SaveDensityMapsToCSVFiles"><code class="flex name class">
+<span>class <span class="ident">SaveDensityMapsToCSVFiles</span></span>
+<span>(</span><span>dir_path, downscaling=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output that saves density maps to CSV files, one density map per file.</p>
+<p>Define output that saves to a given directory. Optionally, downscaling may be used when the density maps are
+expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dir_path</code></strong></dt>
+<dd>Directory where the CSV files will be saved.</dd>
+<dt><strong><code>downscaling</code></strong></dt>
+<dd>If not None, downscales the density maps by a given factor - for example, when using
+<code>downscaling</code> equal to 0.25, maps' widths and heights will be reduced to 1/4ths the original.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SaveDensityMapsToCSVFiles(Output):
+    &#34;&#34;&#34;
+    Output that saves density maps to CSV files, one density map per file.
+    &#34;&#34;&#34;
+    def __init__(self, dir_path, downscaling=None):
+        &#34;&#34;&#34;
+        Define output that saves to a given directory. Optionally, downscaling may be used when the density maps are
+        expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
+
+        Args:
+            dir_path: Directory where the CSV files will be saved.
+            downscaling: If not None, downscales the density maps by a given factor - for example, when using
+                `downscaling` equal to 0.25, maps&#39; widths and heights will be reduced to 1/4ths the original.
+        &#34;&#34;&#34;
+        if downscaling is not None and not 0.0 &lt; downscaling &lt;= 1.0:
+            raise ValueError(&#34;Downscaling factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dir_path = dir_path
+        self.downscaling = downscaling
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the density maps to files.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            den_map_to_save = density_map
+            if self.downscaling is not None:
+                den_map_to_save = _cv2.resize(
+                    den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR
+                ) / self.downscaling ** 2
+            path = _os.path.join(self.dir_path, f&#34;GT_{str(cnt)}.csv&#34;)
+            with open(path, &#39;w&#39;, newline=&#39;&#39;) as f:
+                _csv.writer(f).writerows(den_map_to_save)
+            yield image, density_map
+            cnt += 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.SaveDensityMapsToCSVFiles.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the density maps to files.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of img+DM pairs.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterator of unchanged img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Save the density maps to files.
+
+    Args:
+        images_and_density_maps: Iterator of img+DM pairs.
+
+    Returns:
+        Iterator of unchanged img+DM pairs.
+    &#34;&#34;&#34;
+    if not _os.path.exists(self.dir_path):
+        _os.makedirs(self.dir_path)
+    cnt = 0
+    for image_and_density_map in images_and_density_maps:
+        image, density_map = image_and_density_map
+        den_map_to_save = density_map
+        if self.downscaling is not None:
+            den_map_to_save = _cv2.resize(
+                den_map_to_save, None, fx=self.downscaling, fy=self.downscaling, interpolation=_cv2.INTER_LINEAR
+            ) / self.downscaling ** 2
+        path = _os.path.join(self.dir_path, f&#34;GT_{str(cnt)}.csv&#34;)
+        with open(path, &#39;w&#39;, newline=&#39;&#39;) as f:
+            _csv.writer(f).writerows(den_map_to_save)
+        yield image, density_map
+        cnt += 1</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.outputs.SaveImagesToBinaryFile"><code class="flex name class">
+<span>class <span class="ident">SaveImagesToBinaryFile</span></span>
+<span>(</span><span>file_path, keep_3_dimensions=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output that saves all the images in form of a serialized list to a single binary file, allowing faster loading.</p>
+<p>Defines the output operation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>Path where the file with all the images will be saved.</dd>
+</dl>
+<p>:param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays
+with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SaveImagesToBinaryFile(Output):
+    &#34;&#34;&#34;
+    Output that saves all the images in form of a serialized list to a single binary file, allowing faster loading.
+    &#34;&#34;&#34;
+    def __init__(self, file_path, keep_3_dimensions=True):
+        &#34;&#34;&#34;
+        Defines the output operation.
+
+        Args:
+            file_path: Path where the file with all the images will be saved.
+        :param keep_3_dimensions: When working on grayscale images, their numerical representations may be numpy arrays
+            with shape[2] (indicating channels number) left out instead of being 1. This fixes their shape.
+        &#34;&#34;&#34;
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.file_path = file_path
+        self.keep_3_dimensions = keep_3_dimensions
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the images to a binary file.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        dir_path = _os.path.dirname(self.file_path)
+        if not _os.path.exists(dir_path):
+            _os.makedirs(dir_path)
+        images = []
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            if self.keep_3_dimensions and len(image.shape) != 3:
+                images.append(image.copy().reshape(*image.shape, 1))
+            else:
+                images.append(image)
+            yield image, density_map
+        with open(self.file_path, &#39;wb&#39;) as f:
+            _pickle.dump(images, f)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.SaveImagesToBinaryFile.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the images to a binary file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of img+DM pairs.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterator of unchanged img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Save the images to a binary file.
+
+    Args:
+        images_and_density_maps: Iterator of img+DM pairs.
+
+    Returns:
+        Iterator of unchanged img+DM pairs.
+    &#34;&#34;&#34;
+    dir_path = _os.path.dirname(self.file_path)
+    if not _os.path.exists(dir_path):
+        _os.makedirs(dir_path)
+    images = []
+    for image_and_density_map in images_and_density_maps:
+        image, density_map = image_and_density_map
+        if self.keep_3_dimensions and len(image.shape) != 3:
+            images.append(image.copy().reshape(*image.shape, 1))
+        else:
+            images.append(image)
+        yield image, density_map
+    with open(self.file_path, &#39;wb&#39;) as f:
+        _pickle.dump(images, f)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.outputs.SaveImagesToFiles"><code class="flex name class">
+<span>class <span class="ident">SaveImagesToFiles</span></span>
+<span>(</span><span>dir_path, file_extension='jpg')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output that saves the images to image files, be it PNG, JPG or BMP.
+Each image is saved separately, and the name of the file is deduced from the image's index.</p>
+<p>Define an output that saves the images with the chosen file extension to a given directory. For the list of
+supported extensions, please check opencv-python documentation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dir_path</code></strong></dt>
+<dd>Directory where all the images will be saved.</dd>
+<dt><strong><code>file_extension</code></strong></dt>
+<dd>File extension and at the same time format of the saved image.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SaveImagesToFiles(Output):
+    &#34;&#34;&#34;
+    Output that saves the images to image files, be it PNG, JPG or BMP.
+    Each image is saved separately, and the name of the file is deduced from the image&#39;s index.
+    &#34;&#34;&#34;
+    def __init__(self, dir_path, file_extension=&#34;jpg&#34;):
+        &#34;&#34;&#34;
+        Define an output that saves the images with the chosen file extension to a given directory. For the list of
+        supported extensions, please check opencv-python documentation.
+
+        Args:
+            dir_path: Directory where all the images will be saved.
+            file_extension: File extension and at the same time format of the saved image.
+        &#34;&#34;&#34;
+        Output.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dir_path = dir_path
+        self.file_extension = file_extension
+
+    def output(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Save the images in a given directory, making the directory if necessary. File names are constructed using
+        image&#39;s index, starting from 0.
+
+        Args:
+            images_and_density_maps: Iterator of img+DM pairs.
+
+        Returns:
+            Iterator of unchanged img+DM pairs.
+        &#34;&#34;&#34;
+        if not _os.path.exists(self.dir_path):
+            _os.makedirs(self.dir_path)
+        cnt = 0
+        for image_and_density_map in images_and_density_maps:
+            image, density_map = image_and_density_map
+            path = _os.path.join(self.dir_path, f&#34;IMG_{str(cnt)}.{self.file_extension}&#34;)
+            _cv2.imwrite(path, image)
+            yield image, density_map
+            cnt += 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.outputs.SaveImagesToFiles.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the images in a given directory, making the directory if necessary. File names are constructed using
+image's index, starting from 0.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of img+DM pairs.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterator of unchanged img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Save the images in a given directory, making the directory if necessary. File names are constructed using
+    image&#39;s index, starting from 0.
+
+    Args:
+        images_and_density_maps: Iterator of img+DM pairs.
+
+    Returns:
+        Iterator of unchanged img+DM pairs.
+    &#34;&#34;&#34;
+    if not _os.path.exists(self.dir_path):
+        _os.makedirs(self.dir_path)
+    cnt = 0
+    for image_and_density_map in images_and_density_maps:
+        image, density_map = image_and_density_map
+        path = _os.path.join(self.dir_path, f&#34;IMG_{str(cnt)}.{self.file_extension}&#34;)
+        _cv2.imwrite(path, image)
+        yield image, density_map
+        cnt += 1</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="CCAugmentation" href="index.html">CCAugmentation</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="CCAugmentation.outputs.Demonstrate" href="#CCAugmentation.outputs.Demonstrate">Demonstrate</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.Demonstrate.output" href="#CCAugmentation.outputs.Demonstrate.output">output</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.outputs.Output" href="#CCAugmentation.outputs.Output">Output</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.Output.execute" href="#CCAugmentation.outputs.Output.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.outputs.Output.output" href="#CCAugmentation.outputs.Output.output">output</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.outputs.SaveDensityMapsToBinaryFile" href="#CCAugmentation.outputs.SaveDensityMapsToBinaryFile">SaveDensityMapsToBinaryFile</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.SaveDensityMapsToBinaryFile.output" href="#CCAugmentation.outputs.SaveDensityMapsToBinaryFile.output">output</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.outputs.SaveDensityMapsToCSVFiles" href="#CCAugmentation.outputs.SaveDensityMapsToCSVFiles">SaveDensityMapsToCSVFiles</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.SaveDensityMapsToCSVFiles.output" href="#CCAugmentation.outputs.SaveDensityMapsToCSVFiles.output">output</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.outputs.SaveImagesToBinaryFile" href="#CCAugmentation.outputs.SaveImagesToBinaryFile">SaveImagesToBinaryFile</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.SaveImagesToBinaryFile.output" href="#CCAugmentation.outputs.SaveImagesToBinaryFile.output">output</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.outputs.SaveImagesToFiles" href="#CCAugmentation.outputs.SaveImagesToFiles">SaveImagesToFiles</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.outputs.SaveImagesToFiles.output" href="#CCAugmentation.outputs.SaveImagesToFiles.output">output</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

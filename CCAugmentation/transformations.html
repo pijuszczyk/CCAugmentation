@@ -1,0 +1,3053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>CCAugmentation.transformations API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>CCAugmentation.transformations</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import random as _random
+
+import cv2 as _cv2
+import numpy as _np
+
+from .operations import Operation
+
+
+class Transformation(Operation):
+    &#34;&#34;&#34;
+    Abstract base class for any transformation that may occur on a set of image and density map pairs.
+    Each transformation accepts an iterable (most commonly a generator) of image and density map pairs and is expected
+    to return an iterable of the same cardinality. For custom transformations, please subclass this class or use
+    LambdaTransformation.
+    &#34;&#34;&#34;
+    def __init__(self, probability):
+        &#34;&#34;&#34;
+        Create a new abstract transformation that is applied with specified probability.
+
+        Args:
+            probability: Float value between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if not 0.0 &lt;= probability &lt;= 1.0:
+            raise ValueError(&#34;Probability must be between 0 and 1&#34;)
+
+        Operation.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.probability = probability
+
+    def execute(self, images_and_density_maps):
+        &#34;&#34;&#34; See `transform_all` &#34;&#34;&#34;
+        return self.transform_all(images_and_density_maps)
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Abstract method to be implemented in child classes. Most often, this and __init__ methods are the only ones
+        that must be defined.
+
+        Args:
+            image: Image that will be transformed.
+            density_map: Density map that will be transformed according to the image transformation.
+
+        Returns:
+            Transformed pair of image and density map.
+        &#34;&#34;&#34;
+        raise NotImplementedError(&#34;transform method not implemented in the child class&#34;)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Execute transformation with earlier specified probability on an iterable of img+DM pairs.
+
+        Args:
+            images_and_density_maps: Iterable of img+DM pairs to maybe be transformed.
+
+        Returns:
+            Iterable of maybe transformed img+DM pairs.
+        &#34;&#34;&#34;
+        for img_and_den_map in images_and_density_maps:
+            yield self.transform(*img_and_den_map) if _random.random() &lt; self.probability else img_and_den_map
+
+
+def _crop(image, density_map, new_w, new_h, centered):
+    h, w = image.shape[:2]
+
+    if centered:
+        x0 = (w - new_w) // 2
+        y0 = (h - new_h) // 2
+    else:
+        x0 = _random.randint(0, w - new_w)
+        y0 = _random.randint(0, h - new_h)
+    x1 = x0 + new_w
+    y1 = y0 + new_h
+
+    new_img = image[y0:y1, x0:x1]
+    new_den_map = density_map[y0:y1, x0:x1]
+
+    return new_img, new_den_map
+
+
+class Crop(Transformation):
+    &#34;&#34;&#34;
+    Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
+    or a fraction of the original one). Density map is also reduced to keep it relevant to the image.
+    &#34;&#34;&#34;
+    def __init__(self, width, height, x_factor=None, y_factor=None, centered=False, probability=1.0):
+        &#34;&#34;&#34;
+        Define cropping with specified output size, applied with some probability. One may use a combination of
+        fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
+        dimension: one and only of them can be specified.
+
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            centered: Whether crops are taken from the center or at random positions.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if (width is None and x_factor is None) or (height is None and y_factor is None):
+            raise ValueError(&#34;Must provide factor or fixed size for both dimensions&#34;)
+        if width is not None and width &lt;= 0:
+            raise ValueError(&#34;Width must be greater than 0 (and less than/equal original width)&#34;)
+        if height is not None and height &lt;= 0:
+            raise ValueError(&#34;Height must be greater than 0 (and less than/equal original height)&#34;)
+        if x_factor is not None and not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if y_factor is not None and not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.width = width
+        self.height = height
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+        self.centered = centered
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Crop an image at a random position (or center) to specified size.
+
+        Args:
+            image: Image to be cropped.
+            density_map: Density map to be cropped accordingly, with the same size as the image.
+
+        Returns:
+            Cropped pair of image and density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        new_w = round(w * self.x_factor) if self.width is None else self.width
+        new_h = round(h * self.y_factor) if self.height is None else self.height
+        return _crop(image, density_map, new_w, new_h, self.centered)
+
+
+class Scale(Transformation):
+    &#34;&#34;&#34;
+    Scaling transformation that increases or decreases input size.
+    &#34;&#34;&#34;
+    def __init__(self, width, height, x_factor=None, y_factor=None, probability=1.0):
+        &#34;&#34;&#34;
+        Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
+        relative size with a given probability. One may use a combination of fixed and relative size for separate image
+        dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be
+        specified.
+
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if (width is None and x_factor is None) or (height is None and y_factor is None):
+            raise ValueError(&#34;Must provide factor or fixed size for both dimensions&#34;)
+        if width is not None and width &lt;= 0:
+            raise ValueError(&#34;Width must be greater than 0 (and less than/equal original width)&#34;)
+        if height is not None and height &lt;= 0:
+            raise ValueError(&#34;Height must be greater than 0 (and less than/equal original height)&#34;)
+        if x_factor is not None and not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if y_factor is not None and not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.width = width
+        self.height = height
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Scale an image and the corresponding density map to a specified size.
+
+        Args:
+            image: Image to be scaled.
+            density_map: Density map to be scaled accordingly.
+
+        Returns:
+            Scaled pair of image and density map.
+        &#34;&#34;&#34;
+        if self.width and self.height:
+            h, w = image.shape[:2]
+            scale_x = self.width / w
+            scale_y = self.height / h
+
+            new_img = _cv2.resize(
+                image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR
+            ) / scale_x / scale_y
+        else:
+            new_img = _cv2.resize(
+                image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR
+            ) / self.x_factor / self.y_factor
+        return new_img, new_den_map
+
+
+class Downscale(Transformation):
+    &#34;&#34;&#34;
+    Downscales and then upscales an image, decreasing its quality.
+    &#34;&#34;&#34;
+    def __init__(self, x_factor, y_factor, probability=1.0):
+        &#34;&#34;&#34;
+        Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
+        original size. Note that some pixels may be lost due to integer rounding, leading to a slightly different size.
+
+        Args:
+            x_factor: Downscaling factor for width.
+            y_factor: Downscaling factor for height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.downscaler = Scale(None, None, x_factor, y_factor, 1.0)
+        self.upscaler = Scale(None, None, 1 / x_factor, 1 / y_factor, 1.0)
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Decrease an image quality. Density map stays the same.
+
+        Args:
+            image: Image to be downscaled and upscaled back to normal.
+            density_map: Corresponding density map that won&#39;t be affected.
+
+        Returns:
+            Pair of transformed img+DM.
+        &#34;&#34;&#34;
+        return self.upscaler.transform(*self.downscaler.transform(image, density_map))
+
+
+class Rotate(Transformation):
+    &#34;&#34;&#34;
+    Rotates the given image and density map. The rotation can be executed in two ways:
+
+    - The size of the input doesn&#39;t change, discarding pixels outside the frame and filling missing pixels in the frame
+        with black
+    - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling
+        missing pixels in the frame with black
+    &#34;&#34;&#34;
+    def __init__(self, angle, expand=False, probability=1.0):
+        &#34;&#34;&#34;
+        Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle
+        means counterclockwise rotation.
+
+        Args:
+            angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
+            expand: Whether to adjust frame size for it to contain all the original pixels.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.angle = angle
+        self.expand = expand
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Rotate the image according to specification.
+
+        Args:
+            image: Image to be rotated.
+            density_map: Related density map that will be rotated accordingly.
+
+        Returns:
+            Pair of rotated image and rotated accordingly density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        center_x, center_y = w / 2, h / 2
+        rot_mat = _cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
+
+        if self.expand:
+            cos, sin = _np.abs(rot_mat[0][:2])
+
+            # calculate width and height that will allow the rotated image to be fully preserved
+            new_w = int(w * cos + h * sin)
+            new_h = int(w * sin + h * cos)
+
+            # add translation to the matrix
+            rot_mat[0, 2] += (new_w / 2) - center_x
+            rot_mat[1, 2] += (new_h / 2) - center_y
+        else:
+            new_w, new_h = w, h
+
+        return _cv2.warpAffine(image, rot_mat, (new_w, new_h)), _cv2.warpAffine(density_map, rot_mat, (new_w, new_h))
+
+
+class StandardizeSize(Transformation):
+    &#34;&#34;&#34;
+    Standardizes image and density map sizes in order to reduce variance in size and allow bigger batches.
+    This transformation takes a list of allowed aspect ratios for the images and the base size corresponding to the
+    length of the longer side of an image and scales each image (and relevant density map) to the size best fitting
+    the original size.
+    &#34;&#34;&#34;
+    def __init__(self, std_aspect_ratios, std_base_size):
+        &#34;&#34;&#34;
+        Create a size standardization transformation.
+
+        Args:
+            std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output
+                images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from
+                horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
+            std_base_size: Desired length of the longer side of the output images and density maps.
+        &#34;&#34;&#34;
+        if len(std_aspect_ratios) == 0:
+            raise ValueError(&#34;At least 1 allowed aspect ratio must be entered&#34;)
+        if std_base_size &lt;= 0:
+            raise ValueError(&#34;Base size must be greater than 0&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.std_ratios, self.std_bounds = self._prepare_standard_aspect_ratios(std_aspect_ratios)
+        self.std_base_size = std_base_size
+
+    @staticmethod
+    def _prepare_standard_aspect_ratios(std_ratios):
+        &#34;&#34;&#34;
+        Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
+        Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
+
+        Args:
+            std_ratios: Aspect ratios that are allowed for the output images and density maps.
+
+        Returns:
+            Sorted allowed aspect ratios and calculated boundaries between them.
+        &#34;&#34;&#34;
+        ratios = _np.sort(_np.array(std_ratios))
+        boundaries = _np.array([(prev + curr) / 2 for (prev, curr) in zip(ratios[:-1], ratios[1:])])
+        return ratios, boundaries
+
+    @staticmethod
+    def _find_the_most_similar_ratio(ratio_to_improve, std_ratios, std_boundaries):
+        &#34;&#34;&#34;
+        Find an allowed aspect ratio that is the most similar to the one provided.
+
+        Args:
+            ratio_to_improve: Aspect ratio that maybe can be improved.
+            std_ratios: Allowed aspect ratios.
+            std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
+
+        Returns:
+            Allowed aspect ratio that is the most similar to the provided one.
+        &#34;&#34;&#34;
+        last_matching_boundary_idx = _np.nonzero(ratio_to_improve &lt; std_boundaries)[0]
+        if last_matching_boundary_idx.shape[0] &gt; 0:
+            chosen_std_ratio_idx = last_matching_boundary_idx[0]
+        else:
+            chosen_std_ratio_idx = std_ratios.shape[0] - 1
+        return std_ratios[chosen_std_ratio_idx]
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.
+
+        Args:
+            image: Image with any aspect ratio.
+            density_map: Relevant density map of the same size as image.
+
+        Returns:
+            Scaled pair of image and its density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+
+        chosen_std_ratio = self._find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
+
+        if chosen_std_ratio &gt;= 1.0:
+            new_w = self.std_base_size
+            new_h = int(new_w / chosen_std_ratio)
+        else:
+            new_h = self.std_base_size
+            new_w = int(new_h * chosen_std_ratio)
+
+        # if the size cannot be standardized further, return
+        if (w, h) == (new_w, new_h):
+            return image, density_map
+
+        scale_x = new_w / w
+        scale_y = new_h / h
+
+        new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
+        new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+
+        return new_img, new_den_map
+
+
+class OmitDownscalingPixels(Transformation):
+    &#34;&#34;&#34;
+    Removes pixels that were lost due to downscaling (either by using a CCA transformation or by doing Pooling) by
+    performing a centered crop.
+    &#34;&#34;&#34;
+    def __init__(self, x_factor=None, y_factor=None):
+        &#34;&#34;&#34;
+        Create a centered cropping transformation that omits pixels lost due to downscaling. For example, given an input
+        image of 401x404 size, when it is downscaled by a factor of 4 in both dimensions (e.g. by doing
+        2 2x2 MaxPoolings and then interpolating using a factor of 4), the final size of the image is 400x400. This
+        transformation automatically resizes images and density maps to match the expected cut shape.
+
+        Args:
+            x_factor: By what factor was the input downscaled horizontally. Leave it None to omit horizontal crop.
+            y_factor: By what factor was the input downscaled vertically. Leave it None to omit vertical crop.
+        &#34;&#34;&#34;
+        if x_factor is not None and x_factor &lt; 1:
+            raise ValueError(&#34;Width factor must be an integer greater than/equal 1&#34;)
+        if y_factor is not None and y_factor &lt; 1:
+            raise ValueError(&#34;Height factor must be an integer greater than/equal 1&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the given image and density map.
+
+        Args:
+            image: Image that was downscaled.
+            density_map: Density map that was downscaled.
+
+        Returns:
+            Pair of transformed image and density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        new_w = w - (w % self.x_factor) if self.x_factor is not None else w
+        new_h = h - (h % self.y_factor) if self.y_factor is not None else h
+        return _crop(image, density_map, new_w, new_h, True)
+
+
+class Normalize(Transformation):
+    &#34;&#34;&#34;
+    Normalizes image pixel values using one of normalization methods.
+    &#34;&#34;&#34;
+    def __init__(self, method, by_channel=False, means=None, stds=None):
+        &#34;&#34;&#34;
+        Create a transformation that normalizes image pixel values using one of the following methods:
+
+        - `range_0_to_1` - values are scaled to be in fixed &lt;0; 1&gt; range mapped to the original &lt;0; 255&gt; range
+        - `range_-1_to_1` - values are scaled to be in fixed &lt;-1; 1&gt; range mapped to the original &lt;0; 255&gt; range
+        - `samplewise_centering` - values are translated to make their mean (in respect to a single image) equal to 0
+        - `samplewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to
+            a single image) equal to 1
+        - `featurewise_centering` - values are translated to make their mean (in respect to all images) equal to 0
+        - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all
+            images) equal to 1
+
+        Args:
+            method: Method that will be used for normalization, one of the above.
+            by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel
+                separately and the normalization will also occur by each channel. Else, the values will be normalized
+                by all channels at once.
+            means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies
+                depending on the normalization. Currently, only featurewise normalization uses it.
+            stds: If not None, the operation uses those standard deviation values instead of computing them on its own.
+                Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+        &#34;&#34;&#34;
+        if method not in [&#34;range_0_to_1&#34;, &#34;range_-1_to_1&#34;, &#34;samplewise_centering&#34;, &#34;samplewise_std_normalization&#34;,
+                          &#34;featurewise_centering&#34;, &#34;featurewise_std_normalization&#34;]:
+            raise ValueError(f&#34;Wrong method of normalization selected: {method}&#34;)
+        if method.startswith(&#34;range&#34;) and (means is not None or stds is not None):
+            raise ValueError(&#34;Fixed range normalization doesn&#39;t require computed mean/std values.&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        if (method == &#34;featurewise_centering&#34; and means is None) or \
+                (method == &#34;featurewise_std_normalization&#34; and stds is None):
+            self.requires_full_dataset_in_memory = True
+        self.method = method
+        self.by_channel = by_channel
+        self.means = means
+        self.stds = stds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the given image, return with the untouched density map.
+
+        Args:
+            image: Image whose pixel values will be normalized.
+            density_map: Density map that won&#39;t be affected.
+
+        Returns:
+            Pair of transformed image and corresponding density map.
+        &#34;&#34;&#34;
+        mean_std_axes = (0, 1) if self.by_channel else None
+        if self.by_channel and len(image.shape) != 3:
+            image.shape = (*image.shape, 1)
+
+        if self.method == &#34;range_-1_to_1&#34;:
+            return (image - 127.5) / 255.0, density_map
+        elif self.method == &#34;range_0_to_1&#34;:
+            return image / 255.0, density_map
+        elif self.method == &#34;samplewise_centering&#34;:
+            return image - _np.resize(_np.mean(image, mean_std_axes), [*image.shape]), density_map
+        elif self.method == &#34;samplewise_std_normalization&#34;:
+            return image / _np.resize(_np.std(image, mean_std_axes), [*image.shape]), density_map
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Overriding method looping over all img+DM pairs from an iterable.
+        Behaves the same like the base class implementation when using a method that doesn&#39;t require full dataset to be
+        in memory, or first collects all samples and then transforms them otherwise.
+
+        Args:
+            images_and_density_maps: Iterable of pairs of images and corresponding density maps.
+
+        Returns:
+            Iterable of transformed img+DM pairs.
+        &#34;&#34;&#34;
+        if self.method.startswith(&#34;range&#34;) or self.method.startswith(&#34;samplewise&#34;):
+            for image, density_map in Transformation.transform_all(self, images_and_density_maps):
+                yield image, density_map
+            return
+
+        if self.requires_full_dataset_in_memory:
+            all_images, all_density_maps = zip(*list(images_and_density_maps))
+            all_images, all_density_maps = _np.array(all_images), _np.array(all_density_maps)
+            mean_std_axes = (0, 1, 2) if self.by_channel else None
+            if self.by_channel and len(all_images.shape) != 4:
+                all_images.shape = (*all_images.shape, 1)
+
+            if self.method == &#34;featurewise_centering&#34;:
+                for image, density_map in zip(
+                        all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
+                    yield image, density_map
+            elif self.method == &#34;featurewise_std_normalization&#34;:
+                for image, density_map in zip(
+                        all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
+                    yield image, density_map
+        else:
+            for image, density_map in images_and_density_maps:
+                if self.method == &#34;featurewise_centering&#34;:
+                    yield image - _np.resize(self.means, [*image.shape]), density_map
+                elif self.method == &#34;featurewise_std_normalization&#34;:
+                    yield image / _np.resize(self.stds, [*image.shape]), density_map
+
+
+class NormalizeDensityMap(Transformation):
+    &#34;&#34;&#34;
+    Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on
+    https://arxiv.org/pdf/1907.02724.pdf
+    &#34;&#34;&#34;
+    def __init__(self, multiplier):
+        &#34;&#34;&#34;
+        Create a label/density map normalization operation.
+
+        Args:
+            multiplier: The values in the density map will be multiplied by that number. Make sure to divide
+                the predicted density maps by the same number when calculating the count.
+        &#34;&#34;&#34;
+        if multiplier &lt;= 0.0:
+            raise ValueError(&#34;Multiplier must be greater than 0&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.multiplier = multiplier
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Multiply the values in the density map.
+
+        Args:
+            image: Image that stays the same.
+            density_map: Density map that is multiplied.
+
+        Returns:
+            Image and transformed density map.
+        &#34;&#34;&#34;
+        return image, density_map * self.multiplier
+
+
+class FlipLR(Transformation):
+    &#34;&#34;&#34;
+    Horizontal / left-right random flipping transformation.
+    &#34;&#34;&#34;
+    def __init__(self, probability=0.5):
+        &#34;&#34;&#34;
+        Create LR flipping transformation that flips with the given probability. In most cases, should stay at 0.5
+        (equal chances).
+
+        Args:
+            probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most
+                cases, should stay at 0.5.
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Horizontally flip the image and its density map.
+
+        Args:
+            image: Input image.
+            density_map: Corresponding density map.
+
+        Returns:
+            Flipped image and density map.
+        &#34;&#34;&#34;
+        return _np.fliplr(image), _np.fliplr(density_map)
+
+
+class ToGrayscale(Transformation):
+    &#34;&#34;&#34;
+    Transformation that converts images to grayscale (reduces channels to 1).
+    &#34;&#34;&#34;
+    def __init__(self, probability=1.0):
+        &#34;&#34;&#34;
+        Create the transformation applied with the given probability.
+
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the image to grayscale.
+
+        Args:
+            image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases,
+                the transformation doesn&#39;t provide any real effect.
+            density_map: Density map that won&#39;t be affected.
+
+        Returns:
+            Pair of grayscale image and its density map.
+        &#34;&#34;&#34;
+        return _cv2.cvtColor(image, _cv2.COLOR_BGR2GRAY), density_map
+
+
+class LambdaTransformation(Transformation):
+    &#34;&#34;&#34;
+    One of the two ways to create a custom transformation, the other one being subclassing `Transformation`.
+    This class works by applying a transformation specified as a lambda, over all samples. Alternatively, one use a
+    custom loop, also specified as a lambda.
+    &#34;&#34;&#34;
+    def __init__(self, probability, transformation, loop=None):
+        &#34;&#34;&#34;
+        Create a custom transformation that applies a given transformation lambda over all samples. Alternatively, a
+        custom loop lambda can be given, e.g. to collect all samples before executing a transformation on them.
+
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+            transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
+            loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of
+                transformed img+DM pairs. If None, standard loop is used.
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = None  # can&#39;t save lambda definitions to a human-readable format
+        self.transformation = transformation
+        self.loop = loop
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34; Run the given lambda on a img+DM pair &#34;&#34;&#34;
+        return self.transformation(image, density_map)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34; If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
+        loop. &#34;&#34;&#34;
+        if self.loop is None:
+            return Transformation.transform_all(self, images_and_density_maps)
+        return self.loop(images_and_density_maps, self.transformation)
+
+
+def _get_random_area(img_w, img_h, area_w, area_h, allow_out_of_bounds):
+    &#34;&#34;&#34;
+    Get coordinates of a randomly placed rectangular area. Note that actual area size may differ from (area_h, area_w)
+    if out of bounds selection is enabled and an area on the border is chosen.
+
+    Args:
+        img_w: Width of the image to be sampled from.
+        img_h: Height of the image to be sampled from.
+        area_w: Width of area to be obtained. In case of out of bounds selection, it&#39;s only the max width.
+        area_h: Height of area to be obtained. In case of out of bounds selection, it&#39;s only the max height.
+        allow_out_of_bounds: If true, area is free to be placed partially outside the image.
+
+    Returns:
+        Tuple with start X, start Y, end X, end Y.
+    &#34;&#34;&#34;
+    if allow_out_of_bounds:
+        min_area_x, min_area_y, max_area_x, max_area_y = -area_w, -area_h, img_w - 1, img_h - 1
+        area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+        area_x1, area_y1 = max(0, area_x), max(0, area_y)
+        area_x2, area_y2 = min(img_w, area_x + area_w), min(img_h, area_y + area_h)
+    else:
+        min_area_x, min_area_y, max_area_x, max_area_y = 0, 0, img_w - area_w, img_h - area_h
+        area_x, area_y = _random.randint(min_area_x, max_area_x), _random.randint(min_area_y, max_area_y)
+        area_x1, area_y1 = area_x, area_y
+        area_x2, area_y2 = area_x + area_w, area_y + area_h
+    return area_x1, area_y1, area_x2, area_y2
+
+
+class Cutout(Transformation):
+    &#34;&#34;&#34;
+    Experimental method based on this paper: https://arxiv.org/abs/1708.04552
+    Selects random rectangular regions in an image and zeroes them out. According to the paper, the box should be
+    allowed to encompass some area out of bounds for good performance, although one may also specify a lower probability
+    so that a mix of images with more and less area removed can be found in the dataset. Shape of the cut out box
+    seemed not to be that important so its definition is simplified.
+    &#34;&#34;&#34;
+    def __init__(self, size, factor=None, cuts_num=1, allow_out_of_bounds=True, probability=1.0):
+        &#34;&#34;&#34;
+        Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
+        One may specify one and only one size, absolute or relative.
+
+        Args:
+            size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
+            factor: Relative width and height of cutout regions. Depending on the image&#39;s aspect ratio, it may produce
+                a square or a rectangle.
+            cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be
+                overlays over each other.
+            allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of
+                the frame, zeroing out less pixels than expected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if size is not None and factor is not None:
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if size is None and factor is None:
+            raise ValueError(&#34;Must provide factor or fixed size&#34;)
+        if size is not None and size &lt;= 0:
+            raise ValueError(&#34;Size must be greater than 0 (and less than/equal smaller original image dimension&#34;)
+        if factor is not None and not 0.0 &lt; factor &lt;= 1.0:
+            raise ValueError(&#34;Factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if cuts_num &lt; 1:
+            raise ValueError(&#34;Number of cuts must be an integer greater than 0&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.size = size
+        self.factor = factor
+        self.cuts_num = cuts_num
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Cut out random regions based on the settings.
+
+        Args:
+            image: Image to be cut.
+            density_map: Related density map that will be cut accordingly.
+
+        Returns:
+            Cut image and density map.
+        &#34;&#34;&#34;
+        new_img, new_den_map = image.copy(), density_map.copy()
+        h, w = image.shape[:2]
+        area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
+        for _ in range(self.cuts_num):
+            area_x1, area_y1, area_x2, area_y2 = _get_random_area(w, h, area_w, area_h, self.allow_out_of_bounds)
+            new_img[area_y1:area_y2, area_x1:area_x2] = 0
+            new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
+        return new_img, new_den_map
+
+
+class Copyout(Transformation):
+    &#34;&#34;&#34;
+    Experimental method based on this paper: https://arxiv.org/abs/1909.00390
+    Copies square areas of specified size from random position from random image to a random position in currently
+    transformed image. When out of bounds copying is allowed, the area may become a rectangle when placed on an edge.
+    However, out of bounds selection doesn&#39;t apply to the destination image.
+    &#34;&#34;&#34;
+    def __init__(self, size, allow_out_of_bounds=True, probability=1.0):
+        &#34;&#34;&#34;
+        Create copyout transformation.
+
+        Args:
+            size: Size of the extent that will be copied from one image to another (along with the density data).
+            allow_out_of_bounds: Whether to allow selection of area partially outside the source image frame.
+                Destination area selection is unaffected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if size &lt;= 0:
+            raise ValueError(&#34;Size must be an integer greater than 0&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.size = size
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34; Transformation of a single image+density map pair without loading other pairs is not supported. &#34;&#34;&#34;
+        raise NotImplementedError(&#34;Only transforming the whole dataset at once is currently supported for Copyout&#34;)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Create a generator that for each image and density map pair generates a transformed pair.
+
+        Args:
+            images_and_density_maps: Iterable of tuples of image and density map. Both are affected by the operation.
+
+        Returns:
+            Generator of tuples with transformed image and density map.
+        &#34;&#34;&#34;
+        imgs_dms = list(images_and_density_maps)
+        images_num = len(imgs_dms)
+        for img, dm in imgs_dms:
+            src_index = _np.random.randint(0, images_num)
+            src_img, src_dm = imgs_dms[src_index]
+
+            src_h, src_w = src_img.shape[:2]
+            dest_h, dest_w = img.shape[:2]
+            area_h, area_w = self.size, self.size
+
+            src_area_x1, src_area_y1, src_area_x2, src_area_y2 = \
+                _get_random_area(src_w, src_h, area_w, area_h, self.allow_out_of_bounds)
+
+            if self.allow_out_of_bounds:
+                # shape of the area may have changed
+                area_w, area_h = src_area_x2 - src_area_x1, src_area_y2 - src_area_y1
+
+            dest_area_x1, dest_area_y1, dest_area_x2, dest_area_y2 = \
+                _get_random_area(dest_w, dest_h, area_w, area_h, False)
+
+            new_img, new_dm = img.copy(), dm.copy()
+            new_img[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_img[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+            new_dm[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_dm[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+
+            yield new_img, new_dm</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="CCAugmentation.transformations.Copyout"><code class="flex name class">
+<span>class <span class="ident">Copyout</span></span>
+<span>(</span><span>size, allow_out_of_bounds=True, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Experimental method based on this paper: <a href="https://arxiv.org/abs/1909.00390">https://arxiv.org/abs/1909.00390</a>
+Copies square areas of specified size from random position from random image to a random position in currently
+transformed image. When out of bounds copying is allowed, the area may become a rectangle when placed on an edge.
+However, out of bounds selection doesn't apply to the destination image.</p>
+<p>Create copyout transformation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>size</code></strong></dt>
+<dd>Size of the extent that will be copied from one image to another (along with the density data).</dd>
+<dt><strong><code>allow_out_of_bounds</code></strong></dt>
+<dd>Whether to allow selection of area partially outside the source image frame.
+Destination area selection is unaffected.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Copyout(Transformation):
+    &#34;&#34;&#34;
+    Experimental method based on this paper: https://arxiv.org/abs/1909.00390
+    Copies square areas of specified size from random position from random image to a random position in currently
+    transformed image. When out of bounds copying is allowed, the area may become a rectangle when placed on an edge.
+    However, out of bounds selection doesn&#39;t apply to the destination image.
+    &#34;&#34;&#34;
+    def __init__(self, size, allow_out_of_bounds=True, probability=1.0):
+        &#34;&#34;&#34;
+        Create copyout transformation.
+
+        Args:
+            size: Size of the extent that will be copied from one image to another (along with the density data).
+            allow_out_of_bounds: Whether to allow selection of area partially outside the source image frame.
+                Destination area selection is unaffected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if size &lt;= 0:
+            raise ValueError(&#34;Size must be an integer greater than 0&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.size = size
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34; Transformation of a single image+density map pair without loading other pairs is not supported. &#34;&#34;&#34;
+        raise NotImplementedError(&#34;Only transforming the whole dataset at once is currently supported for Copyout&#34;)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Create a generator that for each image and density map pair generates a transformed pair.
+
+        Args:
+            images_and_density_maps: Iterable of tuples of image and density map. Both are affected by the operation.
+
+        Returns:
+            Generator of tuples with transformed image and density map.
+        &#34;&#34;&#34;
+        imgs_dms = list(images_and_density_maps)
+        images_num = len(imgs_dms)
+        for img, dm in imgs_dms:
+            src_index = _np.random.randint(0, images_num)
+            src_img, src_dm = imgs_dms[src_index]
+
+            src_h, src_w = src_img.shape[:2]
+            dest_h, dest_w = img.shape[:2]
+            area_h, area_w = self.size, self.size
+
+            src_area_x1, src_area_y1, src_area_x2, src_area_y2 = \
+                _get_random_area(src_w, src_h, area_w, area_h, self.allow_out_of_bounds)
+
+            if self.allow_out_of_bounds:
+                # shape of the area may have changed
+                area_w, area_h = src_area_x2 - src_area_x1, src_area_y2 - src_area_y1
+
+            dest_area_x1, dest_area_y1, dest_area_x2, dest_area_y2 = \
+                _get_random_area(dest_w, dest_h, area_w, area_h, False)
+
+            new_img, new_dm = img.copy(), dm.copy()
+            new_img[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_img[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+            new_dm[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+                src_dm[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+
+            yield new_img, new_dm</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Copyout.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transformation of a single image+density map pair without loading other pairs is not supported.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34; Transformation of a single image+density map pair without loading other pairs is not supported. &#34;&#34;&#34;
+    raise NotImplementedError(&#34;Only transforming the whole dataset at once is currently supported for Copyout&#34;)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.transformations.Copyout.transform_all"><code class="name flex">
+<span>def <span class="ident">transform_all</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a generator that for each image and density map pair generates a transformed pair.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterable of tuples of image and density map. Both are affected by the operation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Generator of tuples with transformed image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform_all(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Create a generator that for each image and density map pair generates a transformed pair.
+
+    Args:
+        images_and_density_maps: Iterable of tuples of image and density map. Both are affected by the operation.
+
+    Returns:
+        Generator of tuples with transformed image and density map.
+    &#34;&#34;&#34;
+    imgs_dms = list(images_and_density_maps)
+    images_num = len(imgs_dms)
+    for img, dm in imgs_dms:
+        src_index = _np.random.randint(0, images_num)
+        src_img, src_dm = imgs_dms[src_index]
+
+        src_h, src_w = src_img.shape[:2]
+        dest_h, dest_w = img.shape[:2]
+        area_h, area_w = self.size, self.size
+
+        src_area_x1, src_area_y1, src_area_x2, src_area_y2 = \
+            _get_random_area(src_w, src_h, area_w, area_h, self.allow_out_of_bounds)
+
+        if self.allow_out_of_bounds:
+            # shape of the area may have changed
+            area_w, area_h = src_area_x2 - src_area_x1, src_area_y2 - src_area_y1
+
+        dest_area_x1, dest_area_y1, dest_area_x2, dest_area_y2 = \
+            _get_random_area(dest_w, dest_h, area_w, area_h, False)
+
+        new_img, new_dm = img.copy(), dm.copy()
+        new_img[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+            src_img[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+        new_dm[dest_area_y1:dest_area_y2, dest_area_x1:dest_area_x2] = \
+            src_dm[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
+
+        yield new_img, new_dm</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Crop"><code class="flex name class">
+<span>class <span class="ident">Crop</span></span>
+<span>(</span><span>width, height, x_factor=None, y_factor=None, centered=False, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
+or a fraction of the original one). Density map is also reduced to keep it relevant to the image.</p>
+<p>Define cropping with specified output size, applied with some probability. One may use a combination of
+fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
+dimension: one and only of them can be specified.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>width</code></strong></dt>
+<dd>Fixed output width.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>Fixed output height.</dd>
+<dt><strong><code>x_factor</code></strong></dt>
+<dd>Output width relative to the input width.</dd>
+<dt><strong><code>y_factor</code></strong></dt>
+<dd>Output height relative to the input height.</dd>
+<dt><strong><code>centered</code></strong></dt>
+<dd>Whether crops are taken from the center or at random positions.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Crop(Transformation):
+    &#34;&#34;&#34;
+    Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
+    or a fraction of the original one). Density map is also reduced to keep it relevant to the image.
+    &#34;&#34;&#34;
+    def __init__(self, width, height, x_factor=None, y_factor=None, centered=False, probability=1.0):
+        &#34;&#34;&#34;
+        Define cropping with specified output size, applied with some probability. One may use a combination of
+        fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
+        dimension: one and only of them can be specified.
+
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            centered: Whether crops are taken from the center or at random positions.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if (width is None and x_factor is None) or (height is None and y_factor is None):
+            raise ValueError(&#34;Must provide factor or fixed size for both dimensions&#34;)
+        if width is not None and width &lt;= 0:
+            raise ValueError(&#34;Width must be greater than 0 (and less than/equal original width)&#34;)
+        if height is not None and height &lt;= 0:
+            raise ValueError(&#34;Height must be greater than 0 (and less than/equal original height)&#34;)
+        if x_factor is not None and not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if y_factor is not None and not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.width = width
+        self.height = height
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+        self.centered = centered
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Crop an image at a random position (or center) to specified size.
+
+        Args:
+            image: Image to be cropped.
+            density_map: Density map to be cropped accordingly, with the same size as the image.
+
+        Returns:
+            Cropped pair of image and density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        new_w = round(w * self.x_factor) if self.width is None else self.width
+        new_h = round(h * self.y_factor) if self.height is None else self.height
+        return _crop(image, density_map, new_w, new_h, self.centered)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Crop.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Crop an image at a random position (or center) to specified size.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image to be cropped.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map to be cropped accordingly, with the same size as the image.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Cropped pair of image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Crop an image at a random position (or center) to specified size.
+
+    Args:
+        image: Image to be cropped.
+        density_map: Density map to be cropped accordingly, with the same size as the image.
+
+    Returns:
+        Cropped pair of image and density map.
+    &#34;&#34;&#34;
+    h, w = image.shape[:2]
+    new_w = round(w * self.x_factor) if self.width is None else self.width
+    new_h = round(h * self.y_factor) if self.height is None else self.height
+    return _crop(image, density_map, new_w, new_h, self.centered)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Cutout"><code class="flex name class">
+<span>class <span class="ident">Cutout</span></span>
+<span>(</span><span>size, factor=None, cuts_num=1, allow_out_of_bounds=True, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Experimental method based on this paper: <a href="https://arxiv.org/abs/1708.04552">https://arxiv.org/abs/1708.04552</a>
+Selects random rectangular regions in an image and zeroes them out. According to the paper, the box should be
+allowed to encompass some area out of bounds for good performance, although one may also specify a lower probability
+so that a mix of images with more and less area removed can be found in the dataset. Shape of the cut out box
+seemed not to be that important so its definition is simplified.</p>
+<p>Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
+One may specify one and only one size, absolute or relative.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>size</code></strong></dt>
+<dd>Fixed, absolute width and height of cutout regions. Always results in generated squares.</dd>
+<dt><strong><code>factor</code></strong></dt>
+<dd>Relative width and height of cutout regions. Depending on the image's aspect ratio, it may produce
+a square or a rectangle.</dd>
+<dt><strong><code>cuts_num</code></strong></dt>
+<dd>Number of times this operation is performed. Choice of position is random, so the cutouts may be
+overlays over each other.</dd>
+<dt><strong><code>allow_out_of_bounds</code></strong></dt>
+<dd>Whether to allow randomizing such positions that produce regions sticking out of
+the frame, zeroing out less pixels than expected.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cutout(Transformation):
+    &#34;&#34;&#34;
+    Experimental method based on this paper: https://arxiv.org/abs/1708.04552
+    Selects random rectangular regions in an image and zeroes them out. According to the paper, the box should be
+    allowed to encompass some area out of bounds for good performance, although one may also specify a lower probability
+    so that a mix of images with more and less area removed can be found in the dataset. Shape of the cut out box
+    seemed not to be that important so its definition is simplified.
+    &#34;&#34;&#34;
+    def __init__(self, size, factor=None, cuts_num=1, allow_out_of_bounds=True, probability=1.0):
+        &#34;&#34;&#34;
+        Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
+        One may specify one and only one size, absolute or relative.
+
+        Args:
+            size: Fixed, absolute width and height of cutout regions. Always results in generated squares.
+            factor: Relative width and height of cutout regions. Depending on the image&#39;s aspect ratio, it may produce
+                a square or a rectangle.
+            cuts_num: Number of times this operation is performed. Choice of position is random, so the cutouts may be
+                overlays over each other.
+            allow_out_of_bounds: Whether to allow randomizing such positions that produce regions sticking out of
+                the frame, zeroing out less pixels than expected.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if size is not None and factor is not None:
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if size is None and factor is None:
+            raise ValueError(&#34;Must provide factor or fixed size&#34;)
+        if size is not None and size &lt;= 0:
+            raise ValueError(&#34;Size must be greater than 0 (and less than/equal smaller original image dimension&#34;)
+        if factor is not None and not 0.0 &lt; factor &lt;= 1.0:
+            raise ValueError(&#34;Factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if cuts_num &lt; 1:
+            raise ValueError(&#34;Number of cuts must be an integer greater than 0&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.size = size
+        self.factor = factor
+        self.cuts_num = cuts_num
+        self.allow_out_of_bounds = allow_out_of_bounds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Cut out random regions based on the settings.
+
+        Args:
+            image: Image to be cut.
+            density_map: Related density map that will be cut accordingly.
+
+        Returns:
+            Cut image and density map.
+        &#34;&#34;&#34;
+        new_img, new_den_map = image.copy(), density_map.copy()
+        h, w = image.shape[:2]
+        area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
+        for _ in range(self.cuts_num):
+            area_x1, area_y1, area_x2, area_y2 = _get_random_area(w, h, area_w, area_h, self.allow_out_of_bounds)
+            new_img[area_y1:area_y2, area_x1:area_x2] = 0
+            new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
+        return new_img, new_den_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Cutout.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cut out random regions based on the settings.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image to be cut.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Related density map that will be cut accordingly.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Cut image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Cut out random regions based on the settings.
+
+    Args:
+        image: Image to be cut.
+        density_map: Related density map that will be cut accordingly.
+
+    Returns:
+        Cut image and density map.
+    &#34;&#34;&#34;
+    new_img, new_den_map = image.copy(), density_map.copy()
+    h, w = image.shape[:2]
+    area_h, area_w = (self.size, self.size) if self.factor is None else (int(h * self.factor), int(w * self.factor))
+    for _ in range(self.cuts_num):
+        area_x1, area_y1, area_x2, area_y2 = _get_random_area(w, h, area_w, area_h, self.allow_out_of_bounds)
+        new_img[area_y1:area_y2, area_x1:area_x2] = 0
+        new_den_map[area_y1:area_y2, area_x1:area_x2] = 0
+    return new_img, new_den_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Downscale"><code class="flex name class">
+<span>class <span class="ident">Downscale</span></span>
+<span>(</span><span>x_factor, y_factor, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Downscales and then upscales an image, decreasing its quality.</p>
+<p>Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
+original size. Note that some pixels may be lost due to integer rounding, leading to a slightly different size.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x_factor</code></strong></dt>
+<dd>Downscaling factor for width.</dd>
+<dt><strong><code>y_factor</code></strong></dt>
+<dd>Downscaling factor for height.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Downscale(Transformation):
+    &#34;&#34;&#34;
+    Downscales and then upscales an image, decreasing its quality.
+    &#34;&#34;&#34;
+    def __init__(self, x_factor, y_factor, probability=1.0):
+        &#34;&#34;&#34;
+        Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
+        original size. Note that some pixels may be lost due to integer rounding, leading to a slightly different size.
+
+        Args:
+            x_factor: Downscaling factor for width.
+            y_factor: Downscaling factor for height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.downscaler = Scale(None, None, x_factor, y_factor, 1.0)
+        self.upscaler = Scale(None, None, 1 / x_factor, 1 / y_factor, 1.0)
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Decrease an image quality. Density map stays the same.
+
+        Args:
+            image: Image to be downscaled and upscaled back to normal.
+            density_map: Corresponding density map that won&#39;t be affected.
+
+        Returns:
+            Pair of transformed img+DM.
+        &#34;&#34;&#34;
+        return self.upscaler.transform(*self.downscaler.transform(image, density_map))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Downscale.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decrease an image quality. Density map stays the same.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image to be downscaled and upscaled back to normal.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Corresponding density map that won't be affected.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pair of transformed img+DM.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Decrease an image quality. Density map stays the same.
+
+    Args:
+        image: Image to be downscaled and upscaled back to normal.
+        density_map: Corresponding density map that won&#39;t be affected.
+
+    Returns:
+        Pair of transformed img+DM.
+    &#34;&#34;&#34;
+    return self.upscaler.transform(*self.downscaler.transform(image, density_map))</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.FlipLR"><code class="flex name class">
+<span>class <span class="ident">FlipLR</span></span>
+<span>(</span><span>probability=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Horizontal / left-right random flipping transformation.</p>
+<p>Create LR flipping transformation that flips with the given probability. In most cases, should stay at 0.5
+(equal chances).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most
+cases, should stay at 0.5.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FlipLR(Transformation):
+    &#34;&#34;&#34;
+    Horizontal / left-right random flipping transformation.
+    &#34;&#34;&#34;
+    def __init__(self, probability=0.5):
+        &#34;&#34;&#34;
+        Create LR flipping transformation that flips with the given probability. In most cases, should stay at 0.5
+        (equal chances).
+
+        Args:
+            probability: Probability of flipping the image and its density map. Between 0 and 1 (inclusive). In most
+                cases, should stay at 0.5.
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Horizontally flip the image and its density map.
+
+        Args:
+            image: Input image.
+            density_map: Corresponding density map.
+
+        Returns:
+            Flipped image and density map.
+        &#34;&#34;&#34;
+        return _np.fliplr(image), _np.fliplr(density_map)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.FlipLR.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Horizontally flip the image and its density map.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Input image.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Corresponding density map.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Flipped image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Horizontally flip the image and its density map.
+
+    Args:
+        image: Input image.
+        density_map: Corresponding density map.
+
+    Returns:
+        Flipped image and density map.
+    &#34;&#34;&#34;
+    return _np.fliplr(image), _np.fliplr(density_map)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.LambdaTransformation"><code class="flex name class">
+<span>class <span class="ident">LambdaTransformation</span></span>
+<span>(</span><span>probability, transformation, loop=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>One of the two ways to create a custom transformation, the other one being subclassing <code><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></code>.
+This class works by applying a transformation specified as a lambda, over all samples. Alternatively, one use a
+custom loop, also specified as a lambda.</p>
+<p>Create a custom transformation that applies a given transformation lambda over all samples. Alternatively, a
+custom loop lambda can be given, e.g. to collect all samples before executing a transformation on them.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+<dt><strong><code>transformation</code></strong></dt>
+<dd>Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.</dd>
+<dt><strong><code>loop</code></strong></dt>
+<dd>Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of
+transformed img+DM pairs. If None, standard loop is used.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LambdaTransformation(Transformation):
+    &#34;&#34;&#34;
+    One of the two ways to create a custom transformation, the other one being subclassing `Transformation`.
+    This class works by applying a transformation specified as a lambda, over all samples. Alternatively, one use a
+    custom loop, also specified as a lambda.
+    &#34;&#34;&#34;
+    def __init__(self, probability, transformation, loop=None):
+        &#34;&#34;&#34;
+        Create a custom transformation that applies a given transformation lambda over all samples. Alternatively, a
+        custom loop lambda can be given, e.g. to collect all samples before executing a transformation on them.
+
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+            transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
+            loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of
+                transformed img+DM pairs. If None, standard loop is used.
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = None  # can&#39;t save lambda definitions to a human-readable format
+        self.transformation = transformation
+        self.loop = loop
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34; Run the given lambda on a img+DM pair &#34;&#34;&#34;
+        return self.transformation(image, density_map)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34; If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
+        loop. &#34;&#34;&#34;
+        if self.loop is None:
+            return Transformation.transform_all(self, images_and_density_maps)
+        return self.loop(images_and_density_maps, self.transformation)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.LambdaTransformation.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Run the given lambda on a img+DM pair</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34; Run the given lambda on a img+DM pair &#34;&#34;&#34;
+    return self.transformation(image, density_map)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.transformations.LambdaTransformation.transform_all"><code class="name flex">
+<span>def <span class="ident">transform_all</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
+loop.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform_all(self, images_and_density_maps):
+    &#34;&#34;&#34; If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
+    loop. &#34;&#34;&#34;
+    if self.loop is None:
+        return Transformation.transform_all(self, images_and_density_maps)
+    return self.loop(images_and_density_maps, self.transformation)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Normalize"><code class="flex name class">
+<span>class <span class="ident">Normalize</span></span>
+<span>(</span><span>method, by_channel=False, means=None, stds=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Normalizes image pixel values using one of normalization methods.</p>
+<p>Create a transformation that normalizes image pixel values using one of the following methods:</p>
+<ul>
+<li><code>range_0_to_1</code> - values are scaled to be in fixed &lt;0; 1&gt; range mapped to the original &lt;0; 255&gt; range</li>
+<li><code>range_-1_to_1</code> - values are scaled to be in fixed &lt;-1; 1&gt; range mapped to the original &lt;0; 255&gt; range</li>
+<li><code>samplewise_centering</code> - values are translated to make their mean (in respect to a single image) equal to 0</li>
+<li><code>samplewise_std_normalization</code> - values are scaled to make their sample standard deviation (in respect to
+a single image) equal to 1</li>
+<li><code>featurewise_centering</code> - values are translated to make their mean (in respect to all images) equal to 0</li>
+<li><code>featurewise_std_normalization</code> - values are scaled to make their sample standard deviation (in respect to all
+images) equal to 1</li>
+</ul>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>method</code></strong></dt>
+<dd>Method that will be used for normalization, one of the above.</dd>
+<dt><strong><code>by_channel</code></strong></dt>
+<dd>If true, methods using mean or standard deviation will calculate that metric over each channel
+separately and the normalization will also occur by each channel. Else, the values will be normalized
+by all channels at once.</dd>
+<dt><strong><code>means</code></strong></dt>
+<dd>If not None, the operation uses those mean values instead of computing them on its own. Shape varies
+depending on the normalization. Currently, only featurewise normalization uses it.</dd>
+<dt><strong><code>stds</code></strong></dt>
+<dd>If not None, the operation uses those standard deviation values instead of computing them on its own.
+Shape varies depending on the normalization. Currently, only featurewise normalization uses it.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Normalize(Transformation):
+    &#34;&#34;&#34;
+    Normalizes image pixel values using one of normalization methods.
+    &#34;&#34;&#34;
+    def __init__(self, method, by_channel=False, means=None, stds=None):
+        &#34;&#34;&#34;
+        Create a transformation that normalizes image pixel values using one of the following methods:
+
+        - `range_0_to_1` - values are scaled to be in fixed &lt;0; 1&gt; range mapped to the original &lt;0; 255&gt; range
+        - `range_-1_to_1` - values are scaled to be in fixed &lt;-1; 1&gt; range mapped to the original &lt;0; 255&gt; range
+        - `samplewise_centering` - values are translated to make their mean (in respect to a single image) equal to 0
+        - `samplewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to
+            a single image) equal to 1
+        - `featurewise_centering` - values are translated to make their mean (in respect to all images) equal to 0
+        - `featurewise_std_normalization` - values are scaled to make their sample standard deviation (in respect to all
+            images) equal to 1
+
+        Args:
+            method: Method that will be used for normalization, one of the above.
+            by_channel: If true, methods using mean or standard deviation will calculate that metric over each channel
+                separately and the normalization will also occur by each channel. Else, the values will be normalized
+                by all channels at once.
+            means: If not None, the operation uses those mean values instead of computing them on its own. Shape varies
+                depending on the normalization. Currently, only featurewise normalization uses it.
+            stds: If not None, the operation uses those standard deviation values instead of computing them on its own.
+                Shape varies depending on the normalization. Currently, only featurewise normalization uses it.
+        &#34;&#34;&#34;
+        if method not in [&#34;range_0_to_1&#34;, &#34;range_-1_to_1&#34;, &#34;samplewise_centering&#34;, &#34;samplewise_std_normalization&#34;,
+                          &#34;featurewise_centering&#34;, &#34;featurewise_std_normalization&#34;]:
+            raise ValueError(f&#34;Wrong method of normalization selected: {method}&#34;)
+        if method.startswith(&#34;range&#34;) and (means is not None or stds is not None):
+            raise ValueError(&#34;Fixed range normalization doesn&#39;t require computed mean/std values.&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        if (method == &#34;featurewise_centering&#34; and means is None) or \
+                (method == &#34;featurewise_std_normalization&#34; and stds is None):
+            self.requires_full_dataset_in_memory = True
+        self.method = method
+        self.by_channel = by_channel
+        self.means = means
+        self.stds = stds
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the given image, return with the untouched density map.
+
+        Args:
+            image: Image whose pixel values will be normalized.
+            density_map: Density map that won&#39;t be affected.
+
+        Returns:
+            Pair of transformed image and corresponding density map.
+        &#34;&#34;&#34;
+        mean_std_axes = (0, 1) if self.by_channel else None
+        if self.by_channel and len(image.shape) != 3:
+            image.shape = (*image.shape, 1)
+
+        if self.method == &#34;range_-1_to_1&#34;:
+            return (image - 127.5) / 255.0, density_map
+        elif self.method == &#34;range_0_to_1&#34;:
+            return image / 255.0, density_map
+        elif self.method == &#34;samplewise_centering&#34;:
+            return image - _np.resize(_np.mean(image, mean_std_axes), [*image.shape]), density_map
+        elif self.method == &#34;samplewise_std_normalization&#34;:
+            return image / _np.resize(_np.std(image, mean_std_axes), [*image.shape]), density_map
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Overriding method looping over all img+DM pairs from an iterable.
+        Behaves the same like the base class implementation when using a method that doesn&#39;t require full dataset to be
+        in memory, or first collects all samples and then transforms them otherwise.
+
+        Args:
+            images_and_density_maps: Iterable of pairs of images and corresponding density maps.
+
+        Returns:
+            Iterable of transformed img+DM pairs.
+        &#34;&#34;&#34;
+        if self.method.startswith(&#34;range&#34;) or self.method.startswith(&#34;samplewise&#34;):
+            for image, density_map in Transformation.transform_all(self, images_and_density_maps):
+                yield image, density_map
+            return
+
+        if self.requires_full_dataset_in_memory:
+            all_images, all_density_maps = zip(*list(images_and_density_maps))
+            all_images, all_density_maps = _np.array(all_images), _np.array(all_density_maps)
+            mean_std_axes = (0, 1, 2) if self.by_channel else None
+            if self.by_channel and len(all_images.shape) != 4:
+                all_images.shape = (*all_images.shape, 1)
+
+            if self.method == &#34;featurewise_centering&#34;:
+                for image, density_map in zip(
+                        all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
+                    yield image, density_map
+            elif self.method == &#34;featurewise_std_normalization&#34;:
+                for image, density_map in zip(
+                        all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]),
+                        all_density_maps):
+                    yield image, density_map
+        else:
+            for image, density_map in images_and_density_maps:
+                if self.method == &#34;featurewise_centering&#34;:
+                    yield image - _np.resize(self.means, [*image.shape]), density_map
+                elif self.method == &#34;featurewise_std_normalization&#34;:
+                    yield image / _np.resize(self.stds, [*image.shape]), density_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Normalize.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transform the given image, return with the untouched density map.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image whose pixel values will be normalized.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map that won't be affected.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pair of transformed image and corresponding density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Transform the given image, return with the untouched density map.
+
+    Args:
+        image: Image whose pixel values will be normalized.
+        density_map: Density map that won&#39;t be affected.
+
+    Returns:
+        Pair of transformed image and corresponding density map.
+    &#34;&#34;&#34;
+    mean_std_axes = (0, 1) if self.by_channel else None
+    if self.by_channel and len(image.shape) != 3:
+        image.shape = (*image.shape, 1)
+
+    if self.method == &#34;range_-1_to_1&#34;:
+        return (image - 127.5) / 255.0, density_map
+    elif self.method == &#34;range_0_to_1&#34;:
+        return image / 255.0, density_map
+    elif self.method == &#34;samplewise_centering&#34;:
+        return image - _np.resize(_np.mean(image, mean_std_axes), [*image.shape]), density_map
+    elif self.method == &#34;samplewise_std_normalization&#34;:
+        return image / _np.resize(_np.std(image, mean_std_axes), [*image.shape]), density_map</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.transformations.Normalize.transform_all"><code class="name flex">
+<span>def <span class="ident">transform_all</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Overriding method looping over all img+DM pairs from an iterable.
+Behaves the same like the base class implementation when using a method that doesn't require full dataset to be
+in memory, or first collects all samples and then transforms them otherwise.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterable of pairs of images and corresponding density maps.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterable of transformed img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform_all(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Overriding method looping over all img+DM pairs from an iterable.
+    Behaves the same like the base class implementation when using a method that doesn&#39;t require full dataset to be
+    in memory, or first collects all samples and then transforms them otherwise.
+
+    Args:
+        images_and_density_maps: Iterable of pairs of images and corresponding density maps.
+
+    Returns:
+        Iterable of transformed img+DM pairs.
+    &#34;&#34;&#34;
+    if self.method.startswith(&#34;range&#34;) or self.method.startswith(&#34;samplewise&#34;):
+        for image, density_map in Transformation.transform_all(self, images_and_density_maps):
+            yield image, density_map
+        return
+
+    if self.requires_full_dataset_in_memory:
+        all_images, all_density_maps = zip(*list(images_and_density_maps))
+        all_images, all_density_maps = _np.array(all_images), _np.array(all_density_maps)
+        mean_std_axes = (0, 1, 2) if self.by_channel else None
+        if self.by_channel and len(all_images.shape) != 4:
+            all_images.shape = (*all_images.shape, 1)
+
+        if self.method == &#34;featurewise_centering&#34;:
+            for image, density_map in zip(
+                    all_images - _np.resize(_np.mean(all_images, mean_std_axes), [*all_images.shape]),
+                    all_density_maps):
+                yield image, density_map
+        elif self.method == &#34;featurewise_std_normalization&#34;:
+            for image, density_map in zip(
+                    all_images / _np.resize(_np.std(all_images, mean_std_axes), [*all_images.shape]),
+                    all_density_maps):
+                yield image, density_map
+    else:
+        for image, density_map in images_and_density_maps:
+            if self.method == &#34;featurewise_centering&#34;:
+                yield image - _np.resize(self.means, [*image.shape]), density_map
+            elif self.method == &#34;featurewise_std_normalization&#34;:
+                yield image / _np.resize(self.stds, [*image.shape]), density_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.NormalizeDensityMap"><code class="flex name class">
+<span>class <span class="ident">NormalizeDensityMap</span></span>
+<span>(</span><span>multiplier)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on
+<a href="https://arxiv.org/pdf/1907.02724.pdf">https://arxiv.org/pdf/1907.02724.pdf</a></p>
+<p>Create a label/density map normalization operation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>multiplier</code></strong></dt>
+<dd>The values in the density map will be multiplied by that number. Make sure to divide
+the predicted density maps by the same number when calculating the count.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NormalizeDensityMap(Transformation):
+    &#34;&#34;&#34;
+    Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on
+    https://arxiv.org/pdf/1907.02724.pdf
+    &#34;&#34;&#34;
+    def __init__(self, multiplier):
+        &#34;&#34;&#34;
+        Create a label/density map normalization operation.
+
+        Args:
+            multiplier: The values in the density map will be multiplied by that number. Make sure to divide
+                the predicted density maps by the same number when calculating the count.
+        &#34;&#34;&#34;
+        if multiplier &lt;= 0.0:
+            raise ValueError(&#34;Multiplier must be greater than 0&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.multiplier = multiplier
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Multiply the values in the density map.
+
+        Args:
+            image: Image that stays the same.
+            density_map: Density map that is multiplied.
+
+        Returns:
+            Image and transformed density map.
+        &#34;&#34;&#34;
+        return image, density_map * self.multiplier</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.NormalizeDensityMap.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Multiply the values in the density map.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image that stays the same.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map that is multiplied.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Image and transformed density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Multiply the values in the density map.
+
+    Args:
+        image: Image that stays the same.
+        density_map: Density map that is multiplied.
+
+    Returns:
+        Image and transformed density map.
+    &#34;&#34;&#34;
+    return image, density_map * self.multiplier</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.OmitDownscalingPixels"><code class="flex name class">
+<span>class <span class="ident">OmitDownscalingPixels</span></span>
+<span>(</span><span>x_factor=None, y_factor=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Removes pixels that were lost due to downscaling (either by using a CCA transformation or by doing Pooling) by
+performing a centered crop.</p>
+<p>Create a centered cropping transformation that omits pixels lost due to downscaling. For example, given an input
+image of 401x404 size, when it is downscaled by a factor of 4 in both dimensions (e.g. by doing
+2 2x2 MaxPoolings and then interpolating using a factor of 4), the final size of the image is 400x400. This
+transformation automatically resizes images and density maps to match the expected cut shape.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x_factor</code></strong></dt>
+<dd>By what factor was the input downscaled horizontally. Leave it None to omit horizontal crop.</dd>
+<dt><strong><code>y_factor</code></strong></dt>
+<dd>By what factor was the input downscaled vertically. Leave it None to omit vertical crop.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OmitDownscalingPixels(Transformation):
+    &#34;&#34;&#34;
+    Removes pixels that were lost due to downscaling (either by using a CCA transformation or by doing Pooling) by
+    performing a centered crop.
+    &#34;&#34;&#34;
+    def __init__(self, x_factor=None, y_factor=None):
+        &#34;&#34;&#34;
+        Create a centered cropping transformation that omits pixels lost due to downscaling. For example, given an input
+        image of 401x404 size, when it is downscaled by a factor of 4 in both dimensions (e.g. by doing
+        2 2x2 MaxPoolings and then interpolating using a factor of 4), the final size of the image is 400x400. This
+        transformation automatically resizes images and density maps to match the expected cut shape.
+
+        Args:
+            x_factor: By what factor was the input downscaled horizontally. Leave it None to omit horizontal crop.
+            y_factor: By what factor was the input downscaled vertically. Leave it None to omit vertical crop.
+        &#34;&#34;&#34;
+        if x_factor is not None and x_factor &lt; 1:
+            raise ValueError(&#34;Width factor must be an integer greater than/equal 1&#34;)
+        if y_factor is not None and y_factor &lt; 1:
+            raise ValueError(&#34;Height factor must be an integer greater than/equal 1&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the given image and density map.
+
+        Args:
+            image: Image that was downscaled.
+            density_map: Density map that was downscaled.
+
+        Returns:
+            Pair of transformed image and density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        new_w = w - (w % self.x_factor) if self.x_factor is not None else w
+        new_h = h - (h % self.y_factor) if self.y_factor is not None else h
+        return _crop(image, density_map, new_w, new_h, True)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.OmitDownscalingPixels.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transform the given image and density map.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image that was downscaled.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map that was downscaled.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pair of transformed image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Transform the given image and density map.
+
+    Args:
+        image: Image that was downscaled.
+        density_map: Density map that was downscaled.
+
+    Returns:
+        Pair of transformed image and density map.
+    &#34;&#34;&#34;
+    h, w = image.shape[:2]
+    new_w = w - (w % self.x_factor) if self.x_factor is not None else w
+    new_h = h - (h % self.y_factor) if self.y_factor is not None else h
+    return _crop(image, density_map, new_w, new_h, True)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Rotate"><code class="flex name class">
+<span>class <span class="ident">Rotate</span></span>
+<span>(</span><span>angle, expand=False, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rotates the given image and density map. The rotation can be executed in two ways:</p>
+<ul>
+<li>The size of the input doesn't change, discarding pixels outside the frame and filling missing pixels in the frame
+with black</li>
+<li>The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling
+missing pixels in the frame with black</li>
+</ul>
+<p>Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle
+means counterclockwise rotation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>angle</code></strong></dt>
+<dd>Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.</dd>
+<dt><strong><code>expand</code></strong></dt>
+<dd>Whether to adjust frame size for it to contain all the original pixels.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rotate(Transformation):
+    &#34;&#34;&#34;
+    Rotates the given image and density map. The rotation can be executed in two ways:
+
+    - The size of the input doesn&#39;t change, discarding pixels outside the frame and filling missing pixels in the frame
+        with black
+    - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling
+        missing pixels in the frame with black
+    &#34;&#34;&#34;
+    def __init__(self, angle, expand=False, probability=1.0):
+        &#34;&#34;&#34;
+        Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle
+        means counterclockwise rotation.
+
+        Args:
+            angle: Rotation angle in degrees, positive rotates counterclockwise, negative - clockwise.
+            expand: Whether to adjust frame size for it to contain all the original pixels.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.angle = angle
+        self.expand = expand
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Rotate the image according to specification.
+
+        Args:
+            image: Image to be rotated.
+            density_map: Related density map that will be rotated accordingly.
+
+        Returns:
+            Pair of rotated image and rotated accordingly density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+        center_x, center_y = w / 2, h / 2
+        rot_mat = _cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
+
+        if self.expand:
+            cos, sin = _np.abs(rot_mat[0][:2])
+
+            # calculate width and height that will allow the rotated image to be fully preserved
+            new_w = int(w * cos + h * sin)
+            new_h = int(w * sin + h * cos)
+
+            # add translation to the matrix
+            rot_mat[0, 2] += (new_w / 2) - center_x
+            rot_mat[1, 2] += (new_h / 2) - center_y
+        else:
+            new_w, new_h = w, h
+
+        return _cv2.warpAffine(image, rot_mat, (new_w, new_h)), _cv2.warpAffine(density_map, rot_mat, (new_w, new_h))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Rotate.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rotate the image according to specification.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image to be rotated.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Related density map that will be rotated accordingly.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pair of rotated image and rotated accordingly density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Rotate the image according to specification.
+
+    Args:
+        image: Image to be rotated.
+        density_map: Related density map that will be rotated accordingly.
+
+    Returns:
+        Pair of rotated image and rotated accordingly density map.
+    &#34;&#34;&#34;
+    h, w = image.shape[:2]
+    center_x, center_y = w / 2, h / 2
+    rot_mat = _cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
+
+    if self.expand:
+        cos, sin = _np.abs(rot_mat[0][:2])
+
+        # calculate width and height that will allow the rotated image to be fully preserved
+        new_w = int(w * cos + h * sin)
+        new_h = int(w * sin + h * cos)
+
+        # add translation to the matrix
+        rot_mat[0, 2] += (new_w / 2) - center_x
+        rot_mat[1, 2] += (new_h / 2) - center_y
+    else:
+        new_w, new_h = w, h
+
+    return _cv2.warpAffine(image, rot_mat, (new_w, new_h)), _cv2.warpAffine(density_map, rot_mat, (new_w, new_h))</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Scale"><code class="flex name class">
+<span>class <span class="ident">Scale</span></span>
+<span>(</span><span>width, height, x_factor=None, y_factor=None, probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Scaling transformation that increases or decreases input size.</p>
+<p>Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
+relative size with a given probability. One may use a combination of fixed and relative size for separate image
+dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be
+specified.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>width</code></strong></dt>
+<dd>Fixed output width.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>Fixed output height.</dd>
+<dt><strong><code>x_factor</code></strong></dt>
+<dd>Output width relative to the input width.</dd>
+<dt><strong><code>y_factor</code></strong></dt>
+<dd>Output height relative to the input height.</dd>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Scale(Transformation):
+    &#34;&#34;&#34;
+    Scaling transformation that increases or decreases input size.
+    &#34;&#34;&#34;
+    def __init__(self, width, height, x_factor=None, y_factor=None, probability=1.0):
+        &#34;&#34;&#34;
+        Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
+        relative size with a given probability. One may use a combination of fixed and relative size for separate image
+        dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be
+        specified.
+
+        Args:
+            width: Fixed output width.
+            height: Fixed output height.
+            x_factor: Output width relative to the input width.
+            y_factor: Output height relative to the input height.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
+            raise ValueError(&#34;Cannot provide factor and fixed size at the same time&#34;)
+        if (width is None and x_factor is None) or (height is None and y_factor is None):
+            raise ValueError(&#34;Must provide factor or fixed size for both dimensions&#34;)
+        if width is not None and width &lt;= 0:
+            raise ValueError(&#34;Width must be greater than 0 (and less than/equal original width)&#34;)
+        if height is not None and height &lt;= 0:
+            raise ValueError(&#34;Height must be greater than 0 (and less than/equal original height)&#34;)
+        if x_factor is not None and not 0.0 &lt; x_factor &lt;= 1.0:
+            raise ValueError(&#34;Width factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+        if y_factor is not None and not 0.0 &lt; y_factor &lt;= 1.0:
+            raise ValueError(&#34;Height factor must be between 0 (exclusive) and 1 (inclusive)&#34;)
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.width = width
+        self.height = height
+        self.x_factor = x_factor
+        self.y_factor = y_factor
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Scale an image and the corresponding density map to a specified size.
+
+        Args:
+            image: Image to be scaled.
+            density_map: Density map to be scaled accordingly.
+
+        Returns:
+            Scaled pair of image and density map.
+        &#34;&#34;&#34;
+        if self.width and self.height:
+            h, w = image.shape[:2]
+            scale_x = self.width / w
+            scale_y = self.height / h
+
+            new_img = _cv2.resize(
+                image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR
+            ) / scale_x / scale_y
+        else:
+            new_img = _cv2.resize(
+                image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC
+            )
+            new_den_map = _cv2.resize(
+                density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR
+            ) / self.x_factor / self.y_factor
+        return new_img, new_den_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Scale.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Scale an image and the corresponding density map to a specified size.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image to be scaled.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map to be scaled accordingly.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Scaled pair of image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Scale an image and the corresponding density map to a specified size.
+
+    Args:
+        image: Image to be scaled.
+        density_map: Density map to be scaled accordingly.
+
+    Returns:
+        Scaled pair of image and density map.
+    &#34;&#34;&#34;
+    if self.width and self.height:
+        h, w = image.shape[:2]
+        scale_x = self.width / w
+        scale_y = self.height / h
+
+        new_img = _cv2.resize(
+            image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC
+        )
+        new_den_map = _cv2.resize(
+            density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR
+        ) / scale_x / scale_y
+    else:
+        new_img = _cv2.resize(
+            image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC
+        )
+        new_den_map = _cv2.resize(
+            density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR
+        ) / self.x_factor / self.y_factor
+    return new_img, new_den_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.StandardizeSize"><code class="flex name class">
+<span>class <span class="ident">StandardizeSize</span></span>
+<span>(</span><span>std_aspect_ratios, std_base_size)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Standardizes image and density map sizes in order to reduce variance in size and allow bigger batches.
+This transformation takes a list of allowed aspect ratios for the images and the base size corresponding to the
+length of the longer side of an image and scales each image (and relevant density map) to the size best fitting
+the original size.</p>
+<p>Create a size standardization transformation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>std_aspect_ratios</code></strong></dt>
+<dd>List of aspect ratios defined as float values that are allowed to exist in the output
+images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from
+horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).</dd>
+<dt><strong><code>std_base_size</code></strong></dt>
+<dd>Desired length of the longer side of the output images and density maps.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StandardizeSize(Transformation):
+    &#34;&#34;&#34;
+    Standardizes image and density map sizes in order to reduce variance in size and allow bigger batches.
+    This transformation takes a list of allowed aspect ratios for the images and the base size corresponding to the
+    length of the longer side of an image and scales each image (and relevant density map) to the size best fitting
+    the original size.
+    &#34;&#34;&#34;
+    def __init__(self, std_aspect_ratios, std_base_size):
+        &#34;&#34;&#34;
+        Create a size standardization transformation.
+
+        Args:
+            std_aspect_ratios: List of aspect ratios defined as float values that are allowed to exist in the output
+                images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from
+                horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
+            std_base_size: Desired length of the longer side of the output images and density maps.
+        &#34;&#34;&#34;
+        if len(std_aspect_ratios) == 0:
+            raise ValueError(&#34;At least 1 allowed aspect ratio must be entered&#34;)
+        if std_base_size &lt;= 0:
+            raise ValueError(&#34;Base size must be greater than 0&#34;)
+
+        Transformation.__init__(self, 1.0)
+        self.args = self._prepare_args(locals())
+        self.std_ratios, self.std_bounds = self._prepare_standard_aspect_ratios(std_aspect_ratios)
+        self.std_base_size = std_base_size
+
+    @staticmethod
+    def _prepare_standard_aspect_ratios(std_ratios):
+        &#34;&#34;&#34;
+        Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
+        Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
+
+        Args:
+            std_ratios: Aspect ratios that are allowed for the output images and density maps.
+
+        Returns:
+            Sorted allowed aspect ratios and calculated boundaries between them.
+        &#34;&#34;&#34;
+        ratios = _np.sort(_np.array(std_ratios))
+        boundaries = _np.array([(prev + curr) / 2 for (prev, curr) in zip(ratios[:-1], ratios[1:])])
+        return ratios, boundaries
+
+    @staticmethod
+    def _find_the_most_similar_ratio(ratio_to_improve, std_ratios, std_boundaries):
+        &#34;&#34;&#34;
+        Find an allowed aspect ratio that is the most similar to the one provided.
+
+        Args:
+            ratio_to_improve: Aspect ratio that maybe can be improved.
+            std_ratios: Allowed aspect ratios.
+            std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
+
+        Returns:
+            Allowed aspect ratio that is the most similar to the provided one.
+        &#34;&#34;&#34;
+        last_matching_boundary_idx = _np.nonzero(ratio_to_improve &lt; std_boundaries)[0]
+        if last_matching_boundary_idx.shape[0] &gt; 0:
+            chosen_std_ratio_idx = last_matching_boundary_idx[0]
+        else:
+            chosen_std_ratio_idx = std_ratios.shape[0] - 1
+        return std_ratios[chosen_std_ratio_idx]
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.
+
+        Args:
+            image: Image with any aspect ratio.
+            density_map: Relevant density map of the same size as image.
+
+        Returns:
+            Scaled pair of image and its density map.
+        &#34;&#34;&#34;
+        h, w = image.shape[:2]
+
+        chosen_std_ratio = self._find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
+
+        if chosen_std_ratio &gt;= 1.0:
+            new_w = self.std_base_size
+            new_h = int(new_w / chosen_std_ratio)
+        else:
+            new_h = self.std_base_size
+            new_w = int(new_h * chosen_std_ratio)
+
+        # if the size cannot be standardized further, return
+        if (w, h) == (new_w, new_h):
+            return image, density_map
+
+        scale_x = new_w / w
+        scale_y = new_h / h
+
+        new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
+        new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+
+        return new_img, new_den_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.StandardizeSize.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image with any aspect ratio.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Relevant density map of the same size as image.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Scaled pair of image and its density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.
+
+    Args:
+        image: Image with any aspect ratio.
+        density_map: Relevant density map of the same size as image.
+
+    Returns:
+        Scaled pair of image and its density map.
+    &#34;&#34;&#34;
+    h, w = image.shape[:2]
+
+    chosen_std_ratio = self._find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
+
+    if chosen_std_ratio &gt;= 1.0:
+        new_w = self.std_base_size
+        new_h = int(new_w / chosen_std_ratio)
+    else:
+        new_h = self.std_base_size
+        new_w = int(new_h * chosen_std_ratio)
+
+    # if the size cannot be standardized further, return
+    if (w, h) == (new_w, new_h):
+        return image, density_map
+
+    scale_x = new_w / w
+    scale_y = new_h / h
+
+    new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
+    new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+
+    return new_img, new_den_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.ToGrayscale"><code class="flex name class">
+<span>class <span class="ident">ToGrayscale</span></span>
+<span>(</span><span>probability=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transformation that converts images to grayscale (reduces channels to 1).</p>
+<p>Create the transformation applied with the given probability.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Probability for the transformation to be applied, between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ToGrayscale(Transformation):
+    &#34;&#34;&#34;
+    Transformation that converts images to grayscale (reduces channels to 1).
+    &#34;&#34;&#34;
+    def __init__(self, probability=1.0):
+        &#34;&#34;&#34;
+        Create the transformation applied with the given probability.
+
+        Args:
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Transform the image to grayscale.
+
+        Args:
+            image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases,
+                the transformation doesn&#39;t provide any real effect.
+            density_map: Density map that won&#39;t be affected.
+
+        Returns:
+            Pair of grayscale image and its density map.
+        &#34;&#34;&#34;
+        return _cv2.cvtColor(image, _cv2.COLOR_BGR2GRAY), density_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></li>
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.ToGrayscale.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transform the image to grayscale.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases,
+the transformation doesn't provide any real effect.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map that won't be affected.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pair of grayscale image and its density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Transform the image to grayscale.
+
+    Args:
+        image: BGR image. Note that a loader can load an originally grayscale image to a BGR image. In such cases,
+            the transformation doesn&#39;t provide any real effect.
+        density_map: Density map that won&#39;t be affected.
+
+    Returns:
+        Pair of grayscale image and its density map.
+    &#34;&#34;&#34;
+    return _cv2.cvtColor(image, _cv2.COLOR_BGR2GRAY), density_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.transformations.Transformation"><code class="flex name class">
+<span>class <span class="ident">Transformation</span></span>
+<span>(</span><span>probability)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract base class for any transformation that may occur on a set of image and density map pairs.
+Each transformation accepts an iterable (most commonly a generator) of image and density map pairs and is expected
+to return an iterable of the same cardinality. For custom transformations, please subclass this class or use
+LambdaTransformation.</p>
+<p>Create a new abstract transformation that is applied with specified probability.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probability</code></strong></dt>
+<dd>Float value between 0 and 1 (inclusive).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Transformation(Operation):
+    &#34;&#34;&#34;
+    Abstract base class for any transformation that may occur on a set of image and density map pairs.
+    Each transformation accepts an iterable (most commonly a generator) of image and density map pairs and is expected
+    to return an iterable of the same cardinality. For custom transformations, please subclass this class or use
+    LambdaTransformation.
+    &#34;&#34;&#34;
+    def __init__(self, probability):
+        &#34;&#34;&#34;
+        Create a new abstract transformation that is applied with specified probability.
+
+        Args:
+            probability: Float value between 0 and 1 (inclusive).
+        &#34;&#34;&#34;
+        if not 0.0 &lt;= probability &lt;= 1.0:
+            raise ValueError(&#34;Probability must be between 0 and 1&#34;)
+
+        Operation.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.probability = probability
+
+    def execute(self, images_and_density_maps):
+        &#34;&#34;&#34; See `transform_all` &#34;&#34;&#34;
+        return self.transform_all(images_and_density_maps)
+
+    def transform(self, image, density_map):
+        &#34;&#34;&#34;
+        Abstract method to be implemented in child classes. Most often, this and __init__ methods are the only ones
+        that must be defined.
+
+        Args:
+            image: Image that will be transformed.
+            density_map: Density map that will be transformed according to the image transformation.
+
+        Returns:
+            Transformed pair of image and density map.
+        &#34;&#34;&#34;
+        raise NotImplementedError(&#34;transform method not implemented in the child class&#34;)
+
+    def transform_all(self, images_and_density_maps):
+        &#34;&#34;&#34;
+        Execute transformation with earlier specified probability on an iterable of img+DM pairs.
+
+        Args:
+            images_and_density_maps: Iterable of img+DM pairs to maybe be transformed.
+
+        Returns:
+            Iterable of maybe transformed img+DM pairs.
+        &#34;&#34;&#34;
+        for img_and_den_map in images_and_density_maps:
+            yield self.transform(*img_and_den_map) if _random.random() &lt; self.probability else img_and_den_map</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.transformations.Copyout" href="#CCAugmentation.transformations.Copyout">Copyout</a></li>
+<li><a title="CCAugmentation.transformations.Crop" href="#CCAugmentation.transformations.Crop">Crop</a></li>
+<li><a title="CCAugmentation.transformations.Cutout" href="#CCAugmentation.transformations.Cutout">Cutout</a></li>
+<li><a title="CCAugmentation.transformations.Downscale" href="#CCAugmentation.transformations.Downscale">Downscale</a></li>
+<li><a title="CCAugmentation.transformations.FlipLR" href="#CCAugmentation.transformations.FlipLR">FlipLR</a></li>
+<li><a title="CCAugmentation.transformations.LambdaTransformation" href="#CCAugmentation.transformations.LambdaTransformation">LambdaTransformation</a></li>
+<li><a title="CCAugmentation.transformations.Normalize" href="#CCAugmentation.transformations.Normalize">Normalize</a></li>
+<li><a title="CCAugmentation.transformations.NormalizeDensityMap" href="#CCAugmentation.transformations.NormalizeDensityMap">NormalizeDensityMap</a></li>
+<li><a title="CCAugmentation.transformations.OmitDownscalingPixels" href="#CCAugmentation.transformations.OmitDownscalingPixels">OmitDownscalingPixels</a></li>
+<li><a title="CCAugmentation.transformations.Rotate" href="#CCAugmentation.transformations.Rotate">Rotate</a></li>
+<li><a title="CCAugmentation.transformations.Scale" href="#CCAugmentation.transformations.Scale">Scale</a></li>
+<li><a title="CCAugmentation.transformations.StandardizeSize" href="#CCAugmentation.transformations.StandardizeSize">StandardizeSize</a></li>
+<li><a title="CCAugmentation.transformations.ToGrayscale" href="#CCAugmentation.transformations.ToGrayscale">ToGrayscale</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.transformations.Transformation.execute"><code class="name flex">
+<span>def <span class="ident">execute</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>See <code>transform_all</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute(self, images_and_density_maps):
+    &#34;&#34;&#34; See `transform_all` &#34;&#34;&#34;
+    return self.transform_all(images_and_density_maps)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.transformations.Transformation.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, image, density_map)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract method to be implemented in child classes. Most often, this and <strong>init</strong> methods are the only ones
+that must be defined.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>image</code></strong></dt>
+<dd>Image that will be transformed.</dd>
+<dt><strong><code>density_map</code></strong></dt>
+<dd>Density map that will be transformed according to the image transformation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Transformed pair of image and density map.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform(self, image, density_map):
+    &#34;&#34;&#34;
+    Abstract method to be implemented in child classes. Most often, this and __init__ methods are the only ones
+    that must be defined.
+
+    Args:
+        image: Image that will be transformed.
+        density_map: Density map that will be transformed according to the image transformation.
+
+    Returns:
+        Transformed pair of image and density map.
+    &#34;&#34;&#34;
+    raise NotImplementedError(&#34;transform method not implemented in the child class&#34;)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.transformations.Transformation.transform_all"><code class="name flex">
+<span>def <span class="ident">transform_all</span></span>(<span>self, images_and_density_maps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute transformation with earlier specified probability on an iterable of img+DM pairs.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterable of img+DM pairs to maybe be transformed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterable of maybe transformed img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transform_all(self, images_and_density_maps):
+    &#34;&#34;&#34;
+    Execute transformation with earlier specified probability on an iterable of img+DM pairs.
+
+    Args:
+        images_and_density_maps: Iterable of img+DM pairs to maybe be transformed.
+
+    Returns:
+        Iterable of maybe transformed img+DM pairs.
+    &#34;&#34;&#34;
+    for img_and_den_map in images_and_density_maps:
+        yield self.transform(*img_and_den_map) if _random.random() &lt; self.probability else img_and_den_map</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.operations.Operation" href="operations.html#CCAugmentation.operations.Operation">Operation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.operations.Operation.get_output_samples_number_multiplier" href="operations.html#CCAugmentation.operations.Operation.get_output_samples_number_multiplier">get_output_samples_number_multiplier</a></code></li>
+<li><code><a title="CCAugmentation.operations.Operation.to_json" href="operations.html#CCAugmentation.operations.Operation.to_json">to_json</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="CCAugmentation" href="index.html">CCAugmentation</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Copyout" href="#CCAugmentation.transformations.Copyout">Copyout</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Copyout.transform" href="#CCAugmentation.transformations.Copyout.transform">transform</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Copyout.transform_all" href="#CCAugmentation.transformations.Copyout.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Crop" href="#CCAugmentation.transformations.Crop">Crop</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Crop.transform" href="#CCAugmentation.transformations.Crop.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Cutout" href="#CCAugmentation.transformations.Cutout">Cutout</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Cutout.transform" href="#CCAugmentation.transformations.Cutout.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Downscale" href="#CCAugmentation.transformations.Downscale">Downscale</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Downscale.transform" href="#CCAugmentation.transformations.Downscale.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.FlipLR" href="#CCAugmentation.transformations.FlipLR">FlipLR</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.FlipLR.transform" href="#CCAugmentation.transformations.FlipLR.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.LambdaTransformation" href="#CCAugmentation.transformations.LambdaTransformation">LambdaTransformation</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.LambdaTransformation.transform" href="#CCAugmentation.transformations.LambdaTransformation.transform">transform</a></code></li>
+<li><code><a title="CCAugmentation.transformations.LambdaTransformation.transform_all" href="#CCAugmentation.transformations.LambdaTransformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Normalize" href="#CCAugmentation.transformations.Normalize">Normalize</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Normalize.transform" href="#CCAugmentation.transformations.Normalize.transform">transform</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Normalize.transform_all" href="#CCAugmentation.transformations.Normalize.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.NormalizeDensityMap" href="#CCAugmentation.transformations.NormalizeDensityMap">NormalizeDensityMap</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.NormalizeDensityMap.transform" href="#CCAugmentation.transformations.NormalizeDensityMap.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.OmitDownscalingPixels" href="#CCAugmentation.transformations.OmitDownscalingPixels">OmitDownscalingPixels</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.OmitDownscalingPixels.transform" href="#CCAugmentation.transformations.OmitDownscalingPixels.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Rotate" href="#CCAugmentation.transformations.Rotate">Rotate</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Rotate.transform" href="#CCAugmentation.transformations.Rotate.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Scale" href="#CCAugmentation.transformations.Scale">Scale</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Scale.transform" href="#CCAugmentation.transformations.Scale.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.StandardizeSize" href="#CCAugmentation.transformations.StandardizeSize">StandardizeSize</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.StandardizeSize.transform" href="#CCAugmentation.transformations.StandardizeSize.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.ToGrayscale" href="#CCAugmentation.transformations.ToGrayscale">ToGrayscale</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.ToGrayscale.transform" href="#CCAugmentation.transformations.ToGrayscale.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.transformations.Transformation" href="#CCAugmentation.transformations.Transformation">Transformation</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.transformations.Transformation.execute" href="#CCAugmentation.transformations.Transformation.execute">execute</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform" href="#CCAugmentation.transformations.Transformation.transform">transform</a></code></li>
+<li><code><a title="CCAugmentation.transformations.Transformation.transform_all" href="#CCAugmentation.transformations.Transformation.transform_all">transform_all</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>CCAugmentation.loaders API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>CCAugmentation.loaders</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import csv as _csv
+import math as _math
+import os as _os
+from glob import glob as _glob
+
+import cv2 as _cv2
+import numpy as _np
+from scipy.ndimage.filters import gaussian_filter as _gaussian_filter
+from scipy.spatial import KDTree as _KDTree
+from scipy.io import loadmat as _loadmat
+
+
+def get_density_map_gaussian(im, points):
+    &#34;&#34;&#34;
+    Create a Gaussian density map from the points.
+    Credits:
+    https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
+
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
+    &#34;&#34;&#34;
+    im_density = _np.zeros_like(im[:, :, 0], dtype=_np.float64)
+    h, w = im_density.shape
+    if points is None:
+        return im_density
+    if points.shape[0] == 1:
+        x1 = max(0, min(w-1, round(points[0, 0])))
+        y1 = max(0, min(h-1, round(points[0, 1])))
+        im_density[y1, x1] = 255
+        return im_density
+    for j in range(points.shape[0]):
+        f_sz = 15
+        sigma = 4.0
+        H = _np.multiply(_cv2.getGaussianKernel(f_sz, sigma), (_cv2.getGaussianKernel(f_sz, sigma)).T)
+        x = min(w-1, max(0, abs(int(_math.floor(points[j, 0])))))
+        y = min(h-1, max(0, abs(int(_math.floor(points[j, 1])))))
+        if x &gt;= w or y &gt;= h:
+            continue
+        x1 = x - f_sz//2 + 0
+        y1 = y - f_sz//2 + 0
+        x2 = x + f_sz//2 + 1
+        y2 = y + f_sz//2 + 1
+        dfx1, dfy1, dfx2, dfy2 = 0, 0, 0, 0
+        change_H = False
+        if x1 &lt; 0:
+            dfx1 = abs(x1) + 0
+            x1 = 0
+            change_H = True
+        if y1 &lt; 0:
+            dfy1 = abs(y1) + 0
+            y1 = 0
+            change_H = True
+        if x2 &gt; w:
+            dfx2 = x2 - w
+            x2 = w
+            change_H = True
+        if y2 &gt; h:
+            dfy2 = y2 - h
+            y2 = h
+            change_H = True
+        x1h, y1h, x2h, y2h = 1 + dfx1, 1 + dfy1, f_sz - dfx2, f_sz - dfy2
+        if change_H is True:
+            H = _np.multiply(
+                _cv2.getGaussianKernel(y2h - y1h + 1, sigma),
+                (_cv2.getGaussianKernel(x2h - x1h + 1, sigma)).T
+            )
+        im_density[y1:y2, x1:x2] += H
+
+    return im_density
+
+
+def get_density_map_geometry_adaptive_gaussian_kernel(im, points):
+    &#34;&#34;&#34;
+    Create a density map using Geometry-Adaptive Gaussian kernel proposed in:
+    https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf
+
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
+    &#34;&#34;&#34;
+    h, w = im.shape[:2]
+    im_density = _np.zeros((h, w), dtype=_np.float32)
+    if len(points) == 0:
+        return im_density
+
+    for point in points:
+        x = _np.clip(round(point[0]), 0, w-1)
+        y = _np.clip(round(point[1]), 0, h-1)
+        im_density[y, x] = 1
+
+    if len(points) == 1:
+        sigma = 0
+        im_density += _gaussian_filter(points, sigma, mode=&#39;constant&#39;)
+        return im_density
+
+    tree = _KDTree(points, leafsize=2048)
+    distances, _ = tree.query(points, k=3)
+
+    beta = 0.3
+
+    for i, point in enumerate(points):
+        point_2d = _np.zeros(im_density.shape, dtype=_np.floa32)
+        point_2d[point[1], point[0]] = 1.
+        sigma = (distances[i][1] + distances[i][2] + distances[i][3]) * beta
+        im_density += _gaussian_filter(points, sigma, mode=&#39;constant&#39;)
+    return im_density
+
+
+class Loader:
+    &#34;&#34;&#34;
+    Abstract base loader that should return an iterable of samples, either images, lists of points or density maps.
+    &#34;&#34;&#34;
+    def load(self):
+        &#34;&#34;&#34; Method that must be implemented in the subclasses, returning an iterable of samples &#34;&#34;&#34;
+        raise NotImplementedError(&#34;load not implemented in the child class&#34;)
+
+    @staticmethod
+    def _prepare_args(local_vars):
+        &#34;&#34;&#34; Simple method that removes unwanted &#39;self&#39; variable from the set that will be stored for loading and
+        saving pipelines&#34;&#34;&#34;
+        return {k: v for k, v in local_vars.items() if k != &#39;self&#39;}
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Return number of samples from the dataset that can and will be loaded by the loader, or None if it&#39;s unknown.
+
+        Returns:
+            Number of samples that can be loaded, including the already loaded ones.
+        &#34;&#34;&#34;
+        return None
+
+
+class BasicImageFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
+    &#34;&#34;&#34;
+    def __init__(self, img_paths):
+        &#34;&#34;&#34;
+        Create a new image loader that reads all image files from paths.
+
+        Args:
+            img_paths: Paths to all images that are to be loaded.
+        &#34;&#34;&#34;
+        if len(img_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.img_paths = img_paths
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of images to load, according to number of specified paths.
+
+        Returns:
+            Number of images.
+        &#34;&#34;&#34;
+        return len(self.img_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all images based on provided paths to files.
+
+        Returns:
+            Generator of images in BGR format.
+        &#34;&#34;&#34;
+        for path in self.img_paths:
+            yield _cv2.imread(path, _cv2.IMREAD_COLOR)
+
+
+class ImageFileLoader(BasicImageFileLoader):
+    &#34;&#34;&#34;
+    Loader for all images of some type in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, img_dir, file_extension=&#34;jpg&#34;):
+        &#34;&#34;&#34;
+        Create a new image loader that reads all the images with specified file extension in a given directory.
+
+        Args:
+            img_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(img_dir, f&#34;*.{file_extension}&#34;)))
+        BasicImageFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)
+
+
+class BasicGTPointsMatFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for ground truth data stored as lists of head positions in Matlab files.
+    &#34;&#34;&#34;
+    def __init__(self, gt_paths, getter):
+        &#34;&#34;&#34;
+        Create a loader that loads all data from the provided file paths using a given getter.
+
+        Args:
+            gt_paths: Paths of files that are to be read.
+            getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
+        &#34;&#34;&#34;
+        if len(gt_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.gt_paths = gt_paths
+        self.getter = getter
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of GTs to load, according to number of specified paths.
+
+        Returns:
+            Number of GTs.
+        &#34;&#34;&#34;
+        return len(self.gt_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all Matlab files from paths.
+
+        Returns:
+            Generator of lists of head positions - (X, Y) tuples.
+        &#34;&#34;&#34;
+        for path in self.gt_paths:
+            yield self.getter(_loadmat(path))
+
+
+class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
+    &#34;&#34;&#34;
+    Loader for head positions in all Matlab files in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, gt_dir, getter, file_extension=&#34;mat&#34;):
+        &#34;&#34;&#34;
+        Create a loader that searches for files with specified extension in a given directory and loads them.
+
+        Args:
+            gt_dir: Directory to be searched.
+            file_extension: Desired file extension of Matlab files.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(gt_dir, f&#34;*.{file_extension}&#34;)))
+        BasicGTPointsMatFileLoader.__init__(self, paths, getter)
+        self.args = self._prepare_args(local)
+
+
+class BasicDensityMapCSVFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for density maps stored in separate CSV files.
+    &#34;&#34;&#34;
+    def __init__(self, dm_paths):
+        &#34;&#34;&#34;
+        Create a loader that loads density maps at specified paths.
+
+        Args:
+            dm_paths: Paths to CSV files with density maps.
+        &#34;&#34;&#34;
+        if len(dm_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dm_paths = dm_paths
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of density maps to load, according to number of specified paths.
+
+        Returns:
+            Number of density maps.
+        &#34;&#34;&#34;
+        return len(self.dm_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all density maps from all specified paths.
+
+        Returns:
+            Generator of density maps.
+        &#34;&#34;&#34;
+        for path in self.dm_paths:
+            den_map = []
+            with open(path, &#39;r&#39;, newline=&#39;&#39;) as f:
+                for row in _csv.reader(f):
+                    den_row = []
+                    for cell in row:
+                        den_row.append(float(cell))
+                    den_map.append(den_row)
+
+            yield _np.array(den_map)
+
+
+class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
+    &#34;&#34;&#34;
+    Loader for density maps stored in all CSV files in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, den_map_dir, file_extension=&#34;csv&#34;):
+        &#34;&#34;&#34;
+        Create a loader that searches for files with the given extension in the given directory and loads them.
+
+        Args:
+            den_map_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(den_map_dir, f&#34;*.{file_extension}&#34;)))
+        BasicDensityMapCSVFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)
+
+
+class VariableLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.
+    &#34;&#34;&#34;
+    def __init__(self, data):
+        &#34;&#34;&#34;
+        Create a loader that reads from a variable (list or array most probably) and yields the results.
+
+        Args:
+            data: Iterable that has len() with either images or density maps.
+        &#34;&#34;&#34;
+        # saving dataset variables (possibly consisting of thousands of samples) to a json file would be dangerous
+        self.args = None
+        self.data = data
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Return length of the dataset in the variable.
+
+        Returns:
+            Number of samples.
+        &#34;&#34;&#34;
+        return len(self.data)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Read the variable and yield samples one by one.
+
+        Returns:
+            Generator of either images or density maps.
+        &#34;&#34;&#34;
+        for sample in self.data:
+            yield sample
+
+
+class ConcatenatingLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that doesn&#39;t perform any loading on its own but rather concatenates samples from a few sources.
+    &#34;&#34;&#34;
+    def __init__(self, loaders):
+        &#34;&#34;&#34;
+        Create a loader that concatenates loading results from a few loaders.
+
+        Args:
+            loaders: Loaders whose results will be concatenated.
+        &#34;&#34;&#34;
+        Loader.__init__(self)
+        self.args = [{&#39;name&#39;: loader.__class__.__name__, &#39;args&#39;: loader.args} for loader in loaders]
+        self.loaders = loaders
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of samples to load throughout loaders.
+
+        Returns:
+            Cumulative number of samples.
+        &#34;&#34;&#34;
+        return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all samples from all connected loaders.
+
+        Returns:
+            Generator of samples, be it images, GT point lists or density maps.
+        &#34;&#34;&#34;
+        for loader in self.loaders:
+            for sample in loader:
+                yield sample
+
+
+class CombinedLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
+    density maps (be it straight from a loader or from transformed on-the-fly GT points).
+    &#34;&#34;&#34;
+    def __init__(self, img_loader, gt_loader, den_map_loader=None, gt_to_dm_converter=&#39;gaussian&#39;):
+        &#34;&#34;&#34;
+        Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
+        provide density maps related to the images loaded using `img_loader`. If using ground truth loader, you may
+        also customize how the points will be converted to a density map by specifying `gt_to_dm_converter`.
+
+        Args:
+            img_loader: Loader that provides an iterable of images.
+            gt_loader: Loader that provides an iterable of lists of points.
+            den_map_loader: Loader that provides an iterable of density maps.
+            gt_to_dm_converter: How the points from the ground truth will be converted to a density map, should such
+                conversion happen - when using gt_loader.
+        &#34;&#34;&#34;
+        if (gt_loader is None) == (den_map_loader is None):
+            raise ValueError(&#34;One and only one loader for target must be selected&#34;)
+        if gt_to_dm_converter not in [&#39;gaussian&#39;, &#39;geometry-adaptive gaussian&#39;]:
+            raise ValueError(&#34;Only two converters are available: &#39;gaussian&#39; and &#39;geometry-adaptive gaussian&#39;. Please&#34;
+                             &#34;use one of them.&#34;)
+
+        Loader.__init__(self)
+        self.args = {
+            &#39;img_loader&#39;: {&#39;name&#39;: img_loader.__class__.__name__, &#39;args&#39;: img_loader.args},
+            &#39;gt_loader&#39;: None if gt_loader is None else {
+                &#39;name&#39;: img_loader.__class__.__name__, &#39;args&#39;: img_loader.args
+            },
+            &#39;den_map_loader&#39;: None if den_map_loader is None else {
+                &#39;name&#39;: den_map_loader.__class__.__name__, &#39;args&#39;: den_map_loader.args
+            }
+        }
+        self.img_loader = img_loader
+        self.gt_loader = gt_loader
+        self.den_map_loader = den_map_loader
+        self.gt_to_dm_converter = get_density_map_gaussian if &#39;gaussian&#39; \
+            else get_density_map_geometry_adaptive_gaussian_kernel
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of full samples (img+DM pairs).
+
+        Returns:
+            Number of samples.
+        &#34;&#34;&#34;
+        if self.den_map_loader is None:
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.gt_loader.get_number_of_loadable_samples())
+        else:
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.den_map_loader.get_number_of_loadable_samples())
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
+        GT points to a density map.
+
+        Returns:
+            Generator of img+DM pairs.
+        &#34;&#34;&#34;
+        cnt = 0
+        img_gen = self.img_loader.load()
+        if self.den_map_loader is None:
+            gt_gen = self.gt_loader.load()
+            try:
+                while True:
+                    img = next(img_gen)
+                    try:
+                        gt = next(gt_gen)
+                    except StopIteration:
+                        raise ValueError(f&#34;Missing ground truth for image {str(cnt)}&#34;)
+                    den_map = self.gt_to_dm_converter(img, gt)
+                    yield img, den_map
+                    cnt += 1
+            except StopIteration:
+                pass
+        else:
+            dm_gen = self.den_map_loader.load()
+            try:
+                while True:
+                    img = next(img_gen)
+                    try:
+                        den_map = next(dm_gen)
+                    except StopIteration:
+                        raise ValueError(f&#34;Missing density map for image {str(cnt)}&#34;)
+                    yield img, den_map
+                    cnt += 1
+            except StopIteration:
+                pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="CCAugmentation.loaders.get_density_map_gaussian"><code class="name flex">
+<span>def <span class="ident">get_density_map_gaussian</span></span>(<span>im, points)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a Gaussian density map from the points.
+Credits:
+<a href="https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py">https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py</a></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>im</code></strong></dt>
+<dd>Original image, used only for getting needed shape of the density map.</dd>
+<dt><strong><code>points</code></strong></dt>
+<dd>List of (X, Y) tuples that point at where human heads are located in a picture.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Density map constructed from the points.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_density_map_gaussian(im, points):
+    &#34;&#34;&#34;
+    Create a Gaussian density map from the points.
+    Credits:
+    https://github.com/ZhengPeng7/Multi_column_CNN_in_Keras/blob/master/data_preparation/get_density_map_gaussian.py
+
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
+    &#34;&#34;&#34;
+    im_density = _np.zeros_like(im[:, :, 0], dtype=_np.float64)
+    h, w = im_density.shape
+    if points is None:
+        return im_density
+    if points.shape[0] == 1:
+        x1 = max(0, min(w-1, round(points[0, 0])))
+        y1 = max(0, min(h-1, round(points[0, 1])))
+        im_density[y1, x1] = 255
+        return im_density
+    for j in range(points.shape[0]):
+        f_sz = 15
+        sigma = 4.0
+        H = _np.multiply(_cv2.getGaussianKernel(f_sz, sigma), (_cv2.getGaussianKernel(f_sz, sigma)).T)
+        x = min(w-1, max(0, abs(int(_math.floor(points[j, 0])))))
+        y = min(h-1, max(0, abs(int(_math.floor(points[j, 1])))))
+        if x &gt;= w or y &gt;= h:
+            continue
+        x1 = x - f_sz//2 + 0
+        y1 = y - f_sz//2 + 0
+        x2 = x + f_sz//2 + 1
+        y2 = y + f_sz//2 + 1
+        dfx1, dfy1, dfx2, dfy2 = 0, 0, 0, 0
+        change_H = False
+        if x1 &lt; 0:
+            dfx1 = abs(x1) + 0
+            x1 = 0
+            change_H = True
+        if y1 &lt; 0:
+            dfy1 = abs(y1) + 0
+            y1 = 0
+            change_H = True
+        if x2 &gt; w:
+            dfx2 = x2 - w
+            x2 = w
+            change_H = True
+        if y2 &gt; h:
+            dfy2 = y2 - h
+            y2 = h
+            change_H = True
+        x1h, y1h, x2h, y2h = 1 + dfx1, 1 + dfy1, f_sz - dfx2, f_sz - dfy2
+        if change_H is True:
+            H = _np.multiply(
+                _cv2.getGaussianKernel(y2h - y1h + 1, sigma),
+                (_cv2.getGaussianKernel(x2h - x1h + 1, sigma)).T
+            )
+        im_density[y1:y2, x1:x2] += H
+
+    return im_density</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.get_density_map_geometry_adaptive_gaussian_kernel"><code class="name flex">
+<span>def <span class="ident">get_density_map_geometry_adaptive_gaussian_kernel</span></span>(<span>im, points)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a density map using Geometry-Adaptive Gaussian kernel proposed in:
+<a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf">https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf</a></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>im</code></strong></dt>
+<dd>Original image, used only for getting needed shape of the density map.</dd>
+<dt><strong><code>points</code></strong></dt>
+<dd>List of (X, Y) tuples that point at where human heads are located in a picture.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Density map constructed from the points.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_density_map_geometry_adaptive_gaussian_kernel(im, points):
+    &#34;&#34;&#34;
+    Create a density map using Geometry-Adaptive Gaussian kernel proposed in:
+    https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf
+
+    Args:
+        im: Original image, used only for getting needed shape of the density map.
+        points: List of (X, Y) tuples that point at where human heads are located in a picture.
+
+    Returns:
+        Density map constructed from the points.
+    &#34;&#34;&#34;
+    h, w = im.shape[:2]
+    im_density = _np.zeros((h, w), dtype=_np.float32)
+    if len(points) == 0:
+        return im_density
+
+    for point in points:
+        x = _np.clip(round(point[0]), 0, w-1)
+        y = _np.clip(round(point[1]), 0, h-1)
+        im_density[y, x] = 1
+
+    if len(points) == 1:
+        sigma = 0
+        im_density += _gaussian_filter(points, sigma, mode=&#39;constant&#39;)
+        return im_density
+
+    tree = _KDTree(points, leafsize=2048)
+    distances, _ = tree.query(points, k=3)
+
+    beta = 0.3
+
+    for i, point in enumerate(points):
+        point_2d = _np.zeros(im_density.shape, dtype=_np.floa32)
+        point_2d[point[1], point[0]] = 1.
+        sigma = (distances[i][1] + distances[i][2] + distances[i][3]) * beta
+        im_density += _gaussian_filter(points, sigma, mode=&#39;constant&#39;)
+    return im_density</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="CCAugmentation.loaders.BasicDensityMapCSVFileLoader"><code class="flex name class">
+<span>class <span class="ident">BasicDensityMapCSVFileLoader</span></span>
+<span>(</span><span>dm_paths)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for density maps stored in separate CSV files.</p>
+<p>Create a loader that loads density maps at specified paths.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dm_paths</code></strong></dt>
+<dd>Paths to CSV files with density maps.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BasicDensityMapCSVFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for density maps stored in separate CSV files.
+    &#34;&#34;&#34;
+    def __init__(self, dm_paths):
+        &#34;&#34;&#34;
+        Create a loader that loads density maps at specified paths.
+
+        Args:
+            dm_paths: Paths to CSV files with density maps.
+        &#34;&#34;&#34;
+        if len(dm_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.dm_paths = dm_paths
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of density maps to load, according to number of specified paths.
+
+        Returns:
+            Number of density maps.
+        &#34;&#34;&#34;
+        return len(self.dm_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all density maps from all specified paths.
+
+        Returns:
+            Generator of density maps.
+        &#34;&#34;&#34;
+        for path in self.dm_paths:
+            den_map = []
+            with open(path, &#39;r&#39;, newline=&#39;&#39;) as f:
+                for row in _csv.reader(f):
+                    den_row = []
+                    for cell in row:
+                        den_row.append(float(cell))
+                    den_map.append(den_row)
+
+            yield _np.array(den_map)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.DensityMapCSVFileLoader" href="#CCAugmentation.loaders.DensityMapCSVFileLoader">DensityMapCSVFileLoader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of density maps to load, according to number of specified paths.</p>
+<h2 id="returns">Returns</h2>
+<p>Number of density maps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Get number of density maps to load, according to number of specified paths.
+
+    Returns:
+        Number of density maps.
+    &#34;&#34;&#34;
+    return len(self.dm_paths)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load all density maps from all specified paths.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of density maps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Load all density maps from all specified paths.
+
+    Returns:
+        Generator of density maps.
+    &#34;&#34;&#34;
+    for path in self.dm_paths:
+        den_map = []
+        with open(path, &#39;r&#39;, newline=&#39;&#39;) as f:
+            for row in _csv.reader(f):
+                den_row = []
+                for cell in row:
+                    den_row.append(float(cell))
+                den_map.append(den_row)
+
+        yield _np.array(den_map)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.BasicGTPointsMatFileLoader"><code class="flex name class">
+<span>class <span class="ident">BasicGTPointsMatFileLoader</span></span>
+<span>(</span><span>gt_paths, getter)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for ground truth data stored as lists of head positions in Matlab files.</p>
+<p>Create a loader that loads all data from the provided file paths using a given getter.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>gt_paths</code></strong></dt>
+<dd>Paths of files that are to be read.</dd>
+<dt><strong><code>getter</code></strong></dt>
+<dd>Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BasicGTPointsMatFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for ground truth data stored as lists of head positions in Matlab files.
+    &#34;&#34;&#34;
+    def __init__(self, gt_paths, getter):
+        &#34;&#34;&#34;
+        Create a loader that loads all data from the provided file paths using a given getter.
+
+        Args:
+            gt_paths: Paths of files that are to be read.
+            getter: Lambda that takes Matlab file content and returns list of head positions in form of (X, Y) tuples.
+        &#34;&#34;&#34;
+        if len(gt_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.gt_paths = gt_paths
+        self.getter = getter
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of GTs to load, according to number of specified paths.
+
+        Returns:
+            Number of GTs.
+        &#34;&#34;&#34;
+        return len(self.gt_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all Matlab files from paths.
+
+        Returns:
+            Generator of lists of head positions - (X, Y) tuples.
+        &#34;&#34;&#34;
+        for path in self.gt_paths:
+            yield self.getter(_loadmat(path))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>CCAugmentation.integrations.datasets._NWPUGTLoader</li>
+<li><a title="CCAugmentation.loaders.GTPointsMatFileLoader" href="#CCAugmentation.loaders.GTPointsMatFileLoader">GTPointsMatFileLoader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.BasicGTPointsMatFileLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of GTs to load, according to number of specified paths.</p>
+<h2 id="returns">Returns</h2>
+<p>Number of GTs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Get number of GTs to load, according to number of specified paths.
+
+    Returns:
+        Number of GTs.
+    &#34;&#34;&#34;
+    return len(self.gt_paths)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.BasicGTPointsMatFileLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load all Matlab files from paths.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of lists of head positions - (X, Y) tuples.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Load all Matlab files from paths.
+
+    Returns:
+        Generator of lists of head positions - (X, Y) tuples.
+    &#34;&#34;&#34;
+    for path in self.gt_paths:
+        yield self.getter(_loadmat(path))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.BasicImageFileLoader"><code class="flex name class">
+<span>class <span class="ident">BasicImageFileLoader</span></span>
+<span>(</span><span>img_paths)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.</p>
+<p>Create a new image loader that reads all image files from paths.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>img_paths</code></strong></dt>
+<dd>Paths to all images that are to be loaded.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BasicImageFileLoader(Loader):
+    &#34;&#34;&#34;
+    Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
+    &#34;&#34;&#34;
+    def __init__(self, img_paths):
+        &#34;&#34;&#34;
+        Create a new image loader that reads all image files from paths.
+
+        Args:
+            img_paths: Paths to all images that are to be loaded.
+        &#34;&#34;&#34;
+        if len(img_paths) == 0:
+            raise ValueError(&#34;At least one path must be specified&#34;)
+
+        Loader.__init__(self)
+        self.args = self._prepare_args(locals())
+        self.img_paths = img_paths
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of images to load, according to number of specified paths.
+
+        Returns:
+            Number of images.
+        &#34;&#34;&#34;
+        return len(self.img_paths)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all images based on provided paths to files.
+
+        Returns:
+            Generator of images in BGR format.
+        &#34;&#34;&#34;
+        for path in self.img_paths:
+            yield _cv2.imread(path, _cv2.IMREAD_COLOR)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>CCAugmentation.integrations.datasets._NWPUImageLoader</li>
+<li><a title="CCAugmentation.loaders.ImageFileLoader" href="#CCAugmentation.loaders.ImageFileLoader">ImageFileLoader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.BasicImageFileLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of images to load, according to number of specified paths.</p>
+<h2 id="returns">Returns</h2>
+<p>Number of images.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Get number of images to load, according to number of specified paths.
+
+    Returns:
+        Number of images.
+    &#34;&#34;&#34;
+    return len(self.img_paths)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.BasicImageFileLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load all images based on provided paths to files.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of images in BGR format.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Load all images based on provided paths to files.
+
+    Returns:
+        Generator of images in BGR format.
+    &#34;&#34;&#34;
+    for path in self.img_paths:
+        yield _cv2.imread(path, _cv2.IMREAD_COLOR)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.CombinedLoader"><code class="flex name class">
+<span>class <span class="ident">CombinedLoader</span></span>
+<span>(</span><span>img_loader, gt_loader, den_map_loader=None, gt_to_dm_converter='gaussian')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
+density maps (be it straight from a loader or from transformed on-the-fly GT points).</p>
+<p>Create a combined loader. Either <code>gt_loader</code> or <code>den_map_loader</code> must be specified (but not both) in order to
+provide density maps related to the images loaded using <code>img_loader</code>. If using ground truth loader, you may
+also customize how the points will be converted to a density map by specifying <code>gt_to_dm_converter</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>img_loader</code></strong></dt>
+<dd>Loader that provides an iterable of images.</dd>
+<dt><strong><code>gt_loader</code></strong></dt>
+<dd>Loader that provides an iterable of lists of points.</dd>
+<dt><strong><code>den_map_loader</code></strong></dt>
+<dd>Loader that provides an iterable of density maps.</dd>
+<dt><strong><code>gt_to_dm_converter</code></strong></dt>
+<dd>How the points from the ground truth will be converted to a density map, should such
+conversion happen - when using gt_loader.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CombinedLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
+    density maps (be it straight from a loader or from transformed on-the-fly GT points).
+    &#34;&#34;&#34;
+    def __init__(self, img_loader, gt_loader, den_map_loader=None, gt_to_dm_converter=&#39;gaussian&#39;):
+        &#34;&#34;&#34;
+        Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
+        provide density maps related to the images loaded using `img_loader`. If using ground truth loader, you may
+        also customize how the points will be converted to a density map by specifying `gt_to_dm_converter`.
+
+        Args:
+            img_loader: Loader that provides an iterable of images.
+            gt_loader: Loader that provides an iterable of lists of points.
+            den_map_loader: Loader that provides an iterable of density maps.
+            gt_to_dm_converter: How the points from the ground truth will be converted to a density map, should such
+                conversion happen - when using gt_loader.
+        &#34;&#34;&#34;
+        if (gt_loader is None) == (den_map_loader is None):
+            raise ValueError(&#34;One and only one loader for target must be selected&#34;)
+        if gt_to_dm_converter not in [&#39;gaussian&#39;, &#39;geometry-adaptive gaussian&#39;]:
+            raise ValueError(&#34;Only two converters are available: &#39;gaussian&#39; and &#39;geometry-adaptive gaussian&#39;. Please&#34;
+                             &#34;use one of them.&#34;)
+
+        Loader.__init__(self)
+        self.args = {
+            &#39;img_loader&#39;: {&#39;name&#39;: img_loader.__class__.__name__, &#39;args&#39;: img_loader.args},
+            &#39;gt_loader&#39;: None if gt_loader is None else {
+                &#39;name&#39;: img_loader.__class__.__name__, &#39;args&#39;: img_loader.args
+            },
+            &#39;den_map_loader&#39;: None if den_map_loader is None else {
+                &#39;name&#39;: den_map_loader.__class__.__name__, &#39;args&#39;: den_map_loader.args
+            }
+        }
+        self.img_loader = img_loader
+        self.gt_loader = gt_loader
+        self.den_map_loader = den_map_loader
+        self.gt_to_dm_converter = get_density_map_gaussian if &#39;gaussian&#39; \
+            else get_density_map_geometry_adaptive_gaussian_kernel
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of full samples (img+DM pairs).
+
+        Returns:
+            Number of samples.
+        &#34;&#34;&#34;
+        if self.den_map_loader is None:
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.gt_loader.get_number_of_loadable_samples())
+        else:
+            return min(self.img_loader.get_number_of_loadable_samples(),
+                       self.den_map_loader.get_number_of_loadable_samples())
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
+        GT points to a density map.
+
+        Returns:
+            Generator of img+DM pairs.
+        &#34;&#34;&#34;
+        cnt = 0
+        img_gen = self.img_loader.load()
+        if self.den_map_loader is None:
+            gt_gen = self.gt_loader.load()
+            try:
+                while True:
+                    img = next(img_gen)
+                    try:
+                        gt = next(gt_gen)
+                    except StopIteration:
+                        raise ValueError(f&#34;Missing ground truth for image {str(cnt)}&#34;)
+                    den_map = self.gt_to_dm_converter(img, gt)
+                    yield img, den_map
+                    cnt += 1
+            except StopIteration:
+                pass
+        else:
+            dm_gen = self.den_map_loader.load()
+            try:
+                while True:
+                    img = next(img_gen)
+                    try:
+                        den_map = next(dm_gen)
+                    except StopIteration:
+                        raise ValueError(f&#34;Missing density map for image {str(cnt)}&#34;)
+                    yield img, den_map
+                    cnt += 1
+            except StopIteration:
+                pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.integrations.datasets.NWPULoader" href="integrations/datasets.html#CCAugmentation.integrations.datasets.NWPULoader">NWPULoader</a></li>
+<li><a title="CCAugmentation.integrations.datasets.SHHLoader" href="integrations/datasets.html#CCAugmentation.integrations.datasets.SHHLoader">SHHLoader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.CombinedLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of full samples (img+DM pairs).</p>
+<h2 id="returns">Returns</h2>
+<p>Number of samples.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Get number of full samples (img+DM pairs).
+
+    Returns:
+        Number of samples.
+    &#34;&#34;&#34;
+    if self.den_map_loader is None:
+        return min(self.img_loader.get_number_of_loadable_samples(),
+                   self.gt_loader.get_number_of_loadable_samples())
+    else:
+        return min(self.img_loader.get_number_of_loadable_samples(),
+                   self.den_map_loader.get_number_of_loadable_samples())</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.CombinedLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
+GT points to a density map.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of img+DM pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
+    GT points to a density map.
+
+    Returns:
+        Generator of img+DM pairs.
+    &#34;&#34;&#34;
+    cnt = 0
+    img_gen = self.img_loader.load()
+    if self.den_map_loader is None:
+        gt_gen = self.gt_loader.load()
+        try:
+            while True:
+                img = next(img_gen)
+                try:
+                    gt = next(gt_gen)
+                except StopIteration:
+                    raise ValueError(f&#34;Missing ground truth for image {str(cnt)}&#34;)
+                den_map = self.gt_to_dm_converter(img, gt)
+                yield img, den_map
+                cnt += 1
+        except StopIteration:
+            pass
+    else:
+        dm_gen = self.den_map_loader.load()
+        try:
+            while True:
+                img = next(img_gen)
+                try:
+                    den_map = next(dm_gen)
+                except StopIteration:
+                    raise ValueError(f&#34;Missing density map for image {str(cnt)}&#34;)
+                yield img, den_map
+                cnt += 1
+        except StopIteration:
+            pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.ConcatenatingLoader"><code class="flex name class">
+<span>class <span class="ident">ConcatenatingLoader</span></span>
+<span>(</span><span>loaders)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader that doesn't perform any loading on its own but rather concatenates samples from a few sources.</p>
+<p>Create a loader that concatenates loading results from a few loaders.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>loaders</code></strong></dt>
+<dd>Loaders whose results will be concatenated.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConcatenatingLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that doesn&#39;t perform any loading on its own but rather concatenates samples from a few sources.
+    &#34;&#34;&#34;
+    def __init__(self, loaders):
+        &#34;&#34;&#34;
+        Create a loader that concatenates loading results from a few loaders.
+
+        Args:
+            loaders: Loaders whose results will be concatenated.
+        &#34;&#34;&#34;
+        Loader.__init__(self)
+        self.args = [{&#39;name&#39;: loader.__class__.__name__, &#39;args&#39;: loader.args} for loader in loaders]
+        self.loaders = loaders
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Get number of samples to load throughout loaders.
+
+        Returns:
+            Cumulative number of samples.
+        &#34;&#34;&#34;
+        return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
+
+    def load(self):
+        &#34;&#34;&#34;
+        Load all samples from all connected loaders.
+
+        Returns:
+            Generator of samples, be it images, GT point lists or density maps.
+        &#34;&#34;&#34;
+        for loader in self.loaders:
+            for sample in loader:
+                yield sample</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.ConcatenatingLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of samples to load throughout loaders.</p>
+<h2 id="returns">Returns</h2>
+<p>Cumulative number of samples.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Get number of samples to load throughout loaders.
+
+    Returns:
+        Cumulative number of samples.
+    &#34;&#34;&#34;
+    return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.ConcatenatingLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load all samples from all connected loaders.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of samples, be it images, GT point lists or density maps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Load all samples from all connected loaders.
+
+    Returns:
+        Generator of samples, be it images, GT point lists or density maps.
+    &#34;&#34;&#34;
+    for loader in self.loaders:
+        for sample in loader:
+            yield sample</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.DensityMapCSVFileLoader"><code class="flex name class">
+<span>class <span class="ident">DensityMapCSVFileLoader</span></span>
+<span>(</span><span>den_map_dir, file_extension='csv')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for density maps stored in all CSV files in a given directory.</p>
+<p>Create a loader that searches for files with the given extension in the given directory and loads them.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>den_map_dir</code></strong></dt>
+<dd>Directory to be searched.</dd>
+<dt><strong><code>file_extension</code></strong></dt>
+<dd>Desired extension of files to be loaded.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
+    &#34;&#34;&#34;
+    Loader for density maps stored in all CSV files in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, den_map_dir, file_extension=&#34;csv&#34;):
+        &#34;&#34;&#34;
+        Create a loader that searches for files with the given extension in the given directory and loads them.
+
+        Args:
+            den_map_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(den_map_dir, f&#34;*.{file_extension}&#34;)))
+        BasicDensityMapCSVFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader">BasicDensityMapCSVFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader">BasicDensityMapCSVFileLoader</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.load" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.loaders.GTPointsMatFileLoader"><code class="flex name class">
+<span>class <span class="ident">GTPointsMatFileLoader</span></span>
+<span>(</span><span>gt_dir, getter, file_extension='mat')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for head positions in all Matlab files in a given directory.</p>
+<p>Create a loader that searches for files with specified extension in a given directory and loads them.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>gt_dir</code></strong></dt>
+<dd>Directory to be searched.</dd>
+<dt><strong><code>file_extension</code></strong></dt>
+<dd>Desired file extension of Matlab files.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
+    &#34;&#34;&#34;
+    Loader for head positions in all Matlab files in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, gt_dir, getter, file_extension=&#34;mat&#34;):
+        &#34;&#34;&#34;
+        Create a loader that searches for files with specified extension in a given directory and loads them.
+
+        Args:
+            gt_dir: Directory to be searched.
+            file_extension: Desired file extension of Matlab files.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(gt_dir, f&#34;*.{file_extension}&#34;)))
+        BasicGTPointsMatFileLoader.__init__(self, paths, getter)
+        self.args = self._prepare_args(local)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader">BasicGTPointsMatFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>CCAugmentation.integrations.datasets._SHHGTLoader</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader">BasicGTPointsMatFileLoader</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader.load" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.loaders.ImageFileLoader"><code class="flex name class">
+<span>class <span class="ident">ImageFileLoader</span></span>
+<span>(</span><span>img_dir, file_extension='jpg')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader for all images of some type in a given directory.</p>
+<p>Create a new image loader that reads all the images with specified file extension in a given directory.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>img_dir</code></strong></dt>
+<dd>Directory to be searched.</dd>
+<dt><strong><code>file_extension</code></strong></dt>
+<dd>Desired extension of files to be loaded.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ImageFileLoader(BasicImageFileLoader):
+    &#34;&#34;&#34;
+    Loader for all images of some type in a given directory.
+    &#34;&#34;&#34;
+    def __init__(self, img_dir, file_extension=&#34;jpg&#34;):
+        &#34;&#34;&#34;
+        Create a new image loader that reads all the images with specified file extension in a given directory.
+
+        Args:
+            img_dir: Directory to be searched.
+            file_extension: Desired extension of files to be loaded.
+        &#34;&#34;&#34;
+        local = locals().copy()
+        paths = sorted(_glob(_os.path.join(img_dir, f&#34;*.{file_extension}&#34;)))
+        BasicImageFileLoader.__init__(self, paths)
+        self.args = self._prepare_args(local)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.BasicImageFileLoader" href="#CCAugmentation.loaders.BasicImageFileLoader">BasicImageFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>CCAugmentation.integrations.datasets._SHHImageLoader</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="CCAugmentation.loaders.BasicImageFileLoader" href="#CCAugmentation.loaders.BasicImageFileLoader">BasicImageFileLoader</a></b></code>:
+<ul class="hlist">
+<li><code><a title="CCAugmentation.loaders.BasicImageFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicImageFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicImageFileLoader.load" href="#CCAugmentation.loaders.BasicImageFileLoader.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="CCAugmentation.loaders.Loader"><code class="flex name class">
+<span>class <span class="ident">Loader</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract base loader that should return an iterable of samples, either images, lists of points or density maps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Loader:
+    &#34;&#34;&#34;
+    Abstract base loader that should return an iterable of samples, either images, lists of points or density maps.
+    &#34;&#34;&#34;
+    def load(self):
+        &#34;&#34;&#34; Method that must be implemented in the subclasses, returning an iterable of samples &#34;&#34;&#34;
+        raise NotImplementedError(&#34;load not implemented in the child class&#34;)
+
+    @staticmethod
+    def _prepare_args(local_vars):
+        &#34;&#34;&#34; Simple method that removes unwanted &#39;self&#39; variable from the set that will be stored for loading and
+        saving pipelines&#34;&#34;&#34;
+        return {k: v for k, v in local_vars.items() if k != &#39;self&#39;}
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Return number of samples from the dataset that can and will be loaded by the loader, or None if it&#39;s unknown.
+
+        Returns:
+            Number of samples that can be loaded, including the already loaded ones.
+        &#34;&#34;&#34;
+        return None</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader">BasicDensityMapCSVFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader">BasicGTPointsMatFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.BasicImageFileLoader" href="#CCAugmentation.loaders.BasicImageFileLoader">BasicImageFileLoader</a></li>
+<li><a title="CCAugmentation.loaders.CombinedLoader" href="#CCAugmentation.loaders.CombinedLoader">CombinedLoader</a></li>
+<li><a title="CCAugmentation.loaders.ConcatenatingLoader" href="#CCAugmentation.loaders.ConcatenatingLoader">ConcatenatingLoader</a></li>
+<li><a title="CCAugmentation.loaders.VariableLoader" href="#CCAugmentation.loaders.VariableLoader">VariableLoader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.Loader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return number of samples from the dataset that can and will be loaded by the loader, or None if it's unknown.</p>
+<h2 id="returns">Returns</h2>
+<p>Number of samples that can be loaded, including the already loaded ones.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Return number of samples from the dataset that can and will be loaded by the loader, or None if it&#39;s unknown.
+
+    Returns:
+        Number of samples that can be loaded, including the already loaded ones.
+    &#34;&#34;&#34;
+    return None</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.Loader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method that must be implemented in the subclasses, returning an iterable of samples</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34; Method that must be implemented in the subclasses, returning an iterable of samples &#34;&#34;&#34;
+    raise NotImplementedError(&#34;load not implemented in the child class&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.loaders.VariableLoader"><code class="flex name class">
+<span>class <span class="ident">VariableLoader</span></span>
+<span>(</span><span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.</p>
+<p>Create a loader that reads from a variable (list or array most probably) and yields the results.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>Iterable that has len() with either images or density maps.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VariableLoader(Loader):
+    &#34;&#34;&#34;
+    Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.
+    &#34;&#34;&#34;
+    def __init__(self, data):
+        &#34;&#34;&#34;
+        Create a loader that reads from a variable (list or array most probably) and yields the results.
+
+        Args:
+            data: Iterable that has len() with either images or density maps.
+        &#34;&#34;&#34;
+        # saving dataset variables (possibly consisting of thousands of samples) to a json file would be dangerous
+        self.args = None
+        self.data = data
+
+    def get_number_of_loadable_samples(self):
+        &#34;&#34;&#34;
+        Return length of the dataset in the variable.
+
+        Returns:
+            Number of samples.
+        &#34;&#34;&#34;
+        return len(self.data)
+
+    def load(self):
+        &#34;&#34;&#34;
+        Read the variable and yield samples one by one.
+
+        Returns:
+            Generator of either images or density maps.
+        &#34;&#34;&#34;
+        for sample in self.data:
+            yield sample</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.loaders.VariableLoader.get_number_of_loadable_samples"><code class="name flex">
+<span>def <span class="ident">get_number_of_loadable_samples</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return length of the dataset in the variable.</p>
+<h2 id="returns">Returns</h2>
+<p>Number of samples.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_number_of_loadable_samples(self):
+    &#34;&#34;&#34;
+    Return length of the dataset in the variable.
+
+    Returns:
+        Number of samples.
+    &#34;&#34;&#34;
+    return len(self.data)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.loaders.VariableLoader.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the variable and yield samples one by one.</p>
+<h2 id="returns">Returns</h2>
+<p>Generator of either images or density maps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Read the variable and yield samples one by one.
+
+    Returns:
+        Generator of either images or density maps.
+    &#34;&#34;&#34;
+    for sample in self.data:
+        yield sample</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="CCAugmentation" href="index.html">CCAugmentation</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.get_density_map_gaussian" href="#CCAugmentation.loaders.get_density_map_gaussian">get_density_map_gaussian</a></code></li>
+<li><code><a title="CCAugmentation.loaders.get_density_map_geometry_adaptive_gaussian_kernel" href="#CCAugmentation.loaders.get_density_map_geometry_adaptive_gaussian_kernel">get_density_map_geometry_adaptive_gaussian_kernel</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader">BasicDensityMapCSVFileLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicDensityMapCSVFileLoader.load" href="#CCAugmentation.loaders.BasicDensityMapCSVFileLoader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader">BasicGTPointsMatFileLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicGTPointsMatFileLoader.load" href="#CCAugmentation.loaders.BasicGTPointsMatFileLoader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.BasicImageFileLoader" href="#CCAugmentation.loaders.BasicImageFileLoader">BasicImageFileLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.BasicImageFileLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.BasicImageFileLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.BasicImageFileLoader.load" href="#CCAugmentation.loaders.BasicImageFileLoader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.CombinedLoader" href="#CCAugmentation.loaders.CombinedLoader">CombinedLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.CombinedLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.CombinedLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.CombinedLoader.load" href="#CCAugmentation.loaders.CombinedLoader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.ConcatenatingLoader" href="#CCAugmentation.loaders.ConcatenatingLoader">ConcatenatingLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.ConcatenatingLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.ConcatenatingLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.ConcatenatingLoader.load" href="#CCAugmentation.loaders.ConcatenatingLoader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.DensityMapCSVFileLoader" href="#CCAugmentation.loaders.DensityMapCSVFileLoader">DensityMapCSVFileLoader</a></code></h4>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.GTPointsMatFileLoader" href="#CCAugmentation.loaders.GTPointsMatFileLoader">GTPointsMatFileLoader</a></code></h4>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.ImageFileLoader" href="#CCAugmentation.loaders.ImageFileLoader">ImageFileLoader</a></code></h4>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.Loader" href="#CCAugmentation.loaders.Loader">Loader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.Loader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.Loader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.Loader.load" href="#CCAugmentation.loaders.Loader.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.loaders.VariableLoader" href="#CCAugmentation.loaders.VariableLoader">VariableLoader</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.loaders.VariableLoader.get_number_of_loadable_samples" href="#CCAugmentation.loaders.VariableLoader.get_number_of_loadable_samples">get_number_of_loadable_samples</a></code></li>
+<li><code><a title="CCAugmentation.loaders.VariableLoader.load" href="#CCAugmentation.loaders.VariableLoader.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

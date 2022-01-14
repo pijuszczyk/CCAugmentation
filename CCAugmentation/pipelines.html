@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>CCAugmentation.pipelines API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>CCAugmentation.pipelines</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json as _json
+import random as _random
+
+import numpy as _np
+from tqdm import tqdm as _tqdm
+
+
+class PipelineResultsIterator:
+    &#34;&#34;&#34;
+    Iterator for img+DM pairs on pipeline&#39;s output.
+    &#34;&#34;&#34;
+    def __init__(self, images_and_density_maps, total_samples, verbose=True):
+        &#34;&#34;&#34;
+        Create an iterator for img+DM pairs coming from the pipeline.
+
+        Args:
+            images_and_density_maps: Iterator of preprocessed img+DM pairs.
+            total_samples: Total expected number of samples on output.
+            verbose: Whether to display a progress bar.
+        &#34;&#34;&#34;
+        if total_samples is not None and total_samples &lt;= 0:
+            raise ValueError(&#34;Total samples must be an integer greater than 0&#34;)
+
+        self._images_and_density_maps = images_and_density_maps
+        self._progress = _tqdm(total=total_samples) if verbose and total_samples is not None else None
+
+    def __iter__(self):
+        &#34;&#34;&#34; Return itself. &#34;&#34;&#34;
+        return self
+
+    def __next__(self):
+        &#34;&#34;&#34; Return next img+DM pair, updating the progress bar if it&#39;s enabled. &#34;&#34;&#34;
+        next_result = next(self._images_and_density_maps)
+        if self._progress is not None:
+            self._progress.update(1)
+        return next_result
+
+
+class Pipeline:
+    &#34;&#34;&#34;
+    Pipelines define the data preprocessing and augmentation tasks, starting from loading the original data, through
+    various transformations, up to showing and saving the results. They provide an easy to define and adjust workflow,
+    that can be stored and summarized with ease.
+
+    Unless loading the whole dataset is needed at some point, they provide means of loading just the required minimum,
+    optimizing memory usage.
+
+    First, a data loader must be selected. Such a loader needs to return an iterable of pairs of images and
+    corresponding density maps. Then, a list of operations is prepared. This includes duplicating, cropping, flipping,
+    saving results to files, etc. Finally, such a pipeline is executed to gather the results.
+    &#34;&#34;&#34;
+    def __init__(self, loader, operations):
+        &#34;&#34;&#34;
+        Create a new pipeline that loads the data using the given `loader` and performs `operations` on them.
+
+        Args:
+            loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of
+                such data.
+            operations: List of operations that will be executed on the loaded data.
+        &#34;&#34;&#34;
+        self.loader = loader
+        self.operations = operations
+        self.requires_full_dataset_in_memory = any([op.requires_full_dataset_in_memory for op in operations])
+
+    def get_input_samples_number(self):
+        &#34;&#34;&#34; Get number of samples the loader will load. &#34;&#34;&#34;
+        return self.loader.get_number_of_loadable_samples()
+
+    def get_expected_output_samples_number(self):
+        &#34;&#34;&#34; Starting with the input samples number, internally check for operations modifying the number and calculate
+        the final size. &#34;&#34;&#34;
+        output_samples_num = self.get_input_samples_number()
+        for operation in self.operations:
+            output_samples_num *= operation.get_output_samples_number_multiplier()
+        return round(output_samples_num)
+
+    def _connect_operations(self):
+        &#34;&#34;&#34;
+        Connect the loader with all the prepared operations sequentially to create a working pipeline.
+
+        Returns:
+            Iterable of img+DM pairs.
+        &#34;&#34;&#34;
+        images_and_density_maps = self.loader.load()
+        for operation in self.operations:
+            images_and_density_maps = operation.execute(images_and_density_maps)
+        return images_and_density_maps
+
+    def execute_generate(self, seed=None):
+        &#34;&#34;&#34;
+        Execute the pipeline and return an iterable of the preprocessed, augmented data samples. Minimizes peak
+        memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
+        have a list of the results, please consider using `execute_collect`.
+
+        Args:
+            seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+
+        Returns:
+            Iterable of preprocessed data.
+        &#34;&#34;&#34;
+        if seed is not None:
+            _random.seed(seed)
+            _np.random.seed(seed)
+
+        images_and_density_maps = self._connect_operations()
+
+        return PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), False)
+
+    def execute_collect(self, seed=None, return_np_arrays=False, verbose=True):
+        &#34;&#34;&#34;
+        Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
+        the other for density maps). In opposition to `execute_generate`, this method performs all operations on
+        the whole dataset in one go.
+
+        Args:
+            seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+            return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists.
+                Generally, np.arrays are more useful when training a model but they don&#39;t support elements of
+                varying size (search for &#39;ragged array&#39;), so for safety, Python lists are the default output.
+            verbose: If true, display a progress bar.
+
+        Returns:
+            List of preprocessed data.
+        &#34;&#34;&#34;
+        if seed is not None:
+            _random.seed(seed)
+            _np.random.seed(seed)
+
+        images_and_density_maps = self._connect_operations()
+
+        results = PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose)
+        images, density_maps = zip(*results)
+        if return_np_arrays:
+            return _np.array(images), _np.array(density_maps)
+        else:
+            return images, density_maps
+
+    def summary(self):
+        &#34;&#34;&#34; Print a summary of the pipeline. &#34;&#34;&#34;
+        width = 80
+        print(&#34;*&#34; * width)
+        print(&#34;Pipeline summary&#34;)
+        print(&#34;*&#34; * width)
+        print(&#34;&#34;)
+        print(&#34;Operations:&#34;)
+        for i, op in enumerate(self.operations):
+            print(f&#34;{str(i)}. {str(op)}&#34;)
+        print(&#34;&#34;)
+        print(f&#34;Requires full dataset in memory: {self.requires_full_dataset_in_memory}&#34;)
+
+    def to_json(self):
+        &#34;&#34;&#34; Write the pipeline to a dictionary so that it can be easily serialized as JSON. &#34;&#34;&#34;
+        loader_json = {&#39;name&#39;: self.loader.__class__.__name__, &#39;args&#39;: self.loader.args}
+        operations_json = [{&#39;name&#39;: op.__class__.__name__, &#39;args&#39;: op.args} for op in self.operations]
+        return {&#39;loader&#39;: loader_json, &#39;operations&#39;: operations_json}
+
+
+def read_pipeline_from_json(json_path):
+    &#34;&#34;&#34;
+    Create a new Pipeline with the same configuration as the one deserialized from a JSON file.
+
+    Args:
+        json_path: Path to the JSON with serialized Pipeline (configuration).
+
+    Returns:
+        Pipeline object, or None if errors occurred.
+    &#34;&#34;&#34;
+    def create_instance_invocation(package, name, args):
+        args_strs = []
+        for arg in args.items():
+            if type(arg[1]) is dict and &#39;name&#39; in arg[1] and &#39;args&#39; in arg[1]:
+                args_strs.append(f&#39;{arg[0]}={create_instance_invocation(package, arg[1][&#34;name&#34;], args[1][&#34;args&#34;])}&#39;)
+            elif type(arg[1]) is str:
+                val = arg[1].replace(&#34;\\&#34;, &#34;\\\\&#34;)
+                args_strs.append(f&#39;{arg[0]}=&#34;{val}&#34;&#39;)
+            else:
+                args_strs.append(f&#39;{arg[0]}={arg[1]}&#39;)
+        return f&#39;{package}.{name}({&#34;,&#34;.join(args_strs)})&#39;
+
+    with open(json_path, &#39;r&#39;) as f:
+        pipeline_structure = _json.load(f)
+
+    import CCAugmentation.integrations.datasets as cca_int_ds
+    import CCAugmentation as cca
+    _ = cca_int_ds, cca  # these modules are actually used, don&#39;t remove
+
+    loader = None
+    loader_entry = pipeline_structure[&#39;loader&#39;]
+    loader_name, loader_args = loader_entry[&#39;name&#39;], loader_entry[&#39;args&#39;]
+    for package in [&#39;cca_int_ds&#39;, &#39;cca&#39;]:
+        try:
+            getattr(eval(package), loader_name)
+            loader = eval(create_instance_invocation(package, loader_name, loader_args))
+            break
+        except AttributeError:
+            pass
+    if loader is None:
+        return None
+
+    operations = []
+    operations_entry = pipeline_structure[&#39;operations&#39;]
+    package = &#39;cca&#39;
+    for op in operations_entry:
+        op_name, op_args = op[&#39;name&#39;], op[&#39;args&#39;]
+        try:
+            getattr(eval(package), op_name)
+            inv = create_instance_invocation(package, op_name, op_args)
+            operations.append(eval(inv))
+            break
+        except AttributeError:
+            return None
+
+    return Pipeline(loader, operations)
+
+
+def write_pipeline_to_json(pipeline, json_path, optimized=True):
+    &#34;&#34;&#34;
+    Serialize Pipeline (configuration) to a JSON file.
+
+    Args:
+        pipeline: Pipeline to serialize.
+        json_path: Path where the serialized data will be stored.
+        optimized: Whether to produce an optimized JSON, or a prettified one.
+    &#34;&#34;&#34;
+    with open(json_path, &#39;w&#39;) as f:
+        _json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="CCAugmentation.pipelines.read_pipeline_from_json"><code class="name flex">
+<span>def <span class="ident">read_pipeline_from_json</span></span>(<span>json_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new Pipeline with the same configuration as the one deserialized from a JSON file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>json_path</code></strong></dt>
+<dd>Path to the JSON with serialized Pipeline (configuration).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Pipeline object, or None if errors occurred.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_pipeline_from_json(json_path):
+    &#34;&#34;&#34;
+    Create a new Pipeline with the same configuration as the one deserialized from a JSON file.
+
+    Args:
+        json_path: Path to the JSON with serialized Pipeline (configuration).
+
+    Returns:
+        Pipeline object, or None if errors occurred.
+    &#34;&#34;&#34;
+    def create_instance_invocation(package, name, args):
+        args_strs = []
+        for arg in args.items():
+            if type(arg[1]) is dict and &#39;name&#39; in arg[1] and &#39;args&#39; in arg[1]:
+                args_strs.append(f&#39;{arg[0]}={create_instance_invocation(package, arg[1][&#34;name&#34;], args[1][&#34;args&#34;])}&#39;)
+            elif type(arg[1]) is str:
+                val = arg[1].replace(&#34;\\&#34;, &#34;\\\\&#34;)
+                args_strs.append(f&#39;{arg[0]}=&#34;{val}&#34;&#39;)
+            else:
+                args_strs.append(f&#39;{arg[0]}={arg[1]}&#39;)
+        return f&#39;{package}.{name}({&#34;,&#34;.join(args_strs)})&#39;
+
+    with open(json_path, &#39;r&#39;) as f:
+        pipeline_structure = _json.load(f)
+
+    import CCAugmentation.integrations.datasets as cca_int_ds
+    import CCAugmentation as cca
+    _ = cca_int_ds, cca  # these modules are actually used, don&#39;t remove
+
+    loader = None
+    loader_entry = pipeline_structure[&#39;loader&#39;]
+    loader_name, loader_args = loader_entry[&#39;name&#39;], loader_entry[&#39;args&#39;]
+    for package in [&#39;cca_int_ds&#39;, &#39;cca&#39;]:
+        try:
+            getattr(eval(package), loader_name)
+            loader = eval(create_instance_invocation(package, loader_name, loader_args))
+            break
+        except AttributeError:
+            pass
+    if loader is None:
+        return None
+
+    operations = []
+    operations_entry = pipeline_structure[&#39;operations&#39;]
+    package = &#39;cca&#39;
+    for op in operations_entry:
+        op_name, op_args = op[&#39;name&#39;], op[&#39;args&#39;]
+        try:
+            getattr(eval(package), op_name)
+            inv = create_instance_invocation(package, op_name, op_args)
+            operations.append(eval(inv))
+            break
+        except AttributeError:
+            return None
+
+    return Pipeline(loader, operations)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.write_pipeline_to_json"><code class="name flex">
+<span>def <span class="ident">write_pipeline_to_json</span></span>(<span>pipeline, json_path, optimized=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Serialize Pipeline (configuration) to a JSON file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pipeline</code></strong></dt>
+<dd>Pipeline to serialize.</dd>
+<dt><strong><code>json_path</code></strong></dt>
+<dd>Path where the serialized data will be stored.</dd>
+<dt><strong><code>optimized</code></strong></dt>
+<dd>Whether to produce an optimized JSON, or a prettified one.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_pipeline_to_json(pipeline, json_path, optimized=True):
+    &#34;&#34;&#34;
+    Serialize Pipeline (configuration) to a JSON file.
+
+    Args:
+        pipeline: Pipeline to serialize.
+        json_path: Path where the serialized data will be stored.
+        optimized: Whether to produce an optimized JSON, or a prettified one.
+    &#34;&#34;&#34;
+    with open(json_path, &#39;w&#39;) as f:
+        _json.dump(pipeline.to_json(), f, indent=(None if optimized else 2))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="CCAugmentation.pipelines.Pipeline"><code class="flex name class">
+<span>class <span class="ident">Pipeline</span></span>
+<span>(</span><span>loader, operations)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Pipelines define the data preprocessing and augmentation tasks, starting from loading the original data, through
+various transformations, up to showing and saving the results. They provide an easy to define and adjust workflow,
+that can be stored and summarized with ease.</p>
+<p>Unless loading the whole dataset is needed at some point, they provide means of loading just the required minimum,
+optimizing memory usage.</p>
+<p>First, a data loader must be selected. Such a loader needs to return an iterable of pairs of images and
+corresponding density maps. Then, a list of operations is prepared. This includes duplicating, cropping, flipping,
+saving results to files, etc. Finally, such a pipeline is executed to gather the results.</p>
+<p>Create a new pipeline that loads the data using the given <code>loader</code> and performs <code>operations</code> on them.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>loader</code></strong></dt>
+<dd>Loader that loads pairs of images and corresponding density maps, providing an iterable of
+such data.</dd>
+<dt><strong><code>operations</code></strong></dt>
+<dd>List of operations that will be executed on the loaded data.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pipeline:
+    &#34;&#34;&#34;
+    Pipelines define the data preprocessing and augmentation tasks, starting from loading the original data, through
+    various transformations, up to showing and saving the results. They provide an easy to define and adjust workflow,
+    that can be stored and summarized with ease.
+
+    Unless loading the whole dataset is needed at some point, they provide means of loading just the required minimum,
+    optimizing memory usage.
+
+    First, a data loader must be selected. Such a loader needs to return an iterable of pairs of images and
+    corresponding density maps. Then, a list of operations is prepared. This includes duplicating, cropping, flipping,
+    saving results to files, etc. Finally, such a pipeline is executed to gather the results.
+    &#34;&#34;&#34;
+    def __init__(self, loader, operations):
+        &#34;&#34;&#34;
+        Create a new pipeline that loads the data using the given `loader` and performs `operations` on them.
+
+        Args:
+            loader: Loader that loads pairs of images and corresponding density maps, providing an iterable of
+                such data.
+            operations: List of operations that will be executed on the loaded data.
+        &#34;&#34;&#34;
+        self.loader = loader
+        self.operations = operations
+        self.requires_full_dataset_in_memory = any([op.requires_full_dataset_in_memory for op in operations])
+
+    def get_input_samples_number(self):
+        &#34;&#34;&#34; Get number of samples the loader will load. &#34;&#34;&#34;
+        return self.loader.get_number_of_loadable_samples()
+
+    def get_expected_output_samples_number(self):
+        &#34;&#34;&#34; Starting with the input samples number, internally check for operations modifying the number and calculate
+        the final size. &#34;&#34;&#34;
+        output_samples_num = self.get_input_samples_number()
+        for operation in self.operations:
+            output_samples_num *= operation.get_output_samples_number_multiplier()
+        return round(output_samples_num)
+
+    def _connect_operations(self):
+        &#34;&#34;&#34;
+        Connect the loader with all the prepared operations sequentially to create a working pipeline.
+
+        Returns:
+            Iterable of img+DM pairs.
+        &#34;&#34;&#34;
+        images_and_density_maps = self.loader.load()
+        for operation in self.operations:
+            images_and_density_maps = operation.execute(images_and_density_maps)
+        return images_and_density_maps
+
+    def execute_generate(self, seed=None):
+        &#34;&#34;&#34;
+        Execute the pipeline and return an iterable of the preprocessed, augmented data samples. Minimizes peak
+        memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
+        have a list of the results, please consider using `execute_collect`.
+
+        Args:
+            seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+
+        Returns:
+            Iterable of preprocessed data.
+        &#34;&#34;&#34;
+        if seed is not None:
+            _random.seed(seed)
+            _np.random.seed(seed)
+
+        images_and_density_maps = self._connect_operations()
+
+        return PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), False)
+
+    def execute_collect(self, seed=None, return_np_arrays=False, verbose=True):
+        &#34;&#34;&#34;
+        Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
+        the other for density maps). In opposition to `execute_generate`, this method performs all operations on
+        the whole dataset in one go.
+
+        Args:
+            seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+            return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists.
+                Generally, np.arrays are more useful when training a model but they don&#39;t support elements of
+                varying size (search for &#39;ragged array&#39;), so for safety, Python lists are the default output.
+            verbose: If true, display a progress bar.
+
+        Returns:
+            List of preprocessed data.
+        &#34;&#34;&#34;
+        if seed is not None:
+            _random.seed(seed)
+            _np.random.seed(seed)
+
+        images_and_density_maps = self._connect_operations()
+
+        results = PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose)
+        images, density_maps = zip(*results)
+        if return_np_arrays:
+            return _np.array(images), _np.array(density_maps)
+        else:
+            return images, density_maps
+
+    def summary(self):
+        &#34;&#34;&#34; Print a summary of the pipeline. &#34;&#34;&#34;
+        width = 80
+        print(&#34;*&#34; * width)
+        print(&#34;Pipeline summary&#34;)
+        print(&#34;*&#34; * width)
+        print(&#34;&#34;)
+        print(&#34;Operations:&#34;)
+        for i, op in enumerate(self.operations):
+            print(f&#34;{str(i)}. {str(op)}&#34;)
+        print(&#34;&#34;)
+        print(f&#34;Requires full dataset in memory: {self.requires_full_dataset_in_memory}&#34;)
+
+    def to_json(self):
+        &#34;&#34;&#34; Write the pipeline to a dictionary so that it can be easily serialized as JSON. &#34;&#34;&#34;
+        loader_json = {&#39;name&#39;: self.loader.__class__.__name__, &#39;args&#39;: self.loader.args}
+        operations_json = [{&#39;name&#39;: op.__class__.__name__, &#39;args&#39;: op.args} for op in self.operations]
+        return {&#39;loader&#39;: loader_json, &#39;operations&#39;: operations_json}</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="CCAugmentation.pipelines.Pipeline.execute_collect"><code class="name flex">
+<span>def <span class="ident">execute_collect</span></span>(<span>self, seed=None, return_np_arrays=False, verbose=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
+the other for density maps). In opposition to <code>execute_generate</code>, this method performs all operations on
+the whole dataset in one go.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>seed</code></strong></dt>
+<dd>Random seed. When it's not None, it allows reproducibility of the results.</dd>
+<dt><strong><code>return_np_arrays</code></strong></dt>
+<dd>Whether to use np.arrays (ndarrays) to store images and density maps or Python lists.
+Generally, np.arrays are more useful when training a model but they don't support elements of
+varying size (search for 'ragged array'), so for safety, Python lists are the default output.</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>If true, display a progress bar.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of preprocessed data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_collect(self, seed=None, return_np_arrays=False, verbose=True):
+    &#34;&#34;&#34;
+    Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
+    the other for density maps). In opposition to `execute_generate`, this method performs all operations on
+    the whole dataset in one go.
+
+    Args:
+        seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+        return_np_arrays: Whether to use np.arrays (ndarrays) to store images and density maps or Python lists.
+            Generally, np.arrays are more useful when training a model but they don&#39;t support elements of
+            varying size (search for &#39;ragged array&#39;), so for safety, Python lists are the default output.
+        verbose: If true, display a progress bar.
+
+    Returns:
+        List of preprocessed data.
+    &#34;&#34;&#34;
+    if seed is not None:
+        _random.seed(seed)
+        _np.random.seed(seed)
+
+    images_and_density_maps = self._connect_operations()
+
+    results = PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), verbose)
+    images, density_maps = zip(*results)
+    if return_np_arrays:
+        return _np.array(images), _np.array(density_maps)
+    else:
+        return images, density_maps</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.Pipeline.execute_generate"><code class="name flex">
+<span>def <span class="ident">execute_generate</span></span>(<span>self, seed=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Execute the pipeline and return an iterable of the preprocessed, augmented data samples. Minimizes peak
+memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
+have a list of the results, please consider using <code>execute_collect</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>seed</code></strong></dt>
+<dd>Random seed. When it's not None, it allows reproducibility of the results.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Iterable of preprocessed data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_generate(self, seed=None):
+    &#34;&#34;&#34;
+    Execute the pipeline and return an iterable of the preprocessed, augmented data samples. Minimizes peak
+    memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
+    have a list of the results, please consider using `execute_collect`.
+
+    Args:
+        seed: Random seed. When it&#39;s not None, it allows reproducibility of the results.
+
+    Returns:
+        Iterable of preprocessed data.
+    &#34;&#34;&#34;
+    if seed is not None:
+        _random.seed(seed)
+        _np.random.seed(seed)
+
+    images_and_density_maps = self._connect_operations()
+
+    return PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), False)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.Pipeline.get_expected_output_samples_number"><code class="name flex">
+<span>def <span class="ident">get_expected_output_samples_number</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starting with the input samples number, internally check for operations modifying the number and calculate
+the final size.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_expected_output_samples_number(self):
+    &#34;&#34;&#34; Starting with the input samples number, internally check for operations modifying the number and calculate
+    the final size. &#34;&#34;&#34;
+    output_samples_num = self.get_input_samples_number()
+    for operation in self.operations:
+        output_samples_num *= operation.get_output_samples_number_multiplier()
+    return round(output_samples_num)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.Pipeline.get_input_samples_number"><code class="name flex">
+<span>def <span class="ident">get_input_samples_number</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get number of samples the loader will load.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_input_samples_number(self):
+    &#34;&#34;&#34; Get number of samples the loader will load. &#34;&#34;&#34;
+    return self.loader.get_number_of_loadable_samples()</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.Pipeline.summary"><code class="name flex">
+<span>def <span class="ident">summary</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print a summary of the pipeline.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def summary(self):
+    &#34;&#34;&#34; Print a summary of the pipeline. &#34;&#34;&#34;
+    width = 80
+    print(&#34;*&#34; * width)
+    print(&#34;Pipeline summary&#34;)
+    print(&#34;*&#34; * width)
+    print(&#34;&#34;)
+    print(&#34;Operations:&#34;)
+    for i, op in enumerate(self.operations):
+        print(f&#34;{str(i)}. {str(op)}&#34;)
+    print(&#34;&#34;)
+    print(f&#34;Requires full dataset in memory: {self.requires_full_dataset_in_memory}&#34;)</code></pre>
+</details>
+</dd>
+<dt id="CCAugmentation.pipelines.Pipeline.to_json"><code class="name flex">
+<span>def <span class="ident">to_json</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Write the pipeline to a dictionary so that it can be easily serialized as JSON.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_json(self):
+    &#34;&#34;&#34; Write the pipeline to a dictionary so that it can be easily serialized as JSON. &#34;&#34;&#34;
+    loader_json = {&#39;name&#39;: self.loader.__class__.__name__, &#39;args&#39;: self.loader.args}
+    operations_json = [{&#39;name&#39;: op.__class__.__name__, &#39;args&#39;: op.args} for op in self.operations]
+    return {&#39;loader&#39;: loader_json, &#39;operations&#39;: operations_json}</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="CCAugmentation.pipelines.PipelineResultsIterator"><code class="flex name class">
+<span>class <span class="ident">PipelineResultsIterator</span></span>
+<span>(</span><span>images_and_density_maps, total_samples, verbose=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Iterator for img+DM pairs on pipeline's output.</p>
+<p>Create an iterator for img+DM pairs coming from the pipeline.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>images_and_density_maps</code></strong></dt>
+<dd>Iterator of preprocessed img+DM pairs.</dd>
+<dt><strong><code>total_samples</code></strong></dt>
+<dd>Total expected number of samples on output.</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>Whether to display a progress bar.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PipelineResultsIterator:
+    &#34;&#34;&#34;
+    Iterator for img+DM pairs on pipeline&#39;s output.
+    &#34;&#34;&#34;
+    def __init__(self, images_and_density_maps, total_samples, verbose=True):
+        &#34;&#34;&#34;
+        Create an iterator for img+DM pairs coming from the pipeline.
+
+        Args:
+            images_and_density_maps: Iterator of preprocessed img+DM pairs.
+            total_samples: Total expected number of samples on output.
+            verbose: Whether to display a progress bar.
+        &#34;&#34;&#34;
+        if total_samples is not None and total_samples &lt;= 0:
+            raise ValueError(&#34;Total samples must be an integer greater than 0&#34;)
+
+        self._images_and_density_maps = images_and_density_maps
+        self._progress = _tqdm(total=total_samples) if verbose and total_samples is not None else None
+
+    def __iter__(self):
+        &#34;&#34;&#34; Return itself. &#34;&#34;&#34;
+        return self
+
+    def __next__(self):
+        &#34;&#34;&#34; Return next img+DM pair, updating the progress bar if it&#39;s enabled. &#34;&#34;&#34;
+        next_result = next(self._images_and_density_maps)
+        if self._progress is not None:
+            self._progress.update(1)
+        return next_result</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="CCAugmentation" href="index.html">CCAugmentation</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="CCAugmentation.pipelines.read_pipeline_from_json" href="#CCAugmentation.pipelines.read_pipeline_from_json">read_pipeline_from_json</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.write_pipeline_to_json" href="#CCAugmentation.pipelines.write_pipeline_to_json">write_pipeline_to_json</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="CCAugmentation.pipelines.Pipeline" href="#CCAugmentation.pipelines.Pipeline">Pipeline</a></code></h4>
+<ul class="">
+<li><code><a title="CCAugmentation.pipelines.Pipeline.execute_collect" href="#CCAugmentation.pipelines.Pipeline.execute_collect">execute_collect</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.Pipeline.execute_generate" href="#CCAugmentation.pipelines.Pipeline.execute_generate">execute_generate</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.Pipeline.get_expected_output_samples_number" href="#CCAugmentation.pipelines.Pipeline.get_expected_output_samples_number">get_expected_output_samples_number</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.Pipeline.get_input_samples_number" href="#CCAugmentation.pipelines.Pipeline.get_input_samples_number">get_input_samples_number</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.Pipeline.summary" href="#CCAugmentation.pipelines.Pipeline.summary">summary</a></code></li>
+<li><code><a title="CCAugmentation.pipelines.Pipeline.to_json" href="#CCAugmentation.pipelines.Pipeline.to_json">to_json</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="CCAugmentation.pipelines.PipelineResultsIterator" href="#CCAugmentation.pipelines.PipelineResultsIterator">PipelineResultsIterator</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
