@@ -31,6 +31,14 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Lint with flake8
+      uses: py-actions/flake8@v2
+      with:
+        exclude: "*/__init__.py"
+        max-line-length: "120"
+    - name: Run unit tests
+      run: |
+        python -m unittest
     - name: Build package
       run: |
         pip install wheel setuptools
@@ -39,11 +47,6 @@ jobs:
       run: |
         pip install .
         pip list
-    - name: Lint with flake8
-      uses: py-actions/flake8@v2
-      with:
-        exclude: "*/__init__.py"
-        max-line-length: "120"
     - name: Upload package artifact
       if: matrix.python-version == env.PYTHON_MAIN_VERSION
       uses: actions/upload-artifact@v2
