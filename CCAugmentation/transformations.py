@@ -84,7 +84,7 @@ class Crop(Transformation):
     Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
     or a fraction of the original one). Density map is also reduced to keep it relevant to the image.
     """
-    def __init__(self, width: _typing.Optional[int], height: _typing.Optional[int],
+    def __init__(self, width: _typing.Optional[int] = None, height: _typing.Optional[int] = None,
                  x_factor: _typing.Optional[float] = None, y_factor: _typing.Optional[float] = None,
                  centered: bool = False, probability: float = 1.0):
         """
@@ -142,7 +142,7 @@ class Scale(Transformation):
     """
     Scaling transformation that increases or decreases input size.
     """
-    def __init__(self, width: _typing.Optional[int], height: _typing.Optional[int],
+    def __init__(self, width: _typing.Optional[int] = None, height: _typing.Optional[int] = None,
                  x_factor: _typing.Optional[float] = None, y_factor: _typing.Optional[float] = None,
                  img_interpolation: int = _cv2.INTER_CUBIC, dm_interpolation: int = _cv2.INTER_LINEAR,
                  probability: float = 1.0):
