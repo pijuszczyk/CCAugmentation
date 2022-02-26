@@ -332,7 +332,7 @@ class VariableLoader(Loader):
     """
     Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.
     """
-    def __init__(self, data: _typing.Collection[_typing.Any]):
+    def __init__(self, data: _typing.Union[_typing.Collection, _typing.Iterable]):
         """
         Create a loader that reads from a variable (list or array most probably) and yields the results.
 
@@ -344,14 +344,17 @@ class VariableLoader(Loader):
         self.args = None
         self.data = data
 
-    def get_number_of_loadable_samples(self) -> int:
+    def get_number_of_loadable_samples(self) -> _typing.Optional[int]:
         """
         Return length of the dataset in the variable.
 
         Returns:
             Number of samples.
         """
-        return len(self.data)
+        try:
+            return len(self.data)
+        except TypeError:  # specified variable may not provide len() method
+            return None
 
     def load(self) -> _typing.Generator[_typing.Any, None, None]:
         """
@@ -379,14 +382,17 @@ class ConcatenatingLoader(Loader):
         self.args = [{'name': loader.__class__.__name__, 'args': loader.args} for loader in loaders]
         self.loaders = loaders
 
-    def get_number_of_loadable_samples(self) -> int:
+    def get_number_of_loadable_samples(self) -> _typing.Optional[int]:
         """
         Get number of samples to load throughout loaders.
 
         Returns:
             Cumulative number of samples.
         """
-        return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
+        nums = [loader.get_number_of_loadable_samples() for loader in self.loaders]
+        if None in nums:  # one of the sources may not provide a specific number
+            return None  # in that case, don't return any specific number here too
+        return sum(nums)
 
     def load(self) -> _typing.Generator[_typing.Any, None, None]:
         """
@@ -441,19 +447,22 @@ class CombinedLoader(Loader):
         self.gt_to_dm_converter = get_density_map_gaussian if 'gaussian' \
             else get_density_map_geometry_adaptive_gaussian_kernel
 
-    def get_number_of_loadable_samples(self) -> int:
+    def get_number_of_loadable_samples(self) -> _typing.Optional[int]:
         """
         Get number of full samples (img+DM pairs).
 
         Returns:
             Number of samples.
         """
+        img_num = self.img_loader.get_number_of_loadable_samples()
         if self.den_map_loader is None:
-            return min(self.img_loader.get_number_of_loadable_samples(),
-                       self.gt_loader.get_number_of_loadable_samples())
+            dm_num = self.gt_loader.get_number_of_loadable_samples()
         else:
-            return min(self.img_loader.get_number_of_loadable_samples(),
-                       self.den_map_loader.get_number_of_loadable_samples())
+            dm_num = self.den_map_loader.get_number_of_loadable_samples()
+
+        if img_num is None or dm_num is None:
+            return None
+        return min(img_num, dm_num)
 
     def load(self) -> _typing.Generator[_IMG_DM_PAIR_TYPE, None, None]:
         """
