@@ -138,18 +138,21 @@ class Scale(Transformation):
     """
     Scaling transformation that increases or decreases input size.
     """
-    def __init__(self, width, height, x_factor=None, y_factor=None, probability=1.0):
+    def __init__(self, width, height, x_factor=None, y_factor=None, img_interpolation=_cv2.INTER_CUBIC,
+                 dm_interpolation=_cv2.INTER_LINEAR, probability=1.0):
         """
         Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
         relative size with a given probability. One may use a combination of fixed and relative size for separate image
         dimensions but fixed and relative size cannot be mixed for one dimension - one and only of them can be
-        specified.
+        specified. You may also specify custom interpolation for images and density maps.
 
         Args:
             width: Fixed output width.
             height: Fixed output height.
             x_factor: Output width relative to the input width.
             y_factor: Output height relative to the input height.
+            img_interpolation: Interpolation that will be applied to images when scaling.
+            dm_interpolation: Interpolation that will be applied to density maps when scaling.
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
         if (width is not None and x_factor is not None) or (height is not None and y_factor is not None):
@@ -171,6 +174,8 @@ class Scale(Transformation):
         self.height = height
         self.x_factor = x_factor
         self.y_factor = y_factor
+        self.img_interpolation = img_interpolation
+        self.dm_interpolation = dm_interpolation
 
     def transform(self, image, density_map):
         """
@@ -189,17 +194,17 @@ class Scale(Transformation):
             scale_y = self.height / h
 
             new_img = _cv2.resize(
-                image, (self.width, self.height), interpolation=_cv2.INTER_CUBIC
+                image, (self.width, self.height), interpolation=self.img_interpolation
             )
             new_den_map = _cv2.resize(
-                density_map, (self.width, self.height), interpolation=_cv2.INTER_LINEAR
+                density_map, (self.width, self.height), interpolation=self.dm_interpolation
             ) / scale_x / scale_y
         else:
             new_img = _cv2.resize(
-                image, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_CUBIC
+                image, None, fx=self.x_factor, fy=self.y_factor, interpolation=self.img_interpolation
             )
             new_den_map = _cv2.resize(
-                density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=_cv2.INTER_LINEAR
+                density_map, None, fx=self.x_factor, fy=self.y_factor, interpolation=self.dm_interpolation
             ) / self.x_factor / self.y_factor
         return new_img, new_den_map
 
