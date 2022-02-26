@@ -4,6 +4,17 @@ from CCAugmentation import loaders
 
 
 def _get_SHH_directory(dataset_dir, train_test, part):
+    """
+    Construct a path to Shanghai Tech dataset, according to the official directory structure.
+
+    Args:
+        dataset_dir: The main directory where dataset was unpacked.
+        train_test: Selection of train or test part.
+        part: Selection of A or B part. Please see the dataset's documentation for differences between these two.
+
+    Returns:
+        Full path to the subdirectory with selected data.
+    """
     if train_test.lower() not in ["train", "test"]:
         raise ValueError("train_test must be either equal to 'train' or 'test'")
     if part.upper() not in ['A', 'B']:
@@ -24,7 +35,20 @@ class _SHHGTLoader(loaders.GTPointsMatFileLoader):
 
 
 class SHHLoader(loaders.CombinedLoader):
+    """
+    Typical Shanghai Tech dataset loader.
+    """
     def __init__(self, dataset_dir, train_test, part, gt_to_dm_converter='gaussian'):
+        """
+        Create a combined loader that loads train/test A/B part of SHH dataset.
+
+        Args:
+            dataset_dir: The main directory where dataset was unpacked.
+            train_test: Selection of train or test part.
+            part: Selection of A or B part. Please see the dataset's documentation for differences between these two.
+            gt_to_dm_converter: Which density map generation method to use to convert Y data from points to a density
+                map matrix.
+        """
         local = locals().copy()
         img_loader = _SHHImageLoader(dataset_dir, train_test, part)
         gt_loader = _SHHGTLoader(dataset_dir, train_test, part)
@@ -33,6 +57,16 @@ class SHHLoader(loaders.CombinedLoader):
 
 
 def _get_NWPU_indices_for_set(dataset_dir, train_val_test):
+    """
+    Load indices of files that are part of the selected NWPU dataset's part.
+
+    Args:
+        dataset_dir: The root directory where the dataset was unpacked.
+        train_val_test: Selection of train, val or test part.
+
+    Returns:
+        List of indices of files that the selected part consists of.
+    """
     if train_val_test.lower() not in ["train", "val", "test"]:
         raise ValueError("train_val_test must be either equal to 'train', 'val' or 'test'")
     list_file_path = _os.path.join(dataset_dir, f"{train_val_test.lower()}.txt")
@@ -59,7 +93,19 @@ class _NWPUGTLoader(loaders.BasicGTPointsMatFileLoader):
 
 
 class NWPULoader(loaders.CombinedLoader):
+    """
+    Typical NWPU dataset loader.
+    """
     def __init__(self, dataset_dir, train_val_test, gt_to_dm_converter='gaussian'):
+        """
+        Create a combined loader for NWPU dataset.
+
+        Args:
+            dataset_dir: The root directory where the dataset was unpacked.
+            train_val_test: Selection of train, val or test part.
+            gt_to_dm_converter: Which density map generation method to use to convert Y data from points to a density
+                map matrix.
+        """
         img_loader = _NWPUImageLoader(dataset_dir, train_val_test)
         gt_loader = _NWPUGTLoader(dataset_dir, train_val_test)
         loaders.CombinedLoader.__init__(self, img_loader, gt_loader, gt_to_dm_converter=gt_to_dm_converter)
