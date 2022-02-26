@@ -7,6 +7,8 @@ It supports multitude of simple as well as advanced transformations
 and is based on pipelines which allow a flexible flow of data between loaders, transformations and outputs.
 Deep learning framework-independent, though works best with PyTorch.
 
+You can see the documentation [here](https://pijuszczyk.github.io/CCAugmentation/)
+
 ## Current capabilities
 
 Each data preprocessing procedure is defined in form of a pipeline that consists of a data loader and
