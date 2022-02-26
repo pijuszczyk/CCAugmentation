@@ -122,6 +122,10 @@ class Loader:
     """
     Abstract base loader that should return an iterable of samples, either images, lists of points or density maps.
     """
+    def __init__(self):
+        """ Prepare abstract loader """
+        self.args = self._prepare_args(locals())
+
     def load(self):
         """ Method that must be implemented in the subclasses, returning an iterable of samples """
         raise NotImplementedError("load not implemented in the child class")
@@ -139,7 +143,7 @@ class Loader:
         Returns:
             Number of samples that can be loaded, including the already loaded ones.
         """
-        return None
+        raise NotImplementedError("get_number_of_loadable_samples not implemented in the child class")
 
 
 class BasicImageFileLoader(Loader):
@@ -392,7 +396,7 @@ class ConcatenatingLoader(Loader):
             Generator of samples, be it images, GT point lists or density maps.
         """
         for loader in self.loaders:
-            for sample in loader:
+            for sample in loader.load():
                 yield sample
 
 
