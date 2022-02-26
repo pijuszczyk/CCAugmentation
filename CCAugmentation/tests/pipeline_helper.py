@@ -7,8 +7,8 @@ def generate_data(tuples_number, width=10, height=10):
     imgs, dms = [], []
     for i in range(tuples_number):
         np.random.seed(i)
-        imgs.append(np.random.randint(0, 256, (height, width, 3)))
-        dms.append(np.random.randint(0, 100, (height, width)) / 100.0)
+        imgs.append(np.random.rand(height, width, 3) * 255)
+        dms.append(np.random.rand(height, width))
     return imgs, dms
 
 
