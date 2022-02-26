@@ -71,7 +71,7 @@ class Duplicate(Operation):
     def execute(self, images_and_density_maps):
         """ Duplicates samples. """
         for image_and_density_map in images_and_density_maps:
-            for i in range(self.duplicates_num):
+            for _ in range(self.duplicates_num):
                 yield image_and_density_map
 
 
