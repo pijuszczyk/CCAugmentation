@@ -157,13 +157,13 @@ class Scale(Transformation):
         if (width is None and x_factor is None) or (height is None and y_factor is None):
             raise ValueError("Must provide factor or fixed size for both dimensions")
         if width is not None and width <= 0:
-            raise ValueError("Width must be greater than 0 (and less than/equal original width)")
+            raise ValueError("Width must be greater than 0")
         if height is not None and height <= 0:
-            raise ValueError("Height must be greater than 0 (and less than/equal original height)")
-        if x_factor is not None and not 0.0 < x_factor <= 1.0:
-            raise ValueError("Width factor must be between 0 (exclusive) and 1 (inclusive)")
-        if y_factor is not None and not 0.0 < y_factor <= 1.0:
-            raise ValueError("Height factor must be between 0 (exclusive) and 1 (inclusive)")
+            raise ValueError("Height must be greater than 0")
+        if x_factor is not None and x_factor <= 0.0:
+            raise ValueError("Width factor must be greater than 0")
+        if y_factor is not None and y_factor <= 0.0:
+            raise ValueError("Height factor must be greater than 0")
 
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
