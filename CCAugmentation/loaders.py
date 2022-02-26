@@ -33,22 +33,22 @@ def get_density_map_gaussian(im: _IMG_TYPE, points: _HEADS_POS_ITER_TYPE) -> _DM
     if points is None:
         return im_density
     if points.shape[0] == 1:
-        x1 = max(0, min(w-1, round(points[0, 0])))
-        y1 = max(0, min(h-1, round(points[0, 1])))
+        x1 = max(0, min(w - 1, round(points[0, 0])))
+        y1 = max(0, min(h - 1, round(points[0, 1])))
         im_density[y1, x1] = 255
         return im_density
     for j in range(points.shape[0]):
         f_sz = 15
         sigma = 4.0
         H = _np.multiply(_cv2.getGaussianKernel(f_sz, sigma), (_cv2.getGaussianKernel(f_sz, sigma)).T)
-        x = min(w-1, max(0, abs(int(_math.floor(points[j, 0])))))
-        y = min(h-1, max(0, abs(int(_math.floor(points[j, 1])))))
+        x = min(w - 1, max(0, abs(int(_math.floor(points[j, 0])))))
+        y = min(h - 1, max(0, abs(int(_math.floor(points[j, 1])))))
         if x >= w or y >= h:
             continue
-        x1 = x - f_sz//2 + 0
-        y1 = y - f_sz//2 + 0
-        x2 = x + f_sz//2 + 1
-        y2 = y + f_sz//2 + 1
+        x1 = x - f_sz // 2 + 0
+        y1 = y - f_sz // 2 + 0
+        x2 = x + f_sz // 2 + 1
+        y2 = y + f_sz // 2 + 1
         dfx1, dfy1, dfx2, dfy2 = 0, 0, 0, 0
         change_H = False
         if x1 < 0:
@@ -96,8 +96,8 @@ def get_density_map_geometry_adaptive_gaussian_kernel(im: _IMG_TYPE, points: _HE
         return im_density
 
     for point in points:
-        x = _np.clip(round(point[0]), 0, w-1)
-        y = _np.clip(round(point[1]), 0, h-1)
+        x = _np.clip(round(point[0]), 0, w - 1)
+        y = _np.clip(round(point[1]), 0, h - 1)
         im_density[y, x] = 1
 
     if len(points) == 1:
