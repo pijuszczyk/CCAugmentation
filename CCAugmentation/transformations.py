@@ -308,11 +308,49 @@ class Rotate(Transformation):
         return _cv2.warpAffine(image, rot_mat, (new_w, new_h)), _cv2.warpAffine(density_map, rot_mat, (new_w, new_h))
 
 
+def _prepare_standard_aspect_ratios(std_ratios: _typing.Collection[float]) \
+        -> _typing.Tuple[_np.ndarray, _np.ndarray]:
+    """
+    Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
+    Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
+
+    Args:
+        std_ratios: Aspect ratios that are allowed for the output images and density maps.
+
+    Returns:
+        Sorted allowed aspect ratios and calculated boundaries between them.
+    """
+    ratios = _np.sort(_np.array(std_ratios))
+    boundaries = _np.array([(prev + curr) / 2 for (prev, curr) in zip(ratios[:-1], ratios[1:])])
+    return ratios, boundaries
+
+
+def _find_the_most_similar_ratio(ratio_to_improve: float, std_ratios: _np.ndarray, std_boundaries: _np.ndarray) \
+        -> float:
+    """
+    Find an allowed aspect ratio that is the most similar to the one provided.
+
+    Args:
+        ratio_to_improve: Aspect ratio that maybe can be improved.
+        std_ratios: Allowed aspect ratios.
+        std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
+
+    Returns:
+        Allowed aspect ratio that is the most similar to the provided one.
+    """
+    last_matching_boundary_idx = _np.nonzero(ratio_to_improve < std_boundaries)[0]
+    if last_matching_boundary_idx.shape[0] > 0:
+        chosen_std_ratio_idx = last_matching_boundary_idx[0]
+    else:
+        chosen_std_ratio_idx = std_ratios.shape[0] - 1
+    return std_ratios[chosen_std_ratio_idx]
+
+
 class StandardizeSize(Transformation):
     """
     Standardizes image and density map sizes in order to reduce variance in size and allow bigger batches.
     This transformation takes a list of allowed aspect ratios for the images and the base size corresponding to the
-    length of the longer side of an image and scales each image (and relevant density map) to the size best fitting
+    length of the longer side of an image and scales each image (and the relevant density map) to the size best fitting
     the original size.
     """
     def __init__(self, std_aspect_ratios: _typing.Collection[float], std_base_size: int):
@@ -332,46 +370,8 @@ class StandardizeSize(Transformation):
 
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
-        self.std_ratios, self.std_bounds = self._prepare_standard_aspect_ratios(std_aspect_ratios)
+        self.std_ratios, self.std_bounds = _prepare_standard_aspect_ratios(std_aspect_ratios)
         self.std_base_size = std_base_size
-
-    @staticmethod
-    def _prepare_standard_aspect_ratios(std_ratios: _typing.Collection[float]) \
-            -> _typing.Tuple[_np.ndarray, _np.ndarray]:
-        """
-        Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
-        Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
-
-        Args:
-            std_ratios: Aspect ratios that are allowed for the output images and density maps.
-
-        Returns:
-            Sorted allowed aspect ratios and calculated boundaries between them.
-        """
-        ratios = _np.sort(_np.array(std_ratios))
-        boundaries = _np.array([(prev + curr) / 2 for (prev, curr) in zip(ratios[:-1], ratios[1:])])
-        return ratios, boundaries
-
-    @staticmethod
-    def _find_the_most_similar_ratio(ratio_to_improve: float, std_ratios: _np.ndarray, std_boundaries: _np.ndarray) \
-            -> float:
-        """
-        Find an allowed aspect ratio that is the most similar to the one provided.
-
-        Args:
-            ratio_to_improve: Aspect ratio that maybe can be improved.
-            std_ratios: Allowed aspect ratios.
-            std_boundaries: Uniformly distributed boundaries between allowed aspect ratios.
-
-        Returns:
-            Allowed aspect ratio that is the most similar to the provided one.
-        """
-        last_matching_boundary_idx = _np.nonzero(ratio_to_improve < std_boundaries)[0]
-        if last_matching_boundary_idx.shape[0] > 0:
-            chosen_std_ratio_idx = last_matching_boundary_idx[0]
-        else:
-            chosen_std_ratio_idx = std_ratios.shape[0] - 1
-        return std_ratios[chosen_std_ratio_idx]
 
     def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
@@ -386,7 +386,7 @@ class StandardizeSize(Transformation):
         """
         h, w = image.shape[:2]
 
-        chosen_std_ratio = self._find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
+        chosen_std_ratio = _find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
 
         if chosen_std_ratio >= 1.0:
             new_w = self.std_base_size
@@ -406,6 +406,75 @@ class StandardizeSize(Transformation):
         new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
 
         return new_img, new_den_map
+
+
+class AutoStandardizeSize(Transformation):
+    """
+    A transformation that applies StandardizeSize in an automated way. Instead of relying on manually specified
+    accepted aspect ratios, most common ratios are checked if there are enough instances that have similar
+    characteristic to them, and the present ones are used for the transformation. As for the base size to be used, the
+    minimum found width or height of an image is selected. It may not be the optimal choice but it should be pretty
+    safe, assuming that there aren't any drastic outliers in the dataset.
+    """
+    MOST_COMMON_RATIOS = _np.array([1/1, 3/2, 2/3, 4/3, 3/4, 5/4, 4/5, 16/9, 9/16])
+    TRIED_STD_RATIOS, TRIED_STD_BOUNDS = _prepare_standard_aspect_ratios(MOST_COMMON_RATIOS)
+
+    def __init__(self, min_instances_threshold: int):
+        """
+        Set up the automated transformation.
+
+        Args:
+            min_instances_threshold: Minimum number of instances of an aspect ratio (not necessarily exactly that one
+                but being closest to that one) from the tried ratios list for that ratio to be considered relevant to
+                the dataset used.
+        """
+        if min_instances_threshold <= 0:
+            raise ValueError("Threshold must be greater than 0")
+
+        Transformation.__init__(self, 1.0)
+        self.requires_full_dataset_in_memory = True
+        self.args = self._prepare_args(locals())
+        self.min_instances_threshold = min_instances_threshold
+
+    def _select_relevant_ratios_and_size(self, images_and_density_maps: _typing.Collection[_IMG_DM_PAIR_TYPE]) \
+            -> _typing.Tuple[_np.ndarray, int]:
+        """
+        Find out which aspect ratios are relevant enough for the dataset and which size is the most appropriate (the
+        minimum size in width or height is used).
+
+        Args:
+            images_and_density_maps: Iterable of img+DM pairs that was saved so that it can be traversed more than once.
+
+        Returns:
+             Array of selected aspect ratios and the selected base size.
+        """
+        occur_counters = _np.zeros(len(self.MOST_COMMON_RATIOS))
+        min_size = float('inf')
+        for img, dm in images_and_density_maps:
+            h, w = img.shape[:2]
+            min_size = min(min_size, h, w)
+            chosen_std_ratio = _find_the_most_similar_ratio(w / h, self.TRIED_STD_RATIOS, self.TRIED_STD_BOUNDS)
+            occur_counters[_np.where(self.MOST_COMMON_RATIOS == chosen_std_ratio)] += 1
+
+        rel_ratio_ind = _np.where(occur_counters >= self.min_instances_threshold)
+        return self.MOST_COMMON_RATIOS[rel_ratio_ind], int(min_size)
+
+    def transform_all(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
+        """
+        Apply the standardization to the dataset. First, the whole dataset needs to be saved so that it can be
+        traversed more than once. Then, the follow-up setup is conducted. Finally, the most appropriate size
+        standardization is performed.
+
+        Params:
+            images_and_density_maps: Iterable of img+DM pairs.
+
+        Returns:
+            Iterable of automatically standardized img+DM pairs.
+        """
+        imgs_and_dms_list = list(images_and_density_maps)
+        std_ratios, min_base_size = self._select_relevant_ratios_and_size(imgs_and_dms_list)
+        substandardizer = StandardizeSize(std_ratios, min_base_size)
+        return substandardizer.transform_all(imgs_and_dms_list)
 
 
 class OmitDownscalingPixels(Transformation):
