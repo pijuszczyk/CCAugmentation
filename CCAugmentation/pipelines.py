@@ -1,15 +1,21 @@
 import json as _json
 import random as _random
+import typing as _typing
 
 import numpy as _np
 from tqdm import tqdm as _tqdm
+
+from .common import _IMG_TYPE, _DM_TYPE, _IMG_DM_ITER_TYPE
+from .loaders import Loader
+from .operations import Operation
 
 
 class PipelineResultsIterator:
     """
     Iterator for img+DM pairs on pipeline's output.
     """
-    def __init__(self, images_and_density_maps, total_samples, verbose=True):
+    def __init__(self, images_and_density_maps: _IMG_DM_ITER_TYPE, total_samples: _typing.Optional[int],
+                 verbose: bool = True):
         """
         Create an iterator for img+DM pairs coming from the pipeline.
 
@@ -49,7 +55,7 @@ class Pipeline:
     corresponding density maps. Then, a list of operations is prepared. This includes duplicating, cropping, flipping,
     saving results to files, etc. Finally, such a pipeline is executed to gather the results.
     """
-    def __init__(self, loader, operations):
+    def __init__(self, loader: Loader, operations: _typing.Iterable[Operation]):
         """
         Create a new pipeline that loads the data using the given `loader` and performs `operations` on them.
 
@@ -62,19 +68,22 @@ class Pipeline:
         self.operations = operations
         self.requires_full_dataset_in_memory = any([op.requires_full_dataset_in_memory for op in operations])
 
-    def get_input_samples_number(self):
+    def get_input_samples_number(self) -> _typing.Optional[int]:
         """ Get number of samples the loader will load. """
         return self.loader.get_number_of_loadable_samples()
 
-    def get_expected_output_samples_number(self):
+    def get_expected_output_samples_number(self) -> _typing.Optional[int]:
         """ Starting with the input samples number, internally check for operations modifying the number and calculate
         the final size. """
         output_samples_num = self.get_input_samples_number()
+        if output_samples_num is None:
+            return None
+
         for operation in self.operations:
             output_samples_num *= operation.get_output_samples_number_multiplier()
         return round(output_samples_num)
 
-    def _connect_operations(self):
+    def _connect_operations(self) -> _IMG_DM_ITER_TYPE:
         """
         Connect the loader with all the prepared operations sequentially to create a working pipeline.
 
@@ -86,7 +95,7 @@ class Pipeline:
             images_and_density_maps = operation.execute(images_and_density_maps)
         return images_and_density_maps
 
-    def execute_generate(self, seed=None):
+    def execute_generate(self, seed: _typing.Any = None) -> PipelineResultsIterator:
         """
         Execute the pipeline and return an iterable of the preprocessed, augmented data samples. Minimizes peak
         memory usage when there is no bottleneck in the pipeline. If you wish to preprocess everything in one go and
@@ -106,7 +115,9 @@ class Pipeline:
 
         return PipelineResultsIterator(images_and_density_maps, self.get_expected_output_samples_number(), False)
 
-    def execute_collect(self, seed=None, return_np_arrays=False, verbose=True):
+    def execute_collect(self, seed: _typing.Any = None, return_np_arrays: bool = False, verbose: bool = True) \
+            -> _typing.Union[_typing.Tuple[_np.ndarray, _np.ndarray], _typing.Tuple[_typing.Iterable[_IMG_TYPE],
+                                                                                    _typing.Iterable[_DM_TYPE]]]:
         """
         Execute the pipeline and return lists of the preprocessed, augmented data samples (one list for images,
         the other for density maps). In opposition to `execute_generate`, this method performs all operations on
@@ -135,7 +146,7 @@ class Pipeline:
         else:
             return images, density_maps
 
-    def summary(self):
+    def summary(self) -> None:
         """ Print a summary of the pipeline. """
         width = 80
         print("*" * width)
@@ -148,14 +159,14 @@ class Pipeline:
         print("")
         print(f"Requires full dataset in memory: {self.requires_full_dataset_in_memory}")
 
-    def to_json(self):
+    def to_json(self) -> _typing.Dict[str, _typing.Any]:
         """ Write the pipeline to a dictionary so that it can be easily serialized as JSON. """
         loader_json = {'name': self.loader.__class__.__name__, 'args': self.loader.args}
         operations_json = [{'name': op.__class__.__name__, 'args': op.args} for op in self.operations]
         return {'loader': loader_json, 'operations': operations_json}
 
 
-def read_pipeline_from_json(json_path):
+def read_pipeline_from_json(json_path: str) -> _typing.Optional[Pipeline]:
     """
     Create a new Pipeline with the same configuration as the one deserialized from a JSON file.
 
@@ -213,7 +224,7 @@ def read_pipeline_from_json(json_path):
     return Pipeline(loader, operations)
 
 
-def write_pipeline_to_json(pipeline, json_path, optimized=True):
+def write_pipeline_to_json(pipeline: Pipeline, json_path: str, optimized: bool = True):
     """
     Serialize Pipeline (configuration) to a JSON file.
 

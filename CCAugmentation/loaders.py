@@ -1,16 +1,21 @@
 import csv as _csv
 import math as _math
 import os as _os
+import typing as _typing
 from glob import glob as _glob
 
 import cv2 as _cv2
 import numpy as _np
+from scipy.io import loadmat as _loadmat
 from scipy.ndimage.filters import gaussian_filter as _gaussian_filter
 from scipy.spatial import KDTree as _KDTree
-from scipy.io import loadmat as _loadmat
+
+from .common import _IMG_TYPE, _DM_TYPE, _IMG_DM_PAIR_TYPE
+
+_HEADS_POS_ITER_TYPE = _np.ndarray
 
 
-def get_density_map_gaussian(im, points):
+def get_density_map_gaussian(im: _IMG_TYPE, points: _HEADS_POS_ITER_TYPE) -> _DM_TYPE:
     """
     Create a Gaussian density map from the points.
     Credits:
@@ -73,7 +78,7 @@ def get_density_map_gaussian(im, points):
     return im_density
 
 
-def get_density_map_geometry_adaptive_gaussian_kernel(im, points):
+def get_density_map_geometry_adaptive_gaussian_kernel(im: _IMG_TYPE, points: _HEADS_POS_ITER_TYPE) -> _DM_TYPE:
     """
     Create a density map using Geometry-Adaptive Gaussian kernel proposed in:
     https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf
@@ -122,12 +127,12 @@ class Loader:
         raise NotImplementedError("load not implemented in the child class")
 
     @staticmethod
-    def _prepare_args(local_vars):
+    def _prepare_args(local_vars: _typing.Dict[str, _typing.Any]):
         """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and
         saving pipelines"""
         return {k: v for k, v in local_vars.items() if k != 'self'}
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> _typing.Optional[int]:
         """
         Return number of samples from the dataset that can and will be loaded by the loader, or None if it's unknown.
 
@@ -141,7 +146,7 @@ class BasicImageFileLoader(Loader):
     """
     Loader for images stored in image files. Allows reading any files that opencv-python can handle - e.g. JPG, PNG.
     """
-    def __init__(self, img_paths):
+    def __init__(self, img_paths: _typing.Collection[str]):
         """
         Create a new image loader that reads all image files from paths.
 
@@ -155,7 +160,7 @@ class BasicImageFileLoader(Loader):
         self.args = self._prepare_args(locals())
         self.img_paths = img_paths
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Get number of images to load, according to number of specified paths.
 
@@ -164,7 +169,7 @@ class BasicImageFileLoader(Loader):
         """
         return len(self.img_paths)
 
-    def load(self):
+    def load(self) -> _typing.Generator[_IMG_TYPE, None, None]:
         """
         Load all images based on provided paths to files.
 
@@ -179,7 +184,7 @@ class ImageFileLoader(BasicImageFileLoader):
     """
     Loader for all images of some type in a given directory.
     """
-    def __init__(self, img_dir, file_extension="jpg"):
+    def __init__(self, img_dir: str, file_extension: str = "jpg"):
         """
         Create a new image loader that reads all the images with specified file extension in a given directory.
 
@@ -193,11 +198,15 @@ class ImageFileLoader(BasicImageFileLoader):
         self.args = self._prepare_args(local)
 
 
+_MATLAB_GT_TYPE = _typing.Dict[str, _typing.Any]
+_MATLAB_GT_GETTER_TYPE = _typing.Callable[[_MATLAB_GT_TYPE], _HEADS_POS_ITER_TYPE]
+
+
 class BasicGTPointsMatFileLoader(Loader):
     """
     Loader for ground truth data stored as lists of head positions in Matlab files.
     """
-    def __init__(self, gt_paths, getter):
+    def __init__(self, gt_paths: _typing.Collection[str], getter: _MATLAB_GT_GETTER_TYPE):
         """
         Create a loader that loads all data from the provided file paths using a given getter.
 
@@ -213,7 +222,7 @@ class BasicGTPointsMatFileLoader(Loader):
         self.gt_paths = gt_paths
         self.getter = getter
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Get number of GTs to load, according to number of specified paths.
 
@@ -222,7 +231,7 @@ class BasicGTPointsMatFileLoader(Loader):
         """
         return len(self.gt_paths)
 
-    def load(self):
+    def load(self) -> _typing.Generator[_HEADS_POS_ITER_TYPE, None, None]:
         """
         Load all Matlab files from paths.
 
@@ -237,7 +246,7 @@ class GTPointsMatFileLoader(BasicGTPointsMatFileLoader):
     """
     Loader for head positions in all Matlab files in a given directory.
     """
-    def __init__(self, gt_dir, getter, file_extension="mat"):
+    def __init__(self, gt_dir: str, getter: _MATLAB_GT_GETTER_TYPE, file_extension: str = "mat"):
         """
         Create a loader that searches for files with specified extension in a given directory and loads them.
 
@@ -255,7 +264,7 @@ class BasicDensityMapCSVFileLoader(Loader):
     """
     Loader for density maps stored in separate CSV files.
     """
-    def __init__(self, dm_paths):
+    def __init__(self, dm_paths: _typing.Collection[str]):
         """
         Create a loader that loads density maps at specified paths.
 
@@ -269,7 +278,7 @@ class BasicDensityMapCSVFileLoader(Loader):
         self.args = self._prepare_args(locals())
         self.dm_paths = dm_paths
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Get number of density maps to load, according to number of specified paths.
 
@@ -278,7 +287,7 @@ class BasicDensityMapCSVFileLoader(Loader):
         """
         return len(self.dm_paths)
 
-    def load(self):
+    def load(self) -> _typing.Generator[_DM_TYPE, None, None]:
         """
         Load all density maps from all specified paths.
 
@@ -301,7 +310,7 @@ class DensityMapCSVFileLoader(BasicDensityMapCSVFileLoader):
     """
     Loader for density maps stored in all CSV files in a given directory.
     """
-    def __init__(self, den_map_dir, file_extension="csv"):
+    def __init__(self, den_map_dir: str, file_extension: str = "csv"):
         """
         Create a loader that searches for files with the given extension in the given directory and loads them.
 
@@ -319,18 +328,19 @@ class VariableLoader(Loader):
     """
     Loader that loads from a variable (list or array) instead of file. May be useful when connecting pipelines.
     """
-    def __init__(self, data):
+    def __init__(self, data: _typing.Collection[_typing.Any]):
         """
         Create a loader that reads from a variable (list or array most probably) and yields the results.
 
         Args:
             data: Iterable that has len() with either images or density maps.
         """
+        Loader.__init__(self)
         # saving dataset variables (possibly consisting of thousands of samples) to a json file would be dangerous
         self.args = None
         self.data = data
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Return length of the dataset in the variable.
 
@@ -339,7 +349,7 @@ class VariableLoader(Loader):
         """
         return len(self.data)
 
-    def load(self):
+    def load(self) -> _typing.Generator[_typing.Any, None, None]:
         """
         Read the variable and yield samples one by one.
 
@@ -354,7 +364,7 @@ class ConcatenatingLoader(Loader):
     """
     Loader that doesn't perform any loading on its own but rather concatenates samples from a few sources.
     """
-    def __init__(self, loaders):
+    def __init__(self, loaders: _typing.Iterable[Loader]):
         """
         Create a loader that concatenates loading results from a few loaders.
 
@@ -365,7 +375,7 @@ class ConcatenatingLoader(Loader):
         self.args = [{'name': loader.__class__.__name__, 'args': loader.args} for loader in loaders]
         self.loaders = loaders
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Get number of samples to load throughout loaders.
 
@@ -374,7 +384,7 @@ class ConcatenatingLoader(Loader):
         """
         return sum([loader.get_number_of_loadable_samples() for loader in self.loaders])
 
-    def load(self):
+    def load(self) -> _typing.Generator[_typing.Any, None, None]:
         """
         Load all samples from all connected loaders.
 
@@ -391,7 +401,8 @@ class CombinedLoader(Loader):
     Loader that should be primarily used with a pipeline - zips or combines an iterable of images with an iterable of
     density maps (be it straight from a loader or from transformed on-the-fly GT points).
     """
-    def __init__(self, img_loader, gt_loader, den_map_loader=None, gt_to_dm_converter='gaussian'):
+    def __init__(self, img_loader: Loader, gt_loader: _typing.Optional[Loader],
+                 den_map_loader: _typing.Optional[Loader] = None, gt_to_dm_converter: str = 'gaussian'):
         """
         Create a combined loader. Either `gt_loader` or `den_map_loader` must be specified (but not both) in order to
         provide density maps related to the images loaded using `img_loader`. If using ground truth loader, you may
@@ -426,7 +437,7 @@ class CombinedLoader(Loader):
         self.gt_to_dm_converter = get_density_map_gaussian if 'gaussian' \
             else get_density_map_geometry_adaptive_gaussian_kernel
 
-    def get_number_of_loadable_samples(self):
+    def get_number_of_loadable_samples(self) -> int:
         """
         Get number of full samples (img+DM pairs).
 
@@ -440,7 +451,7 @@ class CombinedLoader(Loader):
             return min(self.img_loader.get_number_of_loadable_samples(),
                        self.den_map_loader.get_number_of_loadable_samples())
 
-    def load(self):
+    def load(self) -> _typing.Generator[_IMG_DM_PAIR_TYPE, None, None]:
         """
         Load and return all img+DM pairs, one by one. If a GT loader is used instead of a DM loader, first transform
         GT points to a density map.
