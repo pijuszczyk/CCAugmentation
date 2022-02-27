@@ -1,6 +1,9 @@
 import random as _random
+import typing as _typing
 
 import numpy as _np
+
+from .common import _IMG_DM_ITER_TYPE
 
 
 class Operation:
@@ -26,20 +29,20 @@ class Operation:
         return self.__class__.__name__
 
     @staticmethod
-    def _prepare_args(local_vars):
+    def _prepare_args(local_vars: _typing.Dict[str, _typing.Any]) -> _typing.Dict[str, _typing.Any]:
         """ Simple method that removes unwanted 'self' variable from the set that will be stored for loading and saving
         pipelines. """
         return {k: v for k, v in local_vars.items() if k != 'self'}
 
-    def to_json(self):
+    def to_json(self) -> _typing.Dict[str, _typing.Union[str, _typing.Dict[str, _typing.Any]]]:
         """ Serialize operation configuration to JSON-compatible dict. """
         return {'name': self.__class__.__name__, 'args': self.args}
 
-    def get_output_samples_number_multiplier(self):
+    def get_output_samples_number_multiplier(self) -> int:
         """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return 1
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ Abstract method that must be implemented in the subclasses, should take and return an iterable of
         img+DM pairs. """
         raise NotImplementedError("execute method not implemented in the child class")
@@ -50,7 +53,7 @@ class Duplicate(Operation):
     Duplicates each sample in a dataset a specified number of times. One of the most helpful operations when it comes
     to data augmentation.
     """
-    def __init__(self, duplicates_num):
+    def __init__(self, duplicates_num: int):
         """
         Define duplication.
 
@@ -64,11 +67,11 @@ class Duplicate(Operation):
         self.args = self._prepare_args(locals())
         self.duplicates_num = duplicates_num
 
-    def get_output_samples_number_multiplier(self):
+    def get_output_samples_number_multiplier(self) -> int:
         """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return self.duplicates_num
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ Duplicates samples. """
         for image_and_density_map in images_and_density_maps:
             for _ in range(self.duplicates_num):
@@ -79,7 +82,7 @@ class Dropout(Operation):
     """
     Drops out samples with a given probability.
     """
-    def __init__(self, probability):
+    def __init__(self, probability: float):
         """
         Define dropout.
 
@@ -94,11 +97,11 @@ class Dropout(Operation):
         self.args = self._prepare_args(locals())
         self.probability = probability
 
-    def get_output_samples_number_multiplier(self):
+    def get_output_samples_number_multiplier(self) -> float:
         """ Return how many img+DM pairs are on average returned as output from a single pair. """
         return 1.0 - self.probability
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ Drops out samples. """
         for image_and_density_map in images_and_density_maps:
             if _random.random() >= self.probability:
@@ -109,7 +112,8 @@ class RandomArgs(Operation):
     """
     Allows running operations with randomized numeral arguments.
     """
-    def __init__(self, operation, constargs, randomargs):
+    def __init__(self, operation: _typing.Union[str, _typing.Callable], constargs: _typing.Dict[str, _typing.Any],
+                 randomargs: _typing.Dict[str, _typing.Tuple[_typing.Any, _typing.Any]]):
         """
         Specify randomization by providing the operation to invoke, const arguments that must be passed as they are and
         random arguments that will be randomized. Only standard, defined in the project, operations are allowed and
@@ -133,7 +137,7 @@ class RandomArgs(Operation):
             self.operation = eval(self._get_op_str())
         self.args = {'operation': self.operation.__name__, 'constargs': constargs, 'randomargs': randomargs}
 
-    def get_output_samples_number_multiplier(self):
+    def get_output_samples_number_multiplier(self) -> float:
         """ Return how many img+DM pairs are on average returned as output from a single pair """
         if self.operation is Duplicate:
             if "duplicates_num" in self.constargs:
@@ -150,9 +154,9 @@ class RandomArgs(Operation):
             else:
                 raise KeyError("Dropout operation missing probability")
         else:
-            return 1
+            return 1.0
 
-    def _get_op_str(self):
+    def _get_op_str(self) -> str:
         """
         Retrieve string representation of the operation to invoke, in a form that is ready to be computed in eval. That
         means, a prefix with module name is added when necessary. Only operations from this, .outputs and
@@ -176,7 +180,7 @@ class RandomArgs(Operation):
 
         return op_str
 
-    def _get_const_str(self):
+    def _get_const_str(self) -> str:
         """
         Transform dictionary of constant arguments to string that can be used inside parentheses in eval().
 
@@ -189,7 +193,7 @@ class RandomArgs(Operation):
             const_components.append(f"{k}={v_str}")
         return ",".join(const_components)
 
-    def _get_rand_str(self):
+    def _get_rand_str(self) -> str:
         """
         Randomize, cast and transform to string the arguments that are to be randomized.
 
@@ -204,7 +208,7 @@ class RandomArgs(Operation):
             rand_components.append(f"{key}={str(val)}")
         return ",".join(rand_components)
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Create and execute the given operation with a set of constant and randomized arguments.
 
@@ -240,7 +244,7 @@ class OptimizeBatch(Operation):
     limit, this can lead to incomplete batches. One should estimate the image size variance (higher variance - greater
     buffer capacity needed) and based on that set a limit.
     """
-    def __init__(self, target_batch_size, max_buffer_size=None):
+    def __init__(self, target_batch_size: int, max_buffer_size: _typing.Optional[int] = None):
         """
         Construct a batch optimizer that tries to lays out input tuples in a way to allow easy construction of batches
         of target size at a later stage. The temporary buffer size limit can be customized. By default it's equal to
@@ -262,7 +266,7 @@ class OptimizeBatch(Operation):
         self.target_batch_size = target_batch_size
         self.max_buffer_size = self.target_batch_size * 10 if max_buffer_size is None else max_buffer_size
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Optimizes layout of input samples.
 

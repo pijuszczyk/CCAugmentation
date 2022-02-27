@@ -1,8 +1,10 @@
 import random as _random
+import typing as _typing
 
 import cv2 as _cv2
 import numpy as _np
 
+from .common import _IMG_TYPE, _DM_TYPE, _IMG_DM_PAIR_TYPE, _IMG_DM_ITER_TYPE
 from .operations import Operation
 
 
@@ -13,7 +15,7 @@ class Transformation(Operation):
     to return an iterable of the same cardinality. For custom transformations, please subclass this class or use
     LambdaTransformation.
     """
-    def __init__(self, probability):
+    def __init__(self, probability: float):
         """
         Create a new abstract transformation that is applied with specified probability.
 
@@ -27,11 +29,11 @@ class Transformation(Operation):
         self.args = self._prepare_args(locals())
         self.probability = probability
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ See `transform_all` """
         return self.transform_all(images_and_density_maps)
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Abstract method to be implemented in child classes. Most often, this and __init__ methods are the only ones
         that must be defined.
@@ -45,7 +47,7 @@ class Transformation(Operation):
         """
         raise NotImplementedError("transform method not implemented in the child class")
 
-    def transform_all(self, images_and_density_maps):
+    def transform_all(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Execute transformation with earlier specified probability on an iterable of img+DM pairs.
 
@@ -59,7 +61,7 @@ class Transformation(Operation):
             yield self.transform(*img_and_den_map) if _random.random() < self.probability else img_and_den_map
 
 
-def _crop(image, density_map, new_w, new_h, centered):
+def _crop(image: _IMG_TYPE, density_map: _DM_TYPE, new_w: int, new_h: int, centered: bool) -> _IMG_DM_PAIR_TYPE:
     h, w = image.shape[:2]
 
     if centered:
@@ -82,7 +84,9 @@ class Crop(Transformation):
     Cropping transformation that cuts out and returns a part of an image with specified size (either fixed one
     or a fraction of the original one). Density map is also reduced to keep it relevant to the image.
     """
-    def __init__(self, width, height, x_factor=None, y_factor=None, centered=False, probability=1.0):
+    def __init__(self, width: _typing.Optional[int], height: _typing.Optional[int],
+                 x_factor: _typing.Optional[float] = None, y_factor: _typing.Optional[float] = None,
+                 centered: bool = False, probability: float = 1.0):
         """
         Define cropping with specified output size, applied with some probability. One may use a combination of
         fixed and relative size for separate image dimensions but fixed and relative size cannot be mixed for one
@@ -117,7 +121,7 @@ class Crop(Transformation):
         self.y_factor = y_factor
         self.centered = centered
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Crop an image at a random position (or center) to specified size.
 
@@ -138,8 +142,10 @@ class Scale(Transformation):
     """
     Scaling transformation that increases or decreases input size.
     """
-    def __init__(self, width, height, x_factor=None, y_factor=None, img_interpolation=_cv2.INTER_CUBIC,
-                 dm_interpolation=_cv2.INTER_LINEAR, probability=1.0):
+    def __init__(self, width: _typing.Optional[int], height: _typing.Optional[int],
+                 x_factor: _typing.Optional[float] = None, y_factor: _typing.Optional[float] = None,
+                 img_interpolation: int = _cv2.INTER_CUBIC, dm_interpolation: int = _cv2.INTER_LINEAR,
+                 probability: float = 1.0):
         """
         Create a scaling transformation that scales the image and the corresponding density map to a specified fixed or
         relative size with a given probability. One may use a combination of fixed and relative size for separate image
@@ -177,7 +183,7 @@ class Scale(Transformation):
         self.img_interpolation = img_interpolation
         self.dm_interpolation = dm_interpolation
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Scale an image and the corresponding density map to a specified size.
 
@@ -213,7 +219,7 @@ class Downscale(Transformation):
     """
     Downscales and then upscales an image, decreasing its quality.
     """
-    def __init__(self, x_factor, y_factor, probability=1.0):
+    def __init__(self, x_factor: float, y_factor: float, probability: float = 1.0):
         """
         Define downscaling in terms of how much the image will be downscaled before getting upscaled back to the
         original size. Note that some pixels may be lost due to integer rounding, leading to a slightly different size.
@@ -230,10 +236,10 @@ class Downscale(Transformation):
 
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
-        self.downscaler = Scale(None, None, x_factor, y_factor, 1.0)
-        self.upscaler = Scale(None, None, 1 / x_factor, 1 / y_factor, 1.0)
+        self.downscaler = Scale(None, None, x_factor, y_factor, probability=1.0)
+        self.upscaler = Scale(None, None, 1 / x_factor, 1 / y_factor, probability=1.0)
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Decrease an image quality. Density map stays the same.
 
@@ -256,7 +262,7 @@ class Rotate(Transformation):
     - The size of the input changes, adjusting the frame so that it can hold the whole image/density map and filling
         missing pixels in the frame with black
     """
-    def __init__(self, angle, expand=False, probability=1.0):
+    def __init__(self, angle: float, expand: bool = False, probability: float = 1.0):
         """
         Create a rotation at the center of image and density map by certain angle measured in degrees. Positive angle
         means counterclockwise rotation.
@@ -271,7 +277,7 @@ class Rotate(Transformation):
         self.angle = angle
         self.expand = expand
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Rotate the image according to specification.
 
@@ -309,7 +315,7 @@ class StandardizeSize(Transformation):
     length of the longer side of an image and scales each image (and relevant density map) to the size best fitting
     the original size.
     """
-    def __init__(self, std_aspect_ratios, std_base_size):
+    def __init__(self, std_aspect_ratios: _typing.Collection[float], std_base_size: int):
         """
         Create a size standardization transformation.
 
@@ -330,7 +336,8 @@ class StandardizeSize(Transformation):
         self.std_base_size = std_base_size
 
     @staticmethod
-    def _prepare_standard_aspect_ratios(std_ratios):
+    def _prepare_standard_aspect_ratios(std_ratios: _typing.Collection[float]) \
+            -> _typing.Tuple[_np.ndarray, _np.ndarray]:
         """
         Find boundaries between consequent allowed aspect ratios to make finding the most appropriate ratios easier.
         Boundaries are such aspect ratio values that are uniformly placed between two nearest allowed aspect ratios.
@@ -346,7 +353,8 @@ class StandardizeSize(Transformation):
         return ratios, boundaries
 
     @staticmethod
-    def _find_the_most_similar_ratio(ratio_to_improve, std_ratios, std_boundaries):
+    def _find_the_most_similar_ratio(ratio_to_improve: float, std_ratios: _np.ndarray, std_boundaries: _np.ndarray) \
+            -> float:
         """
         Find an allowed aspect ratio that is the most similar to the one provided.
 
@@ -365,7 +373,7 @@ class StandardizeSize(Transformation):
             chosen_std_ratio_idx = std_ratios.shape[0] - 1
         return std_ratios[chosen_std_ratio_idx]
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Scale the image and its density map to such a size that its aspect ratio is in the allowed ones.
 
@@ -405,7 +413,7 @@ class OmitDownscalingPixels(Transformation):
     Removes pixels that were lost due to downscaling (either by using a CCA transformation or by doing Pooling) by
     performing a centered crop.
     """
-    def __init__(self, x_factor=None, y_factor=None):
+    def __init__(self, x_factor: _typing.Optional[float] = None, y_factor: _typing.Optional[float] = None):
         """
         Create a centered cropping transformation that omits pixels lost due to downscaling. For example, given an input
         image of 401x404 size, when it is downscaled by a factor of 4 in both dimensions (e.g. by doing
@@ -426,7 +434,7 @@ class OmitDownscalingPixels(Transformation):
         self.x_factor = x_factor
         self.y_factor = y_factor
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Transform the given image and density map.
 
@@ -447,7 +455,8 @@ class Normalize(Transformation):
     """
     Normalizes image pixel values using one of normalization methods.
     """
-    def __init__(self, method, by_channel=False, means=None, stds=None):
+    def __init__(self, method: str, by_channel: bool = False, means: _typing.Optional[_np.ndarray] = None,
+                 stds: _typing.Optional[_np.ndarray] = None):
         """
         Create a transformation that normalizes image pixel values using one of the following methods:
 
@@ -486,7 +495,7 @@ class Normalize(Transformation):
         self.means = means
         self.stds = stds
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Transform the given image, return with the untouched density map.
 
@@ -510,7 +519,7 @@ class Normalize(Transformation):
         elif self.method == "samplewise_std_normalization":
             return image / _np.resize(_np.std(image, mean_std_axes), [*image.shape]), density_map
 
-    def transform_all(self, images_and_density_maps):
+    def transform_all(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Overriding method looping over all img+DM pairs from an iterable.
         Behaves the same like the base class implementation when using a method that doesn't require full dataset to be
@@ -557,7 +566,7 @@ class NormalizeDensityMap(Transformation):
     Normalizes a density map by multiplying its values by a specified parameter. May help in training speed. Based on
     https://arxiv.org/pdf/1907.02724.pdf
     """
-    def __init__(self, multiplier):
+    def __init__(self, multiplier: float):
         """
         Create a label/density map normalization operation.
 
@@ -572,7 +581,7 @@ class NormalizeDensityMap(Transformation):
         self.args = self._prepare_args(locals())
         self.multiplier = multiplier
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Multiply the values in the density map.
 
@@ -590,7 +599,7 @@ class FlipLR(Transformation):
     """
     Horizontal / left-right random flipping transformation.
     """
-    def __init__(self, probability=0.5):
+    def __init__(self, probability: float = 0.5):
         """
         Create LR flipping transformation that flips with the given probability. In most cases, should stay at 0.5
         (equal chances).
@@ -602,7 +611,7 @@ class FlipLR(Transformation):
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Horizontally flip the image and its density map.
 
@@ -620,7 +629,7 @@ class ToGrayscale(Transformation):
     """
     Transformation that converts images to grayscale (reduces channels to 1).
     """
-    def __init__(self, probability=1.0):
+    def __init__(self, probability: float = 1.0):
         """
         Create the transformation applied with the given probability.
 
@@ -630,7 +639,7 @@ class ToGrayscale(Transformation):
         Transformation.__init__(self, probability)
         self.args = self._prepare_args(locals())
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Transform the image to grayscale.
 
@@ -651,14 +660,18 @@ class LambdaTransformation(Transformation):
     This class works by applying a transformation specified as a lambda, over all samples. Alternatively, one use a
     custom loop, also specified as a lambda.
     """
-    def __init__(self, probability, transformation, loop=None):
+    TRANSF_TYPE = _typing.Callable[[_IMG_TYPE, _DM_TYPE], _IMG_DM_PAIR_TYPE]
+    TRANSF_LOOP_TYPE = _typing.Callable[[_IMG_DM_ITER_TYPE, TRANSF_TYPE], _IMG_DM_ITER_TYPE]
+
+    def __init__(self, probability: float, transformation: TRANSF_TYPE,
+                 loop: _typing.Optional[TRANSF_LOOP_TYPE] = None):
         """
         Create a custom transformation that applies a given transformation lambda over all samples. Alternatively, a
         custom loop lambda can be given, e.g. to collect all samples before executing a transformation on them.
 
         Args:
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
-            transformation: Lambda that takes a pair of img+DM and returns a transformed pair of img+DM.
+            transformation: Lambda that takes img+DM from one pair and returns the transformed pair.
             loop: Lambda that takes an iterable of img+DM pairs and transformation lambda and returns an iterable of
                 transformed img+DM pairs. If None, standard loop is used.
         """
@@ -667,11 +680,11 @@ class LambdaTransformation(Transformation):
         self.transformation = transformation
         self.loop = loop
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """ Run the given lambda on a img+DM pair """
         return self.transformation(image, density_map)
 
-    def transform_all(self, images_and_density_maps):
+    def transform_all(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ If a custom loop is defined, use it to loop over all samples from the iterable. Otherwise, use the standard
         loop. """
         if self.loop is None:
@@ -679,7 +692,8 @@ class LambdaTransformation(Transformation):
         return self.loop(images_and_density_maps, self.transformation)
 
 
-def _get_random_area(img_w, img_h, area_w, area_h, allow_out_of_bounds):
+def _get_random_area(img_w: int, img_h: int, area_w: int, area_h: int, allow_out_of_bounds: bool) \
+        -> _typing.Tuple[int, int, int, int]:
     """
     Get coordinates of a randomly placed rectangular area. Note that actual area size may differ from (area_h, area_w)
     if out of bounds selection is enabled and an area on the border is chosen.
@@ -715,7 +729,8 @@ class Cutout(Transformation):
     so that a mix of images with more and less area removed can be found in the dataset. Shape of the cut out box
     seemed not to be that important so its definition is simplified.
     """
-    def __init__(self, size, factor=None, cuts_num=1, allow_out_of_bounds=True, probability=1.0):
+    def __init__(self, size: _typing.Optional[int], factor: _typing.Optional[float] = None, cuts_num: int = 1,
+                 allow_out_of_bounds: bool = True, probability: float = 1.0):
         """
         Create a transformation that zeroes out random rectangular regions of given size, specified number of times.
         One may specify one and only one size, absolute or relative.
@@ -748,7 +763,7 @@ class Cutout(Transformation):
         self.cuts_num = cuts_num
         self.allow_out_of_bounds = allow_out_of_bounds
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
         Cut out random regions based on the settings.
 
@@ -776,7 +791,7 @@ class Copyout(Transformation):
     transformed image. When out of bounds copying is allowed, the area may become a rectangle when placed on an edge.
     However, out of bounds selection doesn't apply to the destination image.
     """
-    def __init__(self, size, allow_out_of_bounds=True, probability=1.0):
+    def __init__(self, size: int, allow_out_of_bounds: bool = True, probability: float = 1.0):
         """
         Create copyout transformation.
 
@@ -795,11 +810,11 @@ class Copyout(Transformation):
         self.size = size
         self.allow_out_of_bounds = allow_out_of_bounds
 
-    def transform(self, image, density_map):
+    def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> None:
         """ Transformation of a single image+density map pair without loading other pairs is not supported. """
         raise NotImplementedError("Only transforming the whole dataset at once is currently supported for Copyout")
 
-    def transform_all(self, images_and_density_maps):
+    def transform_all(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Create a generator that for each image and density map pair generates a transformed pair.
 

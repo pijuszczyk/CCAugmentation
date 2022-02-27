@@ -1,10 +1,12 @@
 import csv as _csv
 import os as _os
 import pickle as _pickle
+import typing as _typing
 
 import cv2 as _cv2
 import matplotlib.pyplot as _plt
 
+from .common import _IMG_DM_ITER_TYPE
 from .operations import Operation
 
 
@@ -19,11 +21,11 @@ class Output(Operation):
         Operation.__init__(self)
         self.args = self._prepare_args(locals())
 
-    def execute(self, images_and_density_maps):
+    def execute(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ See `output` """
         return self.output(images_and_density_maps)
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """ Abstract method that must be implemented in the subclasses. Takes and returns an iterable of unchanged
         img+DM pairs, while generating some side-effect output """
         raise NotImplementedError("output method not implemented in the child class")
@@ -33,7 +35,8 @@ class Demonstrate(Output):
     """
     Output that shows a few examples of preprocessed img+DM pairs using GUI.
     """
-    def __init__(self, max_examples=None, show_density_map=True, density_map_cmap=None):
+    def __init__(self, max_examples: _typing.Optional[int] = None, show_density_map: bool = True,
+                 density_map_cmap: _typing.Optional[_typing.Any] = None):
         """
         Specify demonstration looks.
 
@@ -54,7 +57,7 @@ class Demonstrate(Output):
         self.show_density_map = show_density_map
         self.density_map_cmap = density_map_cmap
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Show examples of preprocessed data.
 
@@ -90,7 +93,7 @@ class SaveImagesToFiles(Output):
     Output that saves the images to image files, be it PNG, JPG or BMP.
     Each image is saved separately, and the name of the file is deduced from the image's index.
     """
-    def __init__(self, dir_path, file_extension="jpg"):
+    def __init__(self, dir_path: str, file_extension: str = "jpg"):
         """
         Define an output that saves the images with the chosen file extension to a given directory. For the list of
         supported extensions, please check opencv-python documentation.
@@ -104,7 +107,7 @@ class SaveImagesToFiles(Output):
         self.dir_path = dir_path
         self.file_extension = file_extension
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Save the images in a given directory, making the directory if necessary. File names are constructed using
         image's index, starting from 0.
@@ -130,7 +133,7 @@ class SaveImagesToBinaryFile(Output):
     """
     Output that saves all the images in form of a serialized list to a single binary file, allowing faster loading.
     """
-    def __init__(self, file_path, keep_3_dimensions=True):
+    def __init__(self, file_path: str, keep_3_dimensions: bool = True):
         """
         Defines the output operation.
 
@@ -145,7 +148,7 @@ class SaveImagesToBinaryFile(Output):
         self.file_path = file_path
         self.keep_3_dimensions = keep_3_dimensions
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Save the images to a binary file.
 
@@ -174,7 +177,7 @@ class SaveDensityMapsToCSVFiles(Output):
     """
     Output that saves density maps to CSV files, one density map per file.
     """
-    def __init__(self, dir_path, downscaling=None):
+    def __init__(self, dir_path: str, downscaling: _typing.Optional[float] = None):
         """
         Define output that saves to a given directory. Optionally, downscaling may be used when the density maps are
         expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
@@ -192,7 +195,7 @@ class SaveDensityMapsToCSVFiles(Output):
         self.dir_path = dir_path
         self.downscaling = downscaling
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Save the density maps to files.
 
@@ -223,7 +226,7 @@ class SaveDensityMapsToBinaryFile(Output):
     """
     Output that saves density maps in form of serialized lists to a single large binary file, allowing faster loading.
     """
-    def __init__(self, file_path, downscaling=None, keep_3_dimensions=True):
+    def __init__(self, file_path: str, downscaling: _typing.Optional[float] = None, keep_3_dimensions: bool = True):
         """
         Define output that saves to a given path. Optionally, downscaling may be used when the density maps are
         expected to be smaller than their corresponding images (e.g. when the model has unbalanced pooling).
@@ -245,7 +248,7 @@ class SaveDensityMapsToBinaryFile(Output):
         self.downscaling = downscaling
         self.keep_3_dimensions = keep_3_dimensions
 
-    def output(self, images_and_density_maps):
+    def output(self, images_and_density_maps: _IMG_DM_ITER_TYPE) -> _IMG_DM_ITER_TYPE:
         """
         Save the density maps to a file.
 
