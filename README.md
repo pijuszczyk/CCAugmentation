@@ -23,12 +23,15 @@ Available transformations are:
 - **Downscale**
 - **Rotate**
 - **StandardizeSize**
+- **AutoStandardizeSize**
+- **OmitDownscalingPixels**
 - **Normalize**
 - **NormalizeDensityMap**
 - **FlipLR**
 - **ToGrayscale**
 - **LambdaTransformation**
 - **Cutout**
+- **Copyout**
 - **Shearing**
 - **Blur**
 - **BlurCutout**
@@ -72,13 +75,12 @@ For more information about the specific topics, please refer to the related comm
 Loading the data from ShanghaiTech dataset and taking crops with 1/4 size:
 
     import CCAugmentation as cca
-    import CCAugmentation as ccat
     
     
     train_data_pipeline = cca.Pipeline(
         cca.integrations.datasets.SHHLoader("/data/ShanghaiTech/", "train", "B"),
         [
-            ccat.Crop(None, None, 1/4, 1/4)
+            cca.Crop(x_scale=1/4, y_scale=1/4)
         ]
     )
     
