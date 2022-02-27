@@ -289,7 +289,7 @@ class Rotate(Transformation):
             Pair of rotated image and rotated accordingly density map.
         """
         h, w = image.shape[:2]
-        center_x, center_y = w / 2, h / 2
+        center_x, center_y = w // 2, h // 2
         rot_mat = _cv2.getRotationMatrix2D((center_x, center_y), self.angle, 1.0)
 
         if self.expand:
@@ -300,8 +300,8 @@ class Rotate(Transformation):
             new_h = int(w * sin + h * cos)
 
             # add translation to the matrix
-            rot_mat[0, 2] += (new_w / 2) - center_x
-            rot_mat[1, 2] += (new_h / 2) - center_y
+            rot_mat[0, 2] += (new_w // 2) - center_x
+            rot_mat[1, 2] += (new_h // 2) - center_y
         else:
             new_w, new_h = w, h
 
@@ -367,6 +367,11 @@ class StandardizeSize(Transformation):
         """
         if len(std_aspect_ratios) == 0:
             raise ValueError("At least 1 allowed aspect ratio must be entered")
+        for ratio in std_aspect_ratios:
+            if ratio <= 0:
+                raise ValueError("Each allowed aspect ratio must be a fraction of width to height, greater than 0")
+        if len(set(std_aspect_ratios)) < len(std_aspect_ratios):
+            raise ValueError("There must not be any duplicate allowed aspect ratios")
         if std_base_size <= 0:
             raise ValueError("Base size must be greater than 0")
         if method not in ["scale", "crop"]:
@@ -393,10 +398,10 @@ class StandardizeSize(Transformation):
 
         chosen_std_ratio = _find_the_most_similar_ratio(w / h, self.std_ratios, self.std_bounds)
 
-        if chosen_std_ratio >= 1.0:
+        if chosen_std_ratio >= 1.0:  # landscape or 1:1
             new_w = self.std_base_size
             new_h = int(new_w / chosen_std_ratio)
-        else:
+        else:  # portrait
             new_h = self.std_base_size
             new_w = int(new_h * chosen_std_ratio)
 
