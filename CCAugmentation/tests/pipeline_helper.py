@@ -1,9 +1,12 @@
+import typing
+
 import numpy as np
 
 import CCAugmentation as cca
 
 
-def generate_data(tuples_number, width=10, height=10):
+def generate_data(tuples_number: int, width: int = 10, height: int = 10) \
+        -> typing.Tuple[typing.List[np.ndarray], typing.List[np.ndarray]]:
     imgs, dms = [], []
     for i in range(tuples_number):
         np.random.seed(i)
@@ -12,7 +15,9 @@ def generate_data(tuples_number, width=10, height=10):
     return imgs, dms
 
 
-def run_ops_in_trivial_pipeline(data, ops):
+def run_ops_in_trivial_pipeline(data: typing.Tuple[typing.Iterable[np.ndarray], typing.Iterable[np.ndarray]],
+                                ops: typing.Iterable[cca.Operation]) -> typing.Tuple[typing.Iterable[np.ndarray],
+                                                                                     typing.Iterable[np.ndarray]]:
     imgs, dms = data
     pipeline = cca.Pipeline(
         cca.CombinedLoader(img_loader=cca.VariableLoader(imgs), den_map_loader=cca.VariableLoader(dms), gt_loader=None),
