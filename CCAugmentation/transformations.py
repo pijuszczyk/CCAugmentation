@@ -353,7 +353,7 @@ class StandardizeSize(Transformation):
     length of the longer side of an image and scales each image (and the relevant density map) to the size best fitting
     the original size.
     """
-    def __init__(self, std_aspect_ratios: _typing.Collection[float], std_base_size: int):
+    def __init__(self, std_aspect_ratios: _typing.Collection[float], std_base_size: int, method: str = "scale"):
         """
         Create a size standardization transformation.
 
@@ -362,16 +362,21 @@ class StandardizeSize(Transformation):
                 images. In case of ratios suited for portrait/vertical mode, inversion of the same aspect ratio from
                 horizontal mode is used, e.g. ratio of 4:3 vertical image is to be seen as 3:4 (or 0.75, to be exact).
             std_base_size: Desired length of the longer side of the output images and density maps.
+            method: How to standardize sizes. You can either scale the images, making them a bit distorted but keeping
+                all the information, or randomly crop them, losing some information in exchange for quality.
         """
         if len(std_aspect_ratios) == 0:
             raise ValueError("At least 1 allowed aspect ratio must be entered")
         if std_base_size <= 0:
             raise ValueError("Base size must be greater than 0")
+        if method not in ["scale", "crop"]:
+            raise ValueError("You can only use scaling (scale) or cropping (crop)")
 
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
         self.std_ratios, self.std_bounds = _prepare_standard_aspect_ratios(std_aspect_ratios)
         self.std_base_size = std_base_size
+        self.method = method
 
     def transform(self, image: _IMG_TYPE, density_map: _DM_TYPE) -> _IMG_DM_PAIR_TYPE:
         """
@@ -399,11 +404,14 @@ class StandardizeSize(Transformation):
         if (w, h) == (new_w, new_h):
             return image, density_map
 
-        scale_x = new_w / w
-        scale_y = new_h / h
+        if self.method == 'scale':
+            scale_x = new_w / w
+            scale_y = new_h / h
 
-        new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
-        new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+            new_img = _cv2.resize(image, (new_w, new_h), interpolation=_cv2.INTER_CUBIC)
+            new_den_map = _cv2.resize(density_map, (new_w, new_h), interpolation=_cv2.INTER_LINEAR) / scale_x / scale_y
+        else:
+            new_img, new_den_map = _crop(image, density_map, new_w, new_h, False)
 
         return new_img, new_den_map
 
@@ -419,7 +427,7 @@ class AutoStandardizeSize(Transformation):
     MOST_COMMON_RATIOS = _np.array([1/1, 3/2, 2/3, 4/3, 3/4, 5/4, 4/5, 16/9, 9/16])
     TRIED_STD_RATIOS, TRIED_STD_BOUNDS = _prepare_standard_aspect_ratios(MOST_COMMON_RATIOS)
 
-    def __init__(self, min_instances_threshold: int):
+    def __init__(self, min_instances_threshold: int, method: str = "scale"):
         """
         Set up the automated transformation.
 
@@ -427,14 +435,18 @@ class AutoStandardizeSize(Transformation):
             min_instances_threshold: Minimum number of instances of an aspect ratio (not necessarily exactly that one
                 but being closest to that one) from the tried ratios list for that ratio to be considered relevant to
                 the dataset used.
+            method: See the same argument in `StandardizeSize`.
         """
         if min_instances_threshold <= 0:
             raise ValueError("Threshold must be greater than 0")
+        if method not in ["scale", "crop"]:
+            raise ValueError("You can only use scaling (scale) or cropping (crop)")
 
         Transformation.__init__(self, 1.0)
         self.requires_full_dataset_in_memory = True
         self.args = self._prepare_args(locals())
         self.min_instances_threshold = min_instances_threshold
+        self.method = method
 
     def _select_relevant_ratios_and_size(self, images_and_density_maps: _typing.Collection[_IMG_DM_PAIR_TYPE]) \
             -> _typing.Tuple[_np.ndarray, int]:
@@ -473,7 +485,7 @@ class AutoStandardizeSize(Transformation):
         """
         imgs_and_dms_list = list(images_and_density_maps)
         std_ratios, min_base_size = self._select_relevant_ratios_and_size(imgs_and_dms_list)
-        substandardizer = StandardizeSize(std_ratios, min_base_size)
+        substandardizer = StandardizeSize(std_ratios, min_base_size, self.method)
         return substandardizer.transform_all(imgs_and_dms_list)
 
 
