@@ -1,4 +1,3 @@
-import enum as _enum
 import random as _random
 import typing as _typing
 
@@ -427,8 +426,8 @@ class AutoStandardizeSize(Transformation):
     A transformation that applies StandardizeSize in an automated way. Instead of relying on manually specified
     accepted aspect ratios, most common ratios are checked if there are enough instances that have similar
     characteristic to them, and the present ones are used for the transformation. As for the base size to be used, the
-    minimum found width or height of an image is selected. It may not be the optimal choice but it should be pretty
-    safe, assuming that there aren't any drastic outliers in the dataset.
+    minimum found greater dimension (width or height) of an image is selected. It may not be the optimal choice but it
+    should be rather safe, assuming that there aren't any drastic outliers in the dataset.
     """
     MOST_COMMON_RATIOS = _np.array([1/1, 3/2, 2/3, 4/3, 3/4, 5/4, 4/5, 16/9, 9/16])
     TRIED_STD_RATIOS, TRIED_STD_BOUNDS = _prepare_standard_aspect_ratios(MOST_COMMON_RATIOS)
@@ -458,7 +457,7 @@ class AutoStandardizeSize(Transformation):
             -> _typing.Tuple[_np.ndarray, int]:
         """
         Find out which aspect ratios are relevant enough for the dataset and which size is the most appropriate (the
-        minimum size in width or height is used).
+        minimum size in the bigger dimension (width or height) is used).
 
         Args:
             images_and_density_maps: Iterable of img+DM pairs that was saved so that it can be traversed more than once.
@@ -470,7 +469,7 @@ class AutoStandardizeSize(Transformation):
         min_size = float('inf')
         for img, dm in images_and_density_maps:
             h, w = img.shape[:2]
-            min_size = min(min_size, h, w)
+            min_size = min(min_size, max(h, w))
             chosen_std_ratio = _find_the_most_similar_ratio(w / h, self.TRIED_STD_RATIOS, self.TRIED_STD_BOUNDS)
             occur_counters[_np.where(self.MOST_COMMON_RATIOS == chosen_std_ratio)] += 1
 
@@ -490,6 +489,8 @@ class AutoStandardizeSize(Transformation):
             Iterable of automatically standardized img+DM pairs.
         """
         imgs_and_dms_list = list(images_and_density_maps)
+        if len(imgs_and_dms_list) < self.min_instances_threshold:
+            raise ValueError("Minimum required ratio instances must not be greater than number of samples")
         std_ratios, min_base_size = self._select_relevant_ratios_and_size(imgs_and_dms_list)
         substandardizer = StandardizeSize(std_ratios, min_base_size, self.method)
         return substandardizer.transform_all(imgs_and_dms_list)
@@ -574,17 +575,26 @@ class Normalize(Transformation):
             raise ValueError(f"Wrong method of normalization selected: {method}")
         if method.startswith("range") and (means is not None or stds is not None):
             raise ValueError("Fixed range normalization doesn't require computed mean/std values.")
+        if by_channel and ((means is not None and len(means) != 3) or (stds is not None and len(stds) != 3)):
+            raise ValueError("When applying by-channel normalization with specified means or stds, they must consist of"
+                             " exactly 3 values, one for each channel.")
+        if not by_channel and ((means is not None and len(means) != 1) or (stds is not None and len(stds) != 1)):
+            raise ValueError("When applying global normalization with specified means or stds, they must consist of"
+                             " exactly 1 value.")
 
         Transformation.__init__(self, 1.0)
         self.args = self._prepare_args(locals())
-        if (method == "featurewise_z-score" and (means is None or stds is None)) or \
-                (method == "featurewise_centering" and means is None) or \
-                (method == "featurewise_std_normalization" and stds is None):
-            self.requires_full_dataset_in_memory = True
         self.method = method
         self.by_channel = by_channel
         self.means = means
         self.stds = stds
+        if (method == "featurewise_z-score" and (means is None or stds is None)) or \
+                (method == "featurewise_centering" and means is None) or \
+                (method == "featurewise_std_normalization" and stds is None):
+            self.requires_full_dataset_in_memory = True
+            # discard potential means or stds
+            self.means = None
+            self.stds = None
 
     @staticmethod
     def _apply_nonfw_normalization(method, image, mean_std_axes):
@@ -593,6 +603,7 @@ class Normalize(Transformation):
             return (image - 127.5) / 255.0
         elif method == "range_0_to_1":
             return image / 255.0
+        # TODO: provided means and stds could be put to use
         elif method == "samplewise_centering":
             return image - _np.resize(_np.mean(image, mean_std_axes), [*image.shape])
         else:  # method == "samplewise_std_normalization"
@@ -665,10 +676,12 @@ class Normalize(Transformation):
                 all_images = self._apply_fw_normalization_on_all("featurewise_centering", all_images, mean_std_axes)
                 all_images = self._apply_fw_normalization_on_all(
                     "featurewise_std_normalization", all_images, mean_std_axes)
-                return zip(all_images, all_density_maps)
+                for t in zip(all_images, all_density_maps):
+                    yield t
             else:
                 all_images = self._apply_fw_normalization_on_all(self.method, all_images, mean_std_axes)
-                return zip(all_images, all_density_maps)
+                for t in zip(all_images, all_density_maps):
+                    yield t
         else:
             if self.method == "featurewise_z-score":
                 for image, density_map in images_and_density_maps:
