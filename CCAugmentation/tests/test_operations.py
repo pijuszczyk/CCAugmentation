@@ -1,4 +1,5 @@
 import random
+import typing
 import unittest
 
 import numpy as np
@@ -11,9 +12,9 @@ class DuplicateTests(unittest.TestCase):
     def setUp(self) -> None:
         self.orig_len = 5
         self.dups_num = 4
-        self.data = list(pipeline_helper.generate_data(self.orig_len))
+        self.data = pipeline_helper.generate_data(self.orig_len)
         self.op = cca.Duplicate(self.dups_num)
-        self.result = pipeline_helper.run_ops_in_trivial_pipeline(self.data, [self.op])
+        self.result = pipeline_helper.run_op_in_trivial_pipeline(self.data, self.op)
 
     def test_invalid_dup_number_fails(self):
         self.assertRaises(ValueError, lambda: cca.Duplicate(0))
@@ -45,7 +46,7 @@ class DropoutTests(unittest.TestCase):
     def _do_dropout(self, rate):
         data = pipeline_helper.generate_data(self.orig_len)
         op = cca.Dropout(rate)
-        return pipeline_helper.run_ops_in_trivial_pipeline(data, [op])
+        return pipeline_helper.run_op_in_trivial_pipeline(data, op)
 
     def test_invalid_dropout_rate_fails(self):
         self.assertRaises(ValueError, lambda: cca.Dropout(1))
@@ -78,17 +79,17 @@ class OptimizeBatchTests(unittest.TestCase):
         self.data = self._generate_data(self.sizes)
 
     @staticmethod
-    def _generate_sample(width, height):
+    def _generate_sample(width, height) -> typing.Tuple[np.ndarray, np.ndarray]:
         imgs, dms = pipeline_helper.generate_data(1, width, height)
         return imgs[0], dms[0]
 
     @staticmethod
     def _generate_data(sizes):
-        return list(zip(*[OptimizeBatchTests._generate_sample(w, h) for (w, h) in sizes]))
+        return tuple(zip(*[OptimizeBatchTests._generate_sample(w, h) for (w, h) in sizes]))
 
     def _optimize_batches(self, batch_size, buffer_size_limit):
         op = cca.OptimizeBatch(batch_size, buffer_size_limit)
-        return pipeline_helper.run_ops_in_trivial_pipeline(self.data, [op])
+        return pipeline_helper.run_op_in_trivial_pipeline(self.data, op)
 
     def test_invalid_batch_size_fails(self):
         self.assertRaises(ValueError, lambda: cca.OptimizeBatch(0))

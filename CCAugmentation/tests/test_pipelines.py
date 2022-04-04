@@ -8,8 +8,8 @@ from CCAugmentation.tests import pipeline_helper
 
 class PipelineResultsIteratorTests(unittest.TestCase):
     def test_invalid_total_samples(self):
-        self.assertRaises(ValueError, lambda: cca.PipelineResultsIterator(zip(pipeline_helper.generate_data(1)), 0))
-        self.assertRaises(ValueError, lambda: cca.PipelineResultsIterator(zip(pipeline_helper.generate_data(1)), -1))
+        self.assertRaises(ValueError, lambda: cca.PipelineResultsIterator(zip(*pipeline_helper.generate_data(1)), 0))
+        self.assertRaises(ValueError, lambda: cca.PipelineResultsIterator(zip(*pipeline_helper.generate_data(1)), -1))
 
     def test_iterates_correctly(self):
         imgs, dms = pipeline_helper.generate_data(5)
