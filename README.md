@@ -27,6 +27,12 @@ Available transformations are:
 - **ToGrayscale**
 - **LambdaTransformation**
 - **Cutout**
+- **Shearing**
+- **Blur**
+- **BlurCutout**
+- **DistortPerspective**
+- **ChangeSaturation**
+- **Mixup**
 
 Available outputs are:
 - **Demonstrate**
@@ -68,7 +74,7 @@ Loading the data from ShanghaiTech dataset and taking crops with 1/4 size:
     
     
     train_data_pipeline = cca.Pipeline(
-        cca.integrations.loading.SHHLoader("/data/ShanghaiTech/", "train", "B"),
+        cca.integrations.datasets.SHHLoader("/data/ShanghaiTech/", "train", "B"),
         [
             ccat.Crop(None, None, 1/4, 1/4)
         ]
