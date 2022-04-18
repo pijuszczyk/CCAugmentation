@@ -843,8 +843,10 @@ class Shearing(Transformation):
         Define shearing parameters.
 
         Args:
-            shearing_x: Shearing factor for X axis. Value of 0 corresponds to no shearing, value 0.5 to moderate shearing.
-            shearing_y: Shearing factor for Y axis. Value of 0 corresponds to no shearing, value 0.5 to moderate shearing.
+            shearing_x: Shearing factor for X axis. Value of 0 corresponds to no shearing, value 0.5 to
+                moderate shearing.
+            shearing_y: Shearing factor for Y axis. Value of 0 corresponds to no shearing, value 0.5 to
+                moderate shearing.
             probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
         """
 
@@ -871,7 +873,7 @@ class Shearing(Transformation):
         """
         h, w = image.shape[:2]
 
-        M = _np.float32([[1, self.shearing_x, 0],
+        m = _np.float32([[1, self.shearing_x, 0],
                         [self.shearing_y, 1, 0],
                         [0, 0, 1]])
 
@@ -879,7 +881,7 @@ class Shearing(Transformation):
         new_w = int(w + _np.abs(self.shearing_x) * h)
         new_h = int(h + _np.abs(self.shearing_y) * w)
 
-        return _cv2.warpPerspective(image, M, (new_w, new_h)), _cv2.warpPerspective(density_map, M, (new_w, new_h))
+        return _cv2.warpPerspective(image, m, (new_w, new_h)), _cv2.warpPerspective(density_map, m, (new_w, new_h))
 
 
 class Blur(Transformation):
@@ -1019,10 +1021,10 @@ class DistortPerspective(Transformation):
         elif mode == 'bottom':
             pts1 = _np.float32([[0, 0], [w, 0],
                                 [0+w*self.strength/2, h], [w-w*self.strength/2, h]])
-        if mode == 'left':
+        elif mode == 'left':
             pts1 = _np.float32([[0, 0+h*self.strength/2], [w, 0],
                                 [0, h-h*self.strength/2], [w, h]])
-        if mode == 'right':
+        else:
             pts1 = _np.float32([[0, 0], [w, 0+h*self.strength/2],
                                 [0, h], [w, h-h*self.strength/2]])
 
@@ -1122,9 +1124,9 @@ class Mixup(Transformation):
                 dest_h, dest_w = img.shape[:2]
                 src_img, src_dm = _cv2.resize(src_img, (dest_w, dest_h)), _cv2.resize(src_dm, (dest_w, dest_h)),
 
-                l = _np.random.beta(self.alpha, self.alpha, size=1)[0]
-                new_img = _cv2.addWeighted(img, l, src_img, 1-l, 0.0)
-                new_dm = _cv2.addWeighted(dm, l, src_dm, 1-l, 0.0)
+                weight = _np.random.beta(self.alpha, self.alpha, size=1)[0]
+                new_img = _cv2.addWeighted(img, weight, src_img, 1-weight, 0.0)
+                new_dm = _cv2.addWeighted(dm, weight, src_dm, 1-weight, 0.0)
 
                 yield new_img, new_dm
             else:
