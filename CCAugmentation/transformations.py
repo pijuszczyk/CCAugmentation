@@ -880,3 +880,96 @@ class Shearing(Transformation):
         new_h = int(h + _np.abs(self.shearing_y) * w)
 
         return _cv2.warpPerspective(image, M, (new_w, new_h)), _cv2.warpPerspective(density_map, M, (new_w, new_h))
+
+
+class Blur(Transformation):
+    """
+    Blurs the given image with normalized box filter (averaging). Corresponding density map remains the same.
+
+    """
+    def __init__(self, ksize, probability=1.0):
+        """
+        Define blur transformation parameters.
+
+        Args:
+            ksize: Size of kernel used in averaging.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+        if ksize <= 0:
+            raise ValueError("Kernel size must be an integer greater than 0")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.ksize = ksize
+
+    def transform(self, image, density_map):
+        """
+        Blur the image according to the specification.
+
+        Args:
+            image: Image to be blurred.
+            density_map: Related density map.
+
+        Returns:
+            A pair of blurred image and corresponding density map.
+        """
+
+        return _cv2.blur(image, (self.ksize, self.ksize)), density_map
+
+
+class BlurCutout(Transformation):
+    """
+    Experimental method inspired by paper: https://arxiv.org/abs/1708.04552
+    Selects random circular regions and blurs them (normalized box filtering). Corresponding density map
+    remains unchanged.
+
+    """
+    def __init__(self, ksize, blurs_num, size, probability=1.0):
+        """
+        Create a transformation that blurs random circular regions (normalized box filtering) of given size,
+        specified number of times. One may specify one and only one size, relative to the image size.
+
+        Args:
+            ksize: Size of kernel used in averaging.
+            blurs_num: Number of times this operation is performed. Choice of position is random, so the blurs may
+                overlay over each other.
+            size: Size of single circular region to be blurred. Circle radius is calculated as average of
+                height and width of the image multiplied by size parameter (fraction).
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+
+        if ksize <= 0:
+            raise ValueError("Kernel size must be an integer greater than 0")
+        if blurs_num <= 0:
+            raise ValueError("Number of blurs must be an integer greater than 0")
+        if not 0.0 < size <= 1.0:
+            raise ValueError("Size must be between 0 (exclusive) and 1 (inclusive)")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.ksize = ksize
+        self.blurs_num = blurs_num
+        self.size = size
+
+    def transform(self, image, density_map):
+        """
+        Blurs out random regions according to the specification.
+
+        Args:
+            image: Image to be partially blurred out.
+            density_map: Related density map.
+
+        Returns:
+            A pair of partially blurred image and corresponding density map.
+        """
+        h, w = image.shape[:2]
+        image_blurred = _cv2.blur(image, (self.ksize, self.ksize))
+
+        mask = _np.zeros((h, w, 3), dtype=_np.uint8)
+        for _ in range(self.blurs_num):
+            x_cord = _np.random.uniform(0, 1)
+            y_cord = _np.random.uniform(0, 1)
+            size = int(((h+w)/2)*self.size)
+            mask = _cv2.circle(mask, (int(w*x_cord), int(h*y_cord)), size, (255, 255, 255), -1)
+
+        return _np.where(mask == (255, 255, 255), image_blurred, image), density_map
