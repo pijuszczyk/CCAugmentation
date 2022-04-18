@@ -1072,3 +1072,60 @@ class ChangeSaturation(Transformation):
         image = _cv2.cvtColor(image, _cv2.COLOR_HSV2BGR)
 
         return image, density_map
+
+
+class Mixup(Transformation):
+    """
+    Experimental method based on: https://arxiv.org/abs/1710.09412
+    In this technique 2 randomly selected input images x_i, x_j and corresponding to them density maps y_i, y_j
+    are mixed together to create new training sample lambda * x_i + (1 - lambda) * x_j with density map
+    lambda * y_i + (1 - lambda) * y_j, where lambda is sampled from Beta distribution.
+
+    """
+    def __init__(self, alpha, probability=1):
+        """
+        Create mixup transformation.
+
+        Args:
+            alpha: Parameter of Beta distribution used in the mixup.
+        """
+        if alpha <= 0:
+            raise ValueError("Alpha must be greater than 0")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.requires_full_dataset_in_memory = True
+        self.alpha = alpha
+
+    def transform(self, image, density_map):
+        """ Transformation of a single image+density map pair without loading other pairs is not supported. """
+        raise NotImplementedError("Only transforming the whole dataset at once is currently supported for Copyout")
+
+    def transform_all(self, images_and_density_maps):
+        """
+        Create a generator that for each image and density map pair performs mixup procedure with randomly selected
+        pair from the dataset.
+
+        Args:
+            images_and_density_maps: Iterable of tuples of image and density map. Both are affected by the operation.
+
+        Returns:
+            Generator of tuples with transformed image and density map.
+        """
+        imgs_dms = list(images_and_density_maps)
+        images_num = len(imgs_dms)
+        for img, dm in imgs_dms:
+            if _random.random() < self.probability:
+                src_index = _np.random.randint(0, images_num)
+                src_img, src_dm = imgs_dms[src_index]
+
+                dest_h, dest_w = img.shape[:2]
+                src_img, src_dm = _cv2.resize(src_img, (dest_w, dest_h)), _cv2.resize(src_dm, (dest_w, dest_h)),
+
+                l = _np.random.beta(self.alpha, self.alpha, size=1)[0]
+                new_img = _cv2.addWeighted(img, l, src_img, 1-l, 0.0)
+                new_dm = _cv2.addWeighted(dm, l, src_dm, 1-l, 0.0)
+
+                yield new_img, new_dm
+            else:
+                yield img, dm
