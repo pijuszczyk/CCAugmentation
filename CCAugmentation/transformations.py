@@ -831,3 +831,52 @@ class Copyout(Transformation):
                 src_dm[src_area_y1:src_area_y2, src_area_x1:src_area_x2]
 
             yield new_img, new_dm
+
+
+class Shearing(Transformation):
+    """
+    Shears the given image and density map along X and Y axis.
+
+    """
+    def __init__(self, shearing_x, shearing_y, probability=1.0):
+        """
+        Define shearing parameters.
+
+        Args:
+            shearing_x: Shearing factor for X axis. Value of 0 corresponds to no shearing, value 0.5 to moderate shearing.
+            shearing_y: Shearing factor for Y axis. Value of 0 corresponds to no shearing, value 0.5 to moderate shearing.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+
+        if shearing_x < 0:
+            raise ValueError("Shearing_x must be >= 0")
+        if shearing_y < 0:
+            raise ValueError("Shearing_y must be >= 0")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.shearing_x = shearing_x
+        self.shearing_y = shearing_y
+
+    def transform(self, image, density_map):
+        """
+        Shear the image according to the specification.
+
+        Args:
+            image: Image to be sheared.
+            density_map: Related density map that will be sheared accordingly.
+
+        Returns:
+            A pair of sheared image and density map.
+        """
+        h, w = image.shape[:2]
+
+        M = _np.float32([[1, self.shearing_x, 0],
+                        [self.shearing_y, 1, 0],
+                        [0, 0, 1]])
+
+        # calculate width and height that will allow the sheared image to be fully preserved
+        new_w = int(w + _np.abs(self.shearing_x) * h)
+        new_h = int(h + _np.abs(self.shearing_y) * w)
+
+        return _cv2.warpPerspective(image, M, (new_w, new_h)), _cv2.warpPerspective(density_map, M, (new_w, new_h))
