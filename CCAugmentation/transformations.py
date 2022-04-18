@@ -1032,3 +1032,43 @@ class DistortPerspective(Transformation):
         matrix = _cv2.getPerspectiveTransform(pts1, pts2)
 
         return _cv2.warpPerspective(image, matrix, (w, h)), _cv2.warpPerspective(density_map, matrix, (w, h))
+
+
+class ChangeSaturation(Transformation):
+    """
+    Transformation that changes saturation of given image.
+
+    """
+    def __init__(self, factor, probability=1.0):
+        """
+        Define saturation change transformation parameters.
+
+        Args:
+            factor: Strength of saturation change. Values smaller than 1 corresponds to decrease in saturation,
+                values greater than 1 corresponds to increase in saturation.
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+
+        if factor < 0:
+            raise ValueError("Factor must be greater than/equal 0")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.factor = factor
+
+    def transform(self, image, density_map):
+        """
+        Change saturation of the image according to specification.
+
+        Args:
+            image: Image to be transformed.
+            density_map: Related density map that will be sheared accordingly.
+
+        Returns:
+            A pair of image with changed saturation and density map.
+        """
+        image = _cv2.cvtColor(image, _cv2.COLOR_BGR2HSV)
+        image[..., 1] = image[..., 1] * self.factor
+        image = _cv2.cvtColor(image, _cv2.COLOR_HSV2BGR)
+
+        return image, density_map
