@@ -973,3 +973,62 @@ class BlurCutout(Transformation):
             mask = _cv2.circle(mask, (int(w*x_cord), int(h*y_cord)), size, (255, 255, 255), -1)
 
         return _np.where(mask == (255, 255, 255), image_blurred, image), density_map
+
+
+class DistortPerspective(Transformation):
+    """
+    Experimental method. Distorts perspective of the given image and applies corresponding transformation to the density
+    map. Perspective is distorted randomly based on 4 presets - extension of the top, bottom, left or right part of the
+    picture. Strength od perspective distortion in specified by the user.
+    """
+    def __init__(self, strength, probability=1.0):
+        """
+        Define strength of perspective distortion.
+
+        Args:
+            strength: Strength of perspective distortion. Specified as percentage of height or width which will
+                be omitted during the perspective extension. between 0 (inclusive) and 1 (exclusive).
+            probability: Probability for the transformation to be applied, between 0 and 1 (inclusive).
+        """
+
+        if not 0.0 <= strength < 1:
+            raise ValueError("Distortion strength must be between 0 (inclusive) and 1 (exclusive)")
+
+        Transformation.__init__(self, probability)
+        self.args = self._prepare_args(locals())
+        self.strength = strength
+
+    def transform(self, image, density_map):
+        """
+        Distort perspective of the given image according to the specification.
+
+        Args:
+            image: Image to be distorted.
+            density_map: Related density map that will be transformed accordingly.
+
+        Returns:
+            A pair of distorted image and density map.
+        """
+        h, w = image.shape[:2]
+
+        modes = ['top', 'bottom', 'left', 'right']
+        mode = _np.random.choice(modes)
+        if mode == 'top':
+            pts1 = _np.float32([[0+w*self.strength/2, 0], [w-w*self.strength/2, 0],
+                                [0, h], [w, h]])
+        elif mode == 'bottom':
+            pts1 = _np.float32([[0, 0], [w, 0],
+                                [0+w*self.strength/2, h], [w-w*self.strength/2, h]])
+        if mode == 'left':
+            pts1 = _np.float32([[0, 0+h*self.strength/2], [w, 0],
+                                [0, h-h*self.strength/2], [w, h]])
+        if mode == 'right':
+            pts1 = _np.float32([[0, 0], [w, 0+h*self.strength/2],
+                                [0, h], [w, h-h*self.strength/2]])
+
+        pts2 = _np.float32([[0, 0], [w, 0],
+                            [0, h], [w, h]])
+
+        matrix = _cv2.getPerspectiveTransform(pts1, pts2)
+
+        return _cv2.warpPerspective(image, matrix, (w, h)), _cv2.warpPerspective(density_map, matrix, (w, h))
