@@ -1222,7 +1222,7 @@ class ChangeSaturation(Transformation):
         Returns:
             A pair of image with changed saturation and density map.
         """
-        image = _cv2.cvtColor(image, _cv2.COLOR_BGR2HSV)
+        image = _cv2.cvtColor(image.astype(_np.uint8), _cv2.COLOR_BGR2HSV)
         image[..., 1] = image[..., 1] * self.factor
         image = _cv2.cvtColor(image, _cv2.COLOR_HSV2BGR)
 
